@@ -123,7 +123,7 @@ dnl Check sizeof long.
 AC_CHECK_SIZEOF([long])
 
 dnl Headers.
-dnl AC_CHECK_HEADERS([])
+AC_CHECK_HEADERS([endian.h byteswap.h])
 
 dnl Check for pod2man and pod2text.
 AC_CHECK_PROG([POD2MAN],[pod2man],[pod2man],[no])
