@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [0])
-m4_define([hivex_release], [74])
+m4_define([hivex_release], [75])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
