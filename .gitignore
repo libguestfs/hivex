@@ -26,6 +26,7 @@ hivex-*.tar.gz
 hivex/*.1
 hivex/*.3
 hivex/hivexget
+hivex/hivexsh
 hivex/hivexml
 install-sh
 *.la
