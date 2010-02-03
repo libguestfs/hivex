@@ -397,8 +397,9 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
-		 hivex/Makefile
-                 hivex.pc])
+                 hivex.pc
+                 hivex/Makefile
+                 hivex/tools/Makefile])
 AC_OUTPUT
 
 dnl Produce summary.

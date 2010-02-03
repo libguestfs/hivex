@@ -27,6 +27,7 @@ hivex/*.1
 hivex/*.3
 hivex/hivexsh
 hivex/hivexml
+hivex/tools/*.opt
 install-sh
 *.la
 .libs
