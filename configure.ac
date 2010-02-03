@@ -399,6 +399,7 @@ AC_CONFIG_FILES([Makefile
                  gnulib/tests/Makefile
                  hivex.pc
                  hivex/Makefile
+                 hivex/t/Makefile
                  hivex/tools/Makefile])
 AC_OUTPUT
 
