@@ -36,7 +36,8 @@ lib_LTLIBRARIES = libhivex.la
 libhivex_la_SOURCES = \
   hivex.c \
   hivex.h \
-  byte_conversions.h
+  byte_conversions.h \
+  gettext.h
 
 libhivex_la_LDFLAGS = -version-info 0:0:0 $(LTLIBINTL) $(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
