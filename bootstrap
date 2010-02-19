@@ -55,9 +55,7 @@ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 <$gnulib_tool || exit
 
 modules='
-arpa_inet
 c-ctype
-closeout
 full-read
 full-write
 gitlog-to-changelog
@@ -66,10 +64,7 @@ gnumakefile
 ignore-value
 maintainer-makefile
 manywarnings
-netinet_in
 progname
-strchrnul
-strerror
 strndup
 vasprintf
 vc-list-files
