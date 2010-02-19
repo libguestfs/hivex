@@ -74,6 +74,8 @@ strndup
 vasprintf
 vc-list-files
 warnings
+xstrtol
+xstrtoll
 '
 
 $gnulib_tool			\
