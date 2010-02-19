@@ -17,7 +17,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 
-SUBDIRS = gnulib/lib hivex gnulib/tests
+SUBDIRS = gnulib/lib hivex gnulib/tests po
 
 EXTRA_DIST = hivex.pc hivex.pc.in
 

@@ -400,7 +400,8 @@ AC_CONFIG_FILES([Makefile
                  hivex.pc
                  hivex/Makefile
                  hivex/t/Makefile
-                 hivex/tools/Makefile])
+                 hivex/tools/Makefile
+                 po/Makefile.in])
 AC_OUTPUT
 
 dnl Produce summary.

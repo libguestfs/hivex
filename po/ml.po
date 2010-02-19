@@ -1,0 +1,1576 @@
+# translation of libguestfs.master.libguestfs.ml.po to
+# Copyright (C) 2010 Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Ani Peter <apeter@redhat.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libguestfs.master.libguestfs.ml\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-02-19 16:48+0000\n"
+"PO-Revision-Date: 2010-02-02 18:35+0530\n"
+"Last-Translator: Ani Peter | അനി പീറ്റര്‍ <apeter@redhat.com>\n"
+"Language-Team: Swathanthra Malayalam Computing | സ്വതന്ത്ര മലയാളം കമ്പ്യൂട്ടിങ് <smc-"
+"discuss@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: hivex/hivexml.c:70
+#, c-format
+msgid "%s: failed to write XML document\n"
+msgstr ""
+
+#: hivex/hivexml.c:101
+#, c-format
+msgid "hivexml: missing name of input file\n"
+msgstr ""
+
+#: hivex/hivexml.c:120
+#, c-format
+msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
+msgstr ""
+
+#: hivex/hivexsh.c:149
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Welcome to hivexsh, the hivex interactive shell for examining\n"
+"Windows Registry binary hive files.\n"
+"\n"
+"Type: 'help' for help summary\n"
+"      'quit' to quit the shell\n"
+"\n"
+msgstr ""
+"\n"
+"വിര്‍ച്ച്വല്‍ മഷീന്‍ ഫയല്‍സിസ്റ്റമുകള്‍ ചിട്ടപ്പെടുത്തുന്നതിനായുള്ള libguestfs\n"
+"ഫയല്‍സിസ്റ്റം ഇന്ററാക്ടീവ് ഷെല്ലായ guestfish-ലേക്കു് സ്വാഗതം.\n"
+"\n"
+"ടൈപ്പ് ചെയ്യേണ്ടു്: കമാന്‍ഡുകള്‍ക്കുള്ള സഹായത്തിനായി 'help'\n"
+"      ഷെല്ലില്‍ നിന്നും പുറത്തു് കടക്കുന്നതിനായി 'quit'\n"
+"\n"
+
+#: hivex/hivexsh.c:263
+#, c-format
+msgid "hivexsh: error getting parent of node %zu\n"
+msgstr ""
+
+#: hivex/hivexsh.c:273
+#, c-format
+msgid "hivexsh: error getting node name of node %zx\n"
+msgstr ""
+
+#: hivex/hivexsh.c:412
+#, c-format
+msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
+msgstr ""
+
+#: hivex/hivexsh.c:433
+#, c-format
+msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
+msgstr ""
+
+#: hivex/hivexsh.c:443
+#, c-format
+msgid "hivexsh: load: no hive file name given to load\n"
+msgstr ""
+
+#: hivex/hivexsh.c:459
+#, c-format
+msgid ""
+"hivexsh: failed to open hive file: %s: %m\n"
+"\n"
+"If you think this file is a valid Windows binary hive file (_not_\n"
+"a regedit *.reg file) then please run this command again using the\n"
+"hivexsh option '-d' and attach the complete output _and_ the hive file\n"
+"which fails into a bug report at https://bugzilla.redhat.com/\n"
+"\n"
+msgstr ""
+
+#: hivex/hivexsh.c:492 hivex/hivexsh.c:601 hivex/hivexsh.c:1063
+#, c-format
+msgid "hivexsh: '%s' command should not be given arguments\n"
+msgstr ""
+
+#: hivex/hivexsh.c:534
+#, c-format
+msgid ""
+"%s: %s: \\ characters in path are doubled - are you escaping the path "
+"parameter correctly?\n"
+msgstr ""
+
+#: hivex/hivexsh.c:572
+#, c-format
+msgid "hivexsh: cd: subkey '%s' not found\n"
+msgstr ""
+
+#: hivex/hivexsh.c:590
+#, c-format
+msgid ""
+"Navigate through the hive's keys using the 'cd' command, as if it\n"
+"contained a filesystem, and use 'ls' to list the subkeys of the\n"
+"current key.  Full documentation is in the hivexsh(1) manual page.\n"
+msgstr ""
+
+#: hivex/hivexsh.c:665
+#, fuzzy, c-format
+msgid "%s: %s: key not found\n"
+msgstr "%s: %s: ഇന്റിജര്‍ പരിധികഴിഞ്ഞിരിക്കുന്നു\n"
+
+#: hivex/hivexsh.c:841 hivex/hivexsh.c:945 hivex/hivexsh.c:969
+#: hivex/hivexsh.c:998
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+msgstr "%s: %s: അസാധുവായ ഇന്റിജര്‍ പരാമീറ്റര്‍ (%s %d തിരികെ നല്‍കിയിരിക്കുന്നു)\n"
+
+#: hivex/hivexsh.c:846 hivex/hivexsh.c:950 hivex/hivexsh.c:975
+#: hivex/hivexsh.c:1003
+#, c-format
+msgid "%s: %s: integer out of range\n"
+msgstr "%s: %s: ഇന്റിജര്‍ പരിധികഴിഞ്ഞിരിക്കുന്നു\n"
+
+#: hivex/hivexsh.c:868 hivex/hivexsh.c:886
+#, c-format
+msgid "hivexsh: setval: unexpected end of input\n"
+msgstr ""
+
+#: hivex/hivexsh.c:907 hivex/hivexsh.c:926
+#, c-format
+msgid ""
+"hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
+msgstr ""
+
+#: hivex/hivexsh.c:1033
+#, c-format
+msgid "hivexsh: setval: trailing garbage after hex string\n"
+msgstr ""
+
+#: hivex/hivexsh.c:1040
+#, c-format
+msgid ""
+"hivexsh: setval: cannot parse value string, please refer to the man page "
+"hivexsh(1) for help: %s\n"
+msgstr ""
+
+#: hivex/hivexsh.c:1069
+#, c-format
+msgid "hivexsh: del: the root node cannot be deleted\n"
+msgstr ""
+
+#~ msgid "use 'alloc file size' to create an image\n"
+#~ msgstr "ഒരു ചിത്രം ഉണ്ടാക്കുന്നതിനായി 'alloc file size' ഉപയോഗിക്കുക\n"
+
+#~ msgid "can't allocate or add disks after launching\n"
+#~ msgstr "ലഭ്യമാക്കിയ ശേഷം സ്ഥലം അനുവദിക്കുകയോ ഡിസ്കുകള്‍ ചേര്‍ക്കുകയോ സാധ്യമല്ല\n"
+
+#~ msgid "use 'sparse file size' to create a sparse image\n"
+#~ msgstr "ഒരു സ്പാര്‍സ് ചിത്രം ഉണ്ടാക്കുന്നതിനായി 'sparse file size' ഉപയോഗിക്കുക\n"
+
+#~ msgid "could not parse size specification '%s'\n"
+#~ msgstr "വ്യാപ്തിയുടെ വിവരണം '%s' പാഴ്സ് ചെയ്യുവാന്‍ സാധ്യമായില്ല\n"
+
+#~ msgid "Command"
+#~ msgstr "കമാന്‍ഡ്"
+
+#~ msgid "Description"
+#~ msgstr "വിവരണം"
+
+#~ msgid "add a CD-ROM disk image to examine"
+#~ msgstr "പരിശോധിക്കുന്നതിനായി ഒരു സിഡി-റോം ചിത്രം ചേര്‍ക്കുക"
+
+#~ msgid "add an image to examine or modify"
+#~ msgstr "പരിശോധിക്കുന്നതിനോ മാറ്റം വരുത്തുന്നതിനോ ഒരു ചിത്രം ചേര്‍ക്കുക"
+
+#~ msgid "add a drive in snapshot mode (read-only)"
+#~ msgstr "സ്നാപ്ഷോട്ട് മോഡില്‍ ഒരു ഡ്രൈവ് ചേര്‍ക്കുക (റീഡ്-ഒണ്‍ലി)"
+
+#~ msgid "close the current Augeas handle"
+#~ msgstr "നിലവിലുള്ള Augeas ഹാന്‍ഡില്‍ അടയ്ക്കുക"
+
+#~ msgid "define an Augeas node"
+#~ msgstr "ഒരു Augeas നോഡ് നിഷ്കര്‍ഷിക്കുന്നു"
+
+#~ msgid "define an Augeas variable"
+#~ msgstr "ഒരു Augeas വേരിയബിള്‍ നിഷ്കര്‍ഷിക്കുന്നു"
+
+#~ msgid "look up the value of an Augeas path"
+#~ msgstr "ഒരു Augeas പാഥിന്റെ മൂല്ല്യം തെരയുക"
+
+#~ msgid "create a new Augeas handle"
+#~ msgstr "ഒരു പുതിയ Augeas ഹാന്‍ഡില്‍ നിര്‍മ്മിക്കുക"
+
+#~ msgid "insert a sibling Augeas node"
+#~ msgstr "ഒരു സിബ്ലിങ് Augueas നോഡ് ചേര്‍ക്കുക"
+
+#~ msgid "load files into the tree"
+#~ msgstr "ട്രീയിലേക്ക് ഫയലുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "list Augeas nodes under augpath"
+#~ msgstr "augpath-ല്‍ Augeas നോഡുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "return Augeas nodes which match augpath"
+#~ msgstr "augpath-നു് ചേരുന്ന Augeas നോഡുകള്‍ തിരികെ നല്‍കുക"
+
+#~ msgid "move Augeas node"
+#~ msgstr "Augeas നോഡ് നീക്കുക"
+
+#~ msgid "remove an Augeas path"
+#~ msgstr "ഒരു Augeas പാഥ് നീക്കം ചെയ്യുക"
+
+#~ msgid "write all pending Augeas changes to disk"
+#~ msgstr "ബാക്കിയുള്ള എല്ലാ Augeas മാറ്റങ്ങളും ഡിസ്കിലേക്ക് സൂക്ഷിക്കുക"
+
+#~ msgid "set Augeas path to value"
+#~ msgstr "Augeas പാഥ് ഒരു മൂല്ല്യമായി സജ്ജമാക്കുക"
+
+#~ msgid "test availability of some parts of the API"
+#~ msgstr "എപിഐയുടെ ചില ഭാഗങ്ങളുടെ ലഭ്യത പരിശോധിക്കുക"
+
+#~ msgid "flush device buffers"
+#~ msgstr "ഡിവൈസ് ബഫറുകള്‍ വെടിപ്പാക്കുക"
+
+#~ msgid "get blocksize of block device"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസിന്റെ വ്യാപ്തി ലഭ്യമാക്കുക"
+
+#~ msgid "is block device set to read-only"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസ് റീഡ്-ഒണ്‍ലി ആയി സജ്ജമാണോ"
+
+#~ msgid "get total size of device in bytes"
+#~ msgstr "ഡിവൈസിന്റെ മൊത്തം വ്യാപ്തി ബൈറ്റ്സില്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "get sectorsize of block device"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസിന്റെ സെക്ടര്‍ വ്യാപ്തി ലഭ്യമാക്കുക"
+
+#~ msgid "get total size of device in 512-byte sectors"
+#~ msgstr "ഡിവൈസിന്റെ മൊത്തം വ്യാപ്തി 512-ബൈറ്റ് സെക്ടറുളില്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "reread partition table"
+#~ msgstr "പാര്‍ട്ടീഷന്‍ ടേബിള്‍ വീണ്ടും ലഭ്യമാക്കുക"
+
+#~ msgid "set blocksize of block device"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസിന്റെ ബ്ലോക്ക് വ്യാപ്തി സജ്ജമാക്കുക"
+
+#~ msgid "set block device to read-only"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസ് റീഡ്-ഒണ്‍ലി ആയി സജ്ജമാക്കുക"
+
+#~ msgid "set block device to read-write"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസ് റീഡ്-റൈറ്റ് ആയി സജ്ജമാക്കുക"
+
+#~ msgid "return true path on case-insensitive filesystem"
+#~ msgstr "കേസ്-സെന്‍സിറ്റീവ് ഫയല്‍സിസ്റ്റത്തില്‍ ട്രൂ പാഥ് തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "list the contents of a file"
+#~ msgstr "ഒരു ഫയലിലുള്ളവ ലഭ്യമാക്കുക"
+
+#~ msgid "compute MD5, SHAx or CRC checksum of file"
+#~ msgstr "ഒരു ഫയലിന്റെ MD5, SHAx അല്ലെങ്കില്‍ CRC ചെക്ക്സം കണ്ടുപിടിക്കുക"
+
+#~ msgid "change file mode"
+#~ msgstr "ഫയല്‍ മോഡ് മാറ്റുക"
+
+#~ msgid "change file owner and group"
+#~ msgstr "ഫയലിന്റെ ഉടമസ്ഥനും ഗ്രൂപ്പും മാറ്റുക"
+
+#~ msgid "run a command from the guest filesystem"
+#~ msgstr "ഗസ്റ്റ് ഫയല്‍സിസ്റ്റമില്‍ നിന്നും ഒരു കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുക"
+
+#~ msgid "run a command, returning lines"
+#~ msgstr "വരികള്‍ തിരികെ ലഭ്യമാക്കുന്ന ഒരു കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുക"
+
+#~ msgid "add qemu parameters"
+#~ msgstr "qemu പരാമീറ്ററുകള്‍ ചേര്‍ക്കുക"
+
+#~ msgid "copy a file"
+#~ msgstr "ഒരു ഫയല്‍ പകര്‍ത്തുക"
+
+#~ msgid "copy a file or directory recursively"
+#~ msgstr "ആവര്‍ത്തിച്ചു് ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറി പകര്‍ത്തുക"
+
+#~ msgid "copy from source to destination using dd"
+#~ msgstr "dd ഉപയോഗിച്ചു് ഉറവിടത്തില്‍ നിന്നും ലക്ഷ്യസ്ഥാനത്തേക്കു് പകര്‍ത്തുക"
+
+#~ msgid "debugging and internals"
+#~ msgstr "ഡീബഗ്ഗിങും ഇന്റേണലും"
+
+#~ msgid "report file system disk space usage"
+#~ msgstr "ഫയല്‍ സിസ്റ്റത്തിന്റെ ഡിസ്കിലുള്ള സ്ഥലത്തിന്റെ ഉപയോഗം രേഖപ്പെടുത്തുക"
+
+#~ msgid "report file system disk space usage (human readable)"
+#~ msgstr ""
+#~ "ഫയല്‍ സിസ്റ്റത്തിന്റെ ഡിസ്കിലുള്ള സ്ഥലത്തിന്റെ ഉപയോഗം രേഖപ്പെടുത്തുക (മനുഷ്യര്‍ക്കു് വായിക്കുവാന്‍ "
+#~ "സാധിക്കുന്നതു്)"
+
+#~ msgid "return kernel messages"
+#~ msgstr "കേണല്‍ സന്ദേശങ്ങള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "download a file to the local machine"
+#~ msgstr "ലോക്കല്‍ മഷീനിലേക്കു് ഒരു ഫയല്‍ ഡൌണ്‍ലോഡ് ചെയ്യുക"
+
+#~ msgid "drop kernel page cache, dentries and inodes"
+#~ msgstr "കേര്‍ണല്‍ താളിന്റെ കാഷ്, ഡിഎന്‍ട്രികള്‍ ഐനോഡുകള്‍ എന്നിവ വേണ്ടെന്നു് വയ്ക്കുക"
+
+#~ msgid "estimate file space usage"
+#~ msgstr "ഫയലിലുള്ള സ്ഥലത്തിന്റെ ഉപയോഗം കണക്കുകൂട്ടുക"
+
+#~ msgid "check an ext2/ext3 filesystem"
+#~ msgstr "ഒരു ext2/ext3 ഫയല്‍സിസ്റ്റം പരിശോധിക്കുക"
+
+#~ msgid "echo arguments back to the client"
+#~ msgstr "ക്ലയന്റിലേക്കു് ആര്‍ഗ്യുമെന്റുകള്‍ തിരികെ എക്കോ ചെയ്യുക"
+
+#~ msgid "return lines matching a pattern"
+#~ msgstr "ഒരു മാതൃകയ്ക്കു് ചേരുന്ന വരികള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "test if two files have equal contents"
+#~ msgstr "രണ്ടു് ഫയലുകളില്‍ ഒരേ പോലുള്ള വിവരങ്ങള്‍ ലഭ്യമാണോ എന്നു് പരിശോധിക്കുക"
+
+#~ msgid "test if file or directory exists"
+#~ msgstr "ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറി നിലവിലുണ്ടോ എന്നു് പരിശോധിക്കുക"
+
+#~ msgid "preallocate a file in the guest filesystem"
+#~ msgstr "ഗസ്റ്റ് ഫയല്‍സിസ്റ്റത്തില്‍ ഒരു ഫയല്‍ പ്രീഅലോക്കേറ്റ് ചെയ്യുക"
+
+#~ msgid "determine file type"
+#~ msgstr "ഫയല്‍ തരം കണ്ടുപിടിക്കുക"
+
+#~ msgid "return the size of the file in bytes"
+#~ msgstr "ഫയലിന്റെ വ്യാപ്തി ബൈറ്റുകളില്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "fill a file with octets"
+#~ msgstr "ഫയല്‍ ഒക്ടറ്റുകള്‍ ഉപയോഗിച്ചു് നിറയ്ക്കുക"
+
+#~ msgid "find all files and directories"
+#~ msgstr "എല്ലാ ഫയലുകളും ഡയറക്ടറികളും കണ്ടുപിടിക്കുക"
+
+#~ msgid "find all files and directories, returning NUL-separated list"
+#~ msgstr ""
+#~ "എല്ലാ ഫയലുകളും ഡറക്ടറികളും കണ്ടുപിടിക്കുക, NUL-വേര്‍തിരിച്ച പട്ടിക തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "run the filesystem checker"
+#~ msgstr "ഫയല്‍സിസ്റ്റം ചെക്കര്‍ പ്രവര്‍ത്തിപ്പിക്കുക"
+
+#~ msgid "get the additional kernel options"
+#~ msgstr "അധികമായ കേര്‍ണല്‍ ഉപാധികള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "get autosync mode"
+#~ msgstr "autosync മോഡ് ലഭ്യമാക്കുക"
+
+#~ msgid "get direct appliance mode flag"
+#~ msgstr "നേരിട്ടുള്ള അപ്ലയന്‍സ് മോഡ് ഫ്ലാഗ് ലഭ്യമാക്കുക"
+
+#~ msgid "get the ext2/3/4 filesystem label"
+#~ msgstr "ext2/3/4 ഫയല്‍സിസ്റ്റം ലേബല്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "get the ext2/3/4 filesystem UUID"
+#~ msgstr "ext2/3/4 ഫയല്‍സിസ്റ്റം UUID ലഭ്യമാക്കുക"
+
+#~ msgid "get memory allocated to the qemu subprocess"
+#~ msgstr "qemu ഉപപ്രകിയകള്‍ക്കുള്ള മെമ്മറി ലഭ്യമാക്കുക"
+
+#~ msgid "get the search path"
+#~ msgstr "തെരച്ചിലിനുള്ള പാഥ് ലഭ്യമാക്കുക"
+
+#~ msgid "get PID of qemu subprocess"
+#~ msgstr "qemu ഉപപ്രക്രിയയ്ക്കുള്ള PID ലഭ്യമാക്കുക"
+
+#~ msgid "get the qemu binary"
+#~ msgstr "qemu ബൈനറി ലഭ്യമാക്കുക"
+
+#~ msgid "get recovery process enabled flag"
+#~ msgstr "വീണ്ടെടുക്കുന്ന പ്രക്രിയ പ്രവര്‍ത്തന സജ്ജമാക്കുന്നതിനുള്ള ഫ്ലാഗ് ലഭ്യമാക്കുക"
+
+#~ msgid "get SELinux enabled flag"
+#~ msgstr "SELinux പ്രവര്‍ത്തന സജ്ജമാക്കുന്നതിനുള്ള ഫ്ലാഗ് ലഭ്യമാക്കുക"
+
+#~ msgid "get the current state"
+#~ msgstr "ഇപ്പോഴുള്ള അവസ്ഥ ലഭ്യമാക്കുക"
+
+#~ msgid "get command trace enabled flag"
+#~ msgstr "കമാന്‍ഡ് ട്രെയിസ് പ്രവര്‍ത്തന സജ്ജമാക്കുന്നതിനുള്ള ഫ്ലാഗ് ലഭ്യമാക്കുക"
+
+#~ msgid "get verbose mode"
+#~ msgstr "വെര്‍ബോസ് മോഡ്"
+
+#~ msgid "get SELinux security context"
+#~ msgstr "SELinux സെക്യൂരിറ്റി കോണ്‍ടെക്സ്റ്റ് ലഭ്യമാക്കുക"
+
+#~ msgid "list extended attributes of a file or directory"
+#~ msgstr "ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറിയ്ക്കുള്ള അധികമായ വിശേഷതകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "expand a wildcard path"
+#~ msgstr "ഒരു വൈള്‍ജ്കാര്‍ഡ് പാഥ് വികസിപ്പിക്കുക"
+
+#~ msgid "install GRUB"
+#~ msgstr "GRUB ഇന്‍സ്റ്റോള്‍ ചെയ്യുക"
+
+#~ msgid "return first 10 lines of a file"
+#~ msgstr "ഒരു ഫയലിന്റെ ആദ്യത്തെ 10 വരികള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "return first N lines of a file"
+#~ msgstr "ഒരു ഫയലിന്റെ ആദ്യത്തെ N വരികള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "dump a file in hexadecimal"
+#~ msgstr "ഹെക്സാഡെസിമലില്‍ ഒരു ഫയല്‍ ഡമ്പ് ചെയ്യുക"
+
+#~ msgid "list files in an initrd"
+#~ msgstr "initrd-യില്‍ ഫയലുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "add an inotify watch"
+#~ msgstr "ഒരു inotify നിരീക്ഷണം ചേര്‍ക്കുക"
+
+#~ msgid "close the inotify handle"
+#~ msgstr "inotify ഹാന്‍ഡില്‍ അടയ്ക്കുക"
+
+#~ msgid "return list of watched files that had events"
+#~ msgstr "ഇവന്റുകളുള്ള നീരീക്ഷണത്തിലുള്ള ഫയലുകളുടെ പട്ടിക തിരികെ നല്‍കുക"
+
+#~ msgid "create an inotify handle"
+#~ msgstr "ഒരു inotify ഹാന്‍ഡില്‍ നിര്‍മ്മിക്കുക"
+
+#~ msgid "return list of inotify events"
+#~ msgstr "inotify ഇവന്റുകളുടെ പട്ടിക ലഭ്യമാക്കുക"
+
+#~ msgid "remove an inotify watch"
+#~ msgstr "inotify നിരീക്ഷണം നീക്കം ചെയ്യുക"
+
+#~ msgid "is busy processing a command"
+#~ msgstr "കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുന്നതില്‍ തിരക്കിലാണു്"
+
+#~ msgid "is in configuration state"
+#~ msgstr "ക്രമീകരണ അവസ്ഥയില്‍"
+
+#~ msgid "test if file exists"
+#~ msgstr "ഫയല്‍ നിലവിലുണ്ടെങ്കില്‍ പരീക്ഷിക്കുക"
+
+#~ msgid "is launching subprocess"
+#~ msgstr "ഉപപ്രക്രിയ ലഭ്യമാക്കുന്നു"
+
+#~ msgid "is ready to accept commands"
+#~ msgstr "കമാന്‍ഡുകള്‍ സ്വീകരിക്കുവാന്‍ തയ്യാര്‍"
+
+#~ msgid "kill the qemu subprocess"
+#~ msgstr "qemu ഉപപ്രക്രിയ ഇല്ലാതാക്കുന്നു"
+
+#~ msgid "launch the qemu subprocess"
+#~ msgstr "qemu ഉപപ്രക്രിയ ലഭ്യമാക്കുന്നു"
+
+#~ msgid "list the block devices"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "list the partitions"
+#~ msgstr "പാര്‍ട്ടീഷനുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "list the files in a directory (long format)"
+#~ msgstr "ഫയലുകള്‍ ഒരു ഡയറക്ടറിയില്‍ ലഭ്യമാക്കുക (ലോങ് ഫോര്‍മാറ്റ്)"
+
+#~ msgid "create a hard link"
+#~ msgstr "ഒരു ഹാര്‍ഡ് ലിങ്ക് നിര്‍മ്മിക്കുക"
+
+#~ msgid "create a symbolic link"
+#~ msgstr "ഒരു സിംബോളിക് ലിങ്ക് നിര്‍മ്മിക്കുക"
+
+#~ msgid "remove extended attribute of a file or directory"
+#~ msgstr "ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറിയ്ക്കുള്ള എക്സ്റ്റെന്‍ഡഡ് വിശേഷത നീക്കം ചെയ്യുക"
+
+#~ msgid "list the files in a directory"
+#~ msgstr "ഒരു ഡയറക്ടറിയിലുള്ള ഫയലുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "set extended attribute of a file or directory"
+#~ msgstr "ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറിയുടെ എക്സ്റ്റെന്‍ഡഡ് വിശേഷത സജ്ജമാക്കുക"
+
+#~ msgid "get file information for a symbolic link"
+#~ msgstr "ഒരു സിംബോളിക് ലിങ്കിനുള്ള ഫയല്‍ വിവരം ലഭ്യമാക്കുക"
+
+#~ msgid "lstat on multiple files"
+#~ msgstr "അനവധി ഫയലുകളില്‍ lstat ചെയ്യുക"
+
+#~ msgid "create an LVM volume group"
+#~ msgstr "ഒരു എല്‍വിഎം വോള്യം ഗ്രൂപ്പ് നിര്‍മ്മിക്കുക"
+
+#~ msgid "remove all LVM LVs, VGs and PVs"
+#~ msgstr "എല്ലാ എല്‍വിഎം എല്‍വികളും വിജികളും പിവികളും നീക്കം ചെയ്യുക"
+
+#~ msgid "remove an LVM logical volume"
+#~ msgstr "ഒരു എല്‍വിഎം ലോജിക്കല്‍ വോള്യം നീക്കം ചെയ്യുക"
+
+#~ msgid "resize an LVM logical volume"
+#~ msgstr "ഒരു എല്‍വിഎം ലോജിക്കല്‍ വോള്യത്തിന്റെ വ്യാപ്തി മാറ്റുക"
+
+#~ msgid "list the LVM logical volumes (LVs)"
+#~ msgstr "ഒരു എല്‍വിഎം ലോജിക്കല്‍ വോള്യമുകള്‍ (എല്‍വി) ലഭ്യമാക്കുക"
+
+#~ msgid "lgetxattr on multiple files"
+#~ msgstr "അനവധി ഫയലുകളില്‍ lgetxattr ചെയ്യുക"
+
+#~ msgid "create a directory"
+#~ msgstr "ഒരു ഡയറക്ടറി ഉണ്ടാക്കുക"
+
+#~ msgid "create a directory with a particular mode"
+#~ msgstr "ഒരു പ്രത്യേക മോഡില്‍ ഡയറക്ടറി ഉണ്ടാക്കുക"
+
+#~ msgid "create a directory and parents"
+#~ msgstr "ഒരു ഡയറക്ടറിയും പേരന്റും ഉണ്ടാക്കുക"
+
+#~ msgid "create a temporary directory"
+#~ msgstr "ഒരു താല്‍ക്കാലിക ഡയറക്ടറി ഉണ്ടാക്കുക"
+
+#~ msgid "make ext2/3/4 filesystem with external journal"
+#~ msgstr "എക്സ്റ്റേണല്‍ ജേര്‍ണലുള്ള ext2/3/4 ഫയല്‍സിസ്റ്റം ഉണ്ടാക്കുക"
+
+#~ msgid "make ext2/3/4 external journal"
+#~ msgstr "ext2/3/4 എക്സ്റ്റേണല്‍ ജേര്‍ണല്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "make ext2/3/4 external journal with label"
+#~ msgstr "ext2/3/4 എക്സ്റ്റേണല്‍ ജേര്‍ണല്‍ ലേബലിനൊപ്പം ഉണ്ടാക്കുക"
+
+#~ msgid "make ext2/3/4 external journal with UUID"
+#~ msgstr "ext2/3/4 എക്സ്റ്റേണല്‍ ജേര്‍ണല്‍ UUID-യ്ക്കൊപ്പം ഉണ്ടാക്കുക"
+
+#~ msgid "make FIFO (named pipe)"
+#~ msgstr "make FIFO (named pipe)"
+
+#~ msgid "make a filesystem"
+#~ msgstr "ഒരു ഫയല്‍സിസ്റ്റം ഉണ്ടാക്കുക"
+
+#~ msgid "make a filesystem with block size"
+#~ msgstr "ബ്ലോക്ക് വ്യാപ്തിയില്‍ ഒരു ഫയല്‍സിസ്റ്റം ഉണ്ടാക്കൂക"
+
+#~ msgid "create a mountpoint"
+#~ msgstr "ഒരു മൌണ്ട് പോയിന്റ് ഉണ്ടാക്കുക"
+
+#~ msgid "make block, character or FIFO devices"
+#~ msgstr "ബ്ലോക്ക്, ക്യാറക്ടര്‍ അല്ലെങ്കില്‍ FIFO ഡിവൈസുകള്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "make block device node"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസ് നോഡ് ഉണ്ടാക്കുക"
+
+#~ msgid "make char device node"
+#~ msgstr "ക്യാര്‍ ഡിവൈസ് നോഡ് ഉണ്ടാക്കുക"
+
+#~ msgid "create a swap partition"
+#~ msgstr "ഒരു സ്വാപ്പ് പാര്‍ട്ടീഷന്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "create a swap partition with a label"
+#~ msgstr "ഒരു സ്വാപ്പ് പാര്‍ട്ടീഷന്‍ ലേബലിനൊപ്പം ഉണ്ടാക്കുക"
+
+#~ msgid "create a swap partition with an explicit UUID"
+#~ msgstr "ഒരു സ്വാപ്പ് പാര്‍ട്ടീഷന്‍ UUID-യ്ക്കൊപ്പം ഉണ്ടാക്കുക"
+
+#~ msgid "create a swap file"
+#~ msgstr "ഒരു സ്വാപ്പ് ഫയല്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "load a kernel module"
+#~ msgstr "ഒരു കേര്‍ണല്‍ ഘടകം ലഭ്യമാക്കുക"
+
+#~ msgid "mount a guest disk at a position in the filesystem"
+#~ msgstr "ഫയല്‍സിസ്റ്റമിലുള്ള ഒരു സ്ഥാനത്തു് ഒരു ഗസ്റ്റ് ഡിസ്ക് മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "mount a file using the loop device"
+#~ msgstr "ലൂപ്പ് ഡിവൈസ് ഉപയോഗിച്ചു് ഒരു ഫയല്‍ മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "mount a guest disk with mount options"
+#~ msgstr "മൌണ്ട് ഉപാധികളുമായി ഒരു ഗസ്റ്റ് ഡിസ്ക് മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "mount a guest disk, read-only"
+#~ msgstr "ഒരു റീഡ്-ഒണ്‍ലി ഗസ്റ്റ് ഡിസ്ക് മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "mount a guest disk with mount options and vfstype"
+#~ msgstr "മൌണ്ട് ഉപാധികളും vfstype-മായി ഒരു ഗസ്റ്റ് ഡിസ്ക് മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "show mountpoints"
+#~ msgstr "മൌണ്ട് പോയിന്റുകള്‍ കാണിക്കുക"
+
+#~ msgid "show mounted filesystems"
+#~ msgstr "മൌണ്ട് ചെയ്ത ഫയല്‍സിസ്റ്റമുകള്‍ കാണിക്കുക"
+
+#~ msgid "move a file"
+#~ msgstr "ഒരു ഫയല്‍ നീക്കുക"
+
+#~ msgid "probe NTFS volume"
+#~ msgstr "NTFS വോള്യം ആവശ്യപ്പെടുക"
+
+#~ msgid "add a partition to the device"
+#~ msgstr "ഡിവൈസിലേക്ക് ഒരു പാര്‍ട്ടീഷന്‍ ചേര്‍ക്കുക"
+
+#~ msgid "partition whole disk with a single primary partition"
+#~ msgstr "ഒരു പൂര്‍ണ്ണ ഡിസ്ക് ഒറ്റ പ്രൈമറി പാര്‍ട്ടീഷനായി സജ്ജമാക്കുക"
+
+#~ msgid "get the partition table type"
+#~ msgstr "പാര്‍ട്ടീഷന്‍ ടേബിള്‍ തരം ലഭ്യമാക്കുക"
+
+#~ msgid "create an empty partition table"
+#~ msgstr "ഒരു കാലി പാര്‍ട്ടീഷന്‍ ടേബിള്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "list partitions on a device"
+#~ msgstr "ഒരു ഡിവൈസില്‍ പാര്‍ട്ടീഷനുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "make a partition bootable"
+#~ msgstr "ഒരു പാര്‍ട്ടീഷന്‍ ബൂട്ടബിളാക്കുക"
+
+#~ msgid "set partition name"
+#~ msgstr "പാര്‍ട്ടീഷന്‍ നാമം സജ്ജമാക്കുക"
+
+#~ msgid "ping the guest daemon"
+#~ msgstr "ഗസ്റ്റ് ഡെമണിനെ പിങ് ചെയ്യുക"
+
+#~ msgid "read part of a file"
+#~ msgstr "ഒരു ഫയലിന്റെ ഭാഗം വായിക്കുക"
+
+#~ msgid "create an LVM physical volume"
+#~ msgstr "ഒരു എല്‍വിഎം ഫിസിക്കല്‍ വോള്യം ഉണ്ടാക്കുക"
+
+#~ msgid "remove an LVM physical volume"
+#~ msgstr "ഒരു എല്‍വിഎം ഫിസിക്കല്‍ വോള്യം നീക്കം ചെയ്യുക"
+
+#~ msgid "resize an LVM physical volume"
+#~ msgstr "ഒരു എല്‍വിഎം ഫിസിക്കല്‍ വോള്യത്തിന്റെ വ്യാപ്തി മാറ്റുക"
+
+#~ msgid "list the LVM physical volumes (PVs)"
+#~ msgstr "എല്‍വിഎം ഫിസിക്കല്‍ വോള്യമുകള്‍ (പിവി) ലഭ്യമാക്കുക"
+
+#~ msgid "read a file"
+#~ msgstr "ഒരു ഫയല്‍ വായിക്കുക"
+
+#~ msgid "read file as lines"
+#~ msgstr "ഫയല്‍ വരികളായി വായിക്കുക"
+
+#~ msgid "read directories entries"
+#~ msgstr "ഡയറക്ടറികളുടെ എന്‍ട്രികള്‍ വായിക്കുക"
+
+#~ msgid "read the target of a symbolic link"
+#~ msgstr "ഒരു സിംബോളിക് ലിങ്കിനുള്ള ടാര്‍ഗറ്റ് വായിക്കുക"
+
+#~ msgid "readlink on multiple files"
+#~ msgstr "readlink on multiple files"
+
+#~ msgid "canonicalized absolute pathname"
+#~ msgstr "കാണോണിക്കല്‍ ആയ ആബ്സല്യൂട്ട് പാഥ്‌നെയിം"
+
+#~ msgid "resize an ext2/ext3 filesystem"
+#~ msgstr "ഒരു ext2/ext3 ഫയല്‍സിസ്റ്റത്തിന്റെ വ്യാപ്തി മാറ്റുക"
+
+#~ msgid "remove a file"
+#~ msgstr "ഒരു ഫയല്‍ നീക്കം ചെയ്യുക"
+
+#~ msgid "remove a file or directory recursively"
+#~ msgstr "ഒരു ഫയല്‍ അല്ലെങ്കില്‍ ഡയറക്ടറി ആവര്‍ത്തിച്ചു് നീക്കം ചെയ്യുക"
+
+#~ msgid "remove a directory"
+#~ msgstr "ഒരു ഡയറക്ടറി നീക്കം ചെയ്യുക"
+
+#~ msgid "remove a mountpoint"
+#~ msgstr "ഒരു മൌണ്ട്പോയിന്റ് നീക്കം ചെയ്യുക"
+
+#~ msgid "scrub (securely wipe) a device"
+#~ msgstr "ഒരു ഡിവൈസ് സ്ക്രബ് ചെയ്യുക"
+
+#~ msgid "scrub (securely wipe) a file"
+#~ msgstr "ഒരു ഫയല്‍ സ്ക്രബ് ചെയ്യുക"
+
+#~ msgid "scrub (securely wipe) free space"
+#~ msgstr "ഉപയോഗത്തിലില്ലാത്ത സ്ഥലം സ്ക്രബ് ചെയ്യുക"
+
+#~ msgid "add options to kernel command line"
+#~ msgstr "കേര്‍ണല്‍ കമാന്‍ഡ് ലൈനിലേക്ക് ഉപാധികള്‍ ചേര്‍ക്കുക"
+
+#~ msgid "set autosync mode"
+#~ msgstr "autosync മോഡ് സജ്ജമാക്കുക"
+
+#~ msgid "enable or disable direct appliance mode"
+#~ msgstr "നേരിട്ടുള്ള അപ്ലയന്‍സ് മോഡ് പ്രവര്‍ത്തന സജ്ജമാക്കുക അല്ലെങ്കില്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "set the ext2/3/4 filesystem label"
+#~ msgstr "ext2/3/4 ഫയല്‍സിസ്റ്റം ലേബല്‍ സജ്ജമാക്കുക"
+
+#~ msgid "set the ext2/3/4 filesystem UUID"
+#~ msgstr "ext2/3/4 ഫയല്‍സിസ്റ്റം UUID സജ്ജമാക്കുക"
+
+#~ msgid "set memory allocated to the qemu subprocess"
+#~ msgstr "ലഭ്യമാക്കിയ മെമ്മറി qemu  ഉപപ്രക്രിയകള്‍ക്ക് സജ്ജമാക്കുക"
+
+#~ msgid "set the search path"
+#~ msgstr "തെരച്ചില്‍ പാഥ സജ്ജമാക്കുക"
+
+#~ msgid "set the qemu binary"
+#~ msgstr "qemu ബൈനറി സജ്ജമാക്കുക"
+
+#~ msgid "enable or disable the recovery process"
+#~ msgstr "വീണ്ടെടുക്കുന്ന പ്രക്രിയ പ്രവര്‍ത്തന സജ്ജമാക്കുക അല്ലെങ്കില്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "set SELinux enabled or disabled at appliance boot"
+#~ msgstr ""
+#~ "പ്രയോഗം ബൂട്ട് ചെയ്യുമ്പോള്‍ SELinux പ്രവര്‍ത്തന സജ്ജമാക്കുക അല്ലെങ്കില്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "enable or disable command traces"
+#~ msgstr "കമാന്‍ഡ് ട്രെയിസുകള്‍ പ്രവര്‍ത്തന സജ്ജമാക്കുക അല്ലെങ്കില്‍ പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "set verbose mode"
+#~ msgstr "വെര്‍ബോസ് മോഡ് സജ്ജമാക്കുക"
+
+#~ msgid "set SELinux security context"
+#~ msgstr "SELinux സെക്യൂരിറ്റി കോണ്‍ടെക്സ്റ്റ് സജ്ജമാക്കുക"
+
+#~ msgid "create partitions on a block device"
+#~ msgstr "ബ്ലോക്ക് ഡിവൈസില്‍ പാര്‍ട്ടീഷനുകള്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "modify a single partition on a block device"
+#~ msgstr "ഒരു ബ്ലോക്ക് ഡിവൈസില്‍ ഒറ്റ പാര്‍ട്ടീഷനില്‍ മാറ്റം വരുത്തുക"
+
+#~ msgid "display the disk geometry from the partition table"
+#~ msgstr "പാര്‍ട്ടീഷന്‍ ടേബിളില്‍ നിന്നും ഡിസ്കോ ജോമെട്രി കാണിക്കുക"
+
+#~ msgid "display the kernel geometry"
+#~ msgstr "കേര്‍ണല്‍ ജോമെട്രി കാണിക്കുക"
+
+#~ msgid "display the partition table"
+#~ msgstr "പാര്‍ട്ടീഷന്‍ ടേബിള്‍ കാണിക്കുക"
+
+#~ msgid "run a command via the shell"
+#~ msgstr "ഷെല്‍ വഴി കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുക"
+
+#~ msgid "run a command via the shell returning lines"
+#~ msgstr "വരികള്‍ തിരികെ നല്‍കുന്ന ഷെല്‍ വഴി കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുക"
+
+#~ msgid "sleep for some seconds"
+#~ msgstr "അല്‍പം സമയത്തേക്ക് പ്രവര്‍ത്തനം നിര്‍ത്തുക"
+
+#~ msgid "get file information"
+#~ msgstr "ഫയല്‍ വിവരം ലഭ്യമാക്കുക"
+
+#~ msgid "get file system statistics"
+#~ msgstr "ഫയല്‍ സിസ്റ്റത്തിന്റെ സ്ഥിതിവിവരകണക്കുകള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "print the printable strings in a file"
+#~ msgstr "പ്രിന്റ് ചെയ്യുവാന്‍ സാധിക്കുന്ന സ്ട്രിങുകള്‍ ഒരു ഫയലിലേക്ക് പ്രിന്റ് ചെയ്യുക"
+
+#~ msgid "disable swap on device"
+#~ msgstr "ഡിവൈസില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "disable swap on file"
+#~ msgstr "ഫയലില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "disable swap on labeled swap partition"
+#~ msgstr "ലേബല്‍ ചെയ്ത സ്വാപ്പ് പാര്‍ട്ടീഷനില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "disable swap on swap partition by UUID"
+#~ msgstr "UUID ഉപയോഗിച്ചു് സ്വാപ്പ് പാര്‍ട്ടീഷനില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന രഹിതമാക്കുക"
+
+#~ msgid "enable swap on device"
+#~ msgstr "ഡിവൈസില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന സജ്ജമാക്കുക"
+
+#~ msgid "enable swap on file"
+#~ msgstr "ഫയലില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന സജ്ജമാക്കുക"
+
+#~ msgid "enable swap on labeled swap partition"
+#~ msgstr "ലേബല്‍ ചെയ്ത സ്വാപ്പ് പാര്‍ട്ടീഷനില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന സജ്ജമാക്കുക"
+
+#~ msgid "enable swap on swap partition by UUID"
+#~ msgstr "UUID ഉപയോഗിച്ചു് സ്വാപ്പ് പാര്‍ട്ടീഷനില്‍ സ്വാപ്പ് പ്രവര്‍ത്തന സജ്ജമാക്കുക"
+
+#~ msgid "sync disks, writes are flushed through to the disk image"
+#~ msgstr "സിന്‍ക് ഡിസ്കുകള്‍ റൈറ്റുകള്‍ എന്നിവ ഡിസ്ക് ഇമേജ് വഴി വെടിപ്പാക്കുന്നു"
+
+#~ msgid "return last 10 lines of a file"
+#~ msgstr "ഒരു ഫയലിന്റെ അവസാന 10 വരികള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "return last N lines of a file"
+#~ msgstr "ഒരു ഫയലിന്റെ അവസാന N വരികള്‍ തിരികെ ലഭ്യമാക്കുക"
+
+#~ msgid "unpack tarfile to directory"
+#~ msgstr "ഡയറക്ടറിയിലേക്ക് tarfile അണ്‍പാക്ക് ചെയ്യുക"
+
+#~ msgid "pack directory into tarfile"
+#~ msgstr "ഡയറക്ടറി tarfile-ലേക്ക് പാക്ക് ചെയ്യുക"
+
+#~ msgid "unpack compressed tarball to directory"
+#~ msgstr "കംപ്രസ്സ് ചെയ്ത ടാര്‍ബോള്‍ ഡയറക്ടറിയിലേക്ക് അണ്‍പാക്ക് ചെയ്യുക"
+
+#~ msgid "pack directory into compressed tarball"
+#~ msgstr "ഡയറക്ടറി കംപ്രസ്സ് ചെയ്ത ടാര്‍ബോളിലേക്ക് പാക്ക് ചെയ്യുക"
+
+#~ msgid "update file timestamps or create a new file"
+#~ msgstr "ഫയല്‍ ടൈംസ്റ്റാംപുകള്‍ പരിഷ്കരിക്കുക അല്ലെങ്കില്‍ ഒരു പുതിയ ഫയല്‍ നിര്‍മ്മിക്കുക"
+
+#~ msgid "truncate a file to zero size"
+#~ msgstr "ഒരു ഫയല്‍ പൂജ്യം വ്യാപ്തിയിലേക്ക് വെട്ടികുറയ്ക്കുക"
+
+#~ msgid "truncate a file to a particular size"
+#~ msgstr "ഒരു ഫയല്‍ പ്രത്യേക വ്യാപ്തിയിലേക്ക് വെട്ടികുറയ്ക്കുക"
+
+#~ msgid "get ext2/ext3/ext4 superblock details"
+#~ msgstr "ext2/ext3/ext4 സൂപ്പര്‍ ബ്ലോക്ക് വിശദാംശങ്ങള്‍ ലഭ്യമാക്കുക"
+
+#~ msgid "set file mode creation mask (umask)"
+#~ msgstr "ഫയല്‍ മോഡ് ക്രിയേഷന്‍ മാസ്ക് സജ്ജമാക്കുക (അണ്‍മാസ്ക്)"
+
+#~ msgid "unmount a filesystem"
+#~ msgstr "ഒരു ഫയല്‍സിസ്റ്റം അണ്‍മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "unmount all filesystems"
+#~ msgstr "എല്ലാ ഫയല്‍സിസ്റ്റമുകളും അണ്‍മൌണ്ട് ചെയ്യുക"
+
+#~ msgid "upload a file from the local machine"
+#~ msgstr "ലോക്കല്‍ മഷീനില്‍ നിന്നും ഒരു ഫയല്‍ അപ്‌ലോഡ് ചെയ്യുക"
+
+#~ msgid "set timestamp of a file with nanosecond precision"
+#~ msgstr "ഒരു ഫയലിന്റെ ടൈംസ്റ്റാംപ് നാനോസെക്കന്‍ഡ് പ്രിസിഷനില്‍ സജ്ജമാക്കുക"
+
+#~ msgid "get the library version number"
+#~ msgstr "ലൈബ്രറിയുടെ പതിപ്പു് ലഭ്യമാക്കുക"
+
+#~ msgid "get the Linux VFS type corresponding to a mounted device"
+#~ msgstr "ഒരു മൌണ്ട് ചെയ്ത ഡിവൈസിനുള്ള Linux  VFS രീതി ലഭ്യമാക്കുക"
+
+#~ msgid "activate or deactivate some volume groups"
+#~ msgstr "ചില വോള്യം ഗ്രൂപ്പുകള്‍ സജീവം അല്ലെങ്കില്‍ നിര്‍ജീവമാക്കുക"
+
+#~ msgid "activate or deactivate all volume groups"
+#~ msgstr "എല്ലാ വോള്യം ഗ്രൂപ്പുകളും സജീവം അല്ലെങ്കില്‍ നിര്‍ജീവമാക്കുക"
+
+#~ msgid "remove an LVM volume group"
+#~ msgstr "ഒരു എല്‍വിഎം വോള്യം ഗ്രൂപ്പ് നീക്കം ചെയ്യുക"
+
+#~ msgid "list the LVM volume groups (VGs)"
+#~ msgstr "എല്‍വിഎം വോള്യം ഗ്രൂപ്പുകള്‍ (വിജി) ലഭ്യമാക്കുക"
+
+#~ msgid "count characters in a file"
+#~ msgstr "ഒരു ഫയലിലുള്ള അക്ഷരങ്ങള്‍ എണ്ണുക"
+
+#~ msgid "count lines in a file"
+#~ msgstr "ഒരു ഫയലിലുള്ള വരികള്‍ എണ്ണുക"
+
+#~ msgid "count words in a file"
+#~ msgstr "ഒരു ഫയലിലുള്ള വാക്കുകള്‍ എണ്ണുക"
+
+#~ msgid "create a file"
+#~ msgstr "ഒരു ഫയല്‍ ഉണ്ടാക്കുക"
+
+#~ msgid "write zeroes to the device"
+#~ msgstr "ഡിവൈസിലേക്ക് പൂജ്യങ്ങള്‍ സൂക്ഷിക്കുക"
+
+#~ msgid "zero unused inodes and disk blocks on ext2/3 filesystem"
+#~ msgstr "zero unused inodes and disk blocks on ext2/3 filesystem"
+
+#~ msgid "determine file type inside a compressed file"
+#~ msgstr "ഒരു കംപ്രസ്സ്ഡ് ഫയലിലുള്ള ഫയല്‍ രീതി കണ്ടുപിടിക്കുക"
+
+#~ msgid "Use -h <cmd> / help <cmd> to show detailed help for a command."
+#~ msgstr "ഒരു കമാന്‍ഡിന്റെ വിശദവിവരങ്ങള്‍ക്കായി -h <cmd> / help <cmd> ഉപയോഗിക്കുക."
+
+#~ msgid "%s should have %d parameter(s)\n"
+#~ msgstr "%s-ല്‍ %d പരാമീറ്ററുകള്‍ ആവശ്യമുണ്ടു് \n"
+
+#~ msgid "type 'help %s' for help on %s\n"
+#~ msgstr "%s-ലുള്ള ആവശ്യങ്ങള്‍ക്കായി 'help %s' ശ്രമിച്ചു നോക്കുക\n"
+
+#~ msgid "%s: unknown command\n"
+#~ msgstr "%s: അപരിചിതമായ കമാന്‍ഡ്\n"
+
+#~ msgid "use '%s filename' to edit a file\n"
+#~ msgstr "ഒരു ഫയല്‍ ചിട്ടപ്പെടുത്തുന്നതിനായി '%s filename' ഉപയോഗിക്കുക\n"
+
+#~ msgid "Try `%s --help' for more information.\n"
+#~ msgstr "കൂടുതല്‍ വിവരങ്ങള്‍ക്കായി `%s --help' ശ്രമിക്കുക.\n"
+
+#~ msgid ""
+#~ "%s: guest filesystem shell\n"
+#~ "%s lets you edit virtual machine filesystems\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  %s [--options] cmd [: cmd : cmd ...]\n"
+#~ "  %s -i libvirt-domain\n"
+#~ "  %s -i disk-image(s)\n"
+#~ "or for interactive use:\n"
+#~ "  %s\n"
+#~ "or from a shell script:\n"
+#~ "  %s <<EOF\n"
+#~ "  cmd\n"
+#~ "  ...\n"
+#~ "  EOF\n"
+#~ "Options:\n"
+#~ "  -h|--cmd-help        List available commands\n"
+#~ "  -h|--cmd-help cmd    Display detailed help on 'cmd'\n"
+#~ "  -a|--add image       Add image\n"
+#~ "  -D|--no-dest-paths   Don't tab-complete paths from guest fs\n"
+#~ "  -f|--file file       Read commands from file\n"
+#~ "  -i|--inspector       Run virt-inspector to get disk mountpoints\n"
+#~ "  --listen             Listen for remote commands\n"
+#~ "  -m|--mount dev[:mnt] Mount dev on mnt (if omitted, /)\n"
+#~ "  -n|--no-sync         Don't autosync\n"
+#~ "  --remote[=pid]       Send commands to remote %s\n"
+#~ "  -r|--ro              Mount read-only\n"
+#~ "  --selinux            Enable SELinux support\n"
+#~ "  -v|--verbose         Verbose messages\n"
+#~ "  -x                   Echo each command before executing it\n"
+#~ "  -V|--version         Display version and exit\n"
+#~ "For more information,  see the manpage %s(1).\n"
+#~ msgstr ""
+#~ "%s: guest filesystem shell\n"
+#~ "%s lets you edit virtual machine filesystems\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  %s [--options] cmd [: cmd : cmd ...]\n"
+#~ "  %s -i libvirt-domain\n"
+#~ "  %s -i disk-image(s)\n"
+#~ "or for interactive use:\n"
+#~ "  %s\n"
+#~ "or from a shell script:\n"
+#~ "  %s <<EOF\n"
+#~ "  cmd\n"
+#~ "  ...\n"
+#~ "  EOF\n"
+#~ "Options:\n"
+#~ "  -h|--cmd-help        List available commands\n"
+#~ "  -h|--cmd-help cmd    Display detailed help on 'cmd'\n"
+#~ "  -a|--add image       Add image\n"
+#~ "  -D|--no-dest-paths   Don't tab-complete paths from guest fs\n"
+#~ "  -f|--file file       Read commands from file\n"
+#~ "  -i|--inspector       Run virt-inspector to get disk mountpoints\n"
+#~ "  --listen             Listen for remote commands\n"
+#~ "  -m|--mount dev[:mnt] Mount dev on mnt (if omitted, /)\n"
+#~ "  -n|--no-sync         Don't autosync\n"
+#~ "  --remote[=pid]       Send commands to remote %s\n"
+#~ "  -r|--ro              Mount read-only\n"
+#~ "  --selinux            Enable SELinux support\n"
+#~ "  -v|--verbose         Verbose messages\n"
+#~ "  -x                   Echo each command before executing it\n"
+#~ "  -V|--version         Display version and exit\n"
+#~ "For more information,  see the manpage %s(1).\n"
+
+#~ msgid "guestfs_create: failed to create handle\n"
+#~ msgstr "guestfs_create: ഹാന്‍ഡില്‍ ഉണ്ടാക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "%s: --listen=PID: PID was not a number: %s\n"
+#~ msgstr "%s: --listen=PID: PID ഒരു നംബറല്ല: %s\n"
+
+#~ msgid ""
+#~ "%s: remote: $GUESTFISH_PID must be set to the PID of the remote process\n"
+#~ msgstr "%s: remote: റിമോട്ട് പ്രക്രിയയുടെ PID-ലേക്ക് $GUESTFISH_PID സജ്ജമാക്കേണം\n"
+
+#~ msgid "%s: unknown long option: %s (%d)\n"
+#~ msgstr "%s: അപരിചിതമായ ലോങ് ഉപാധി: %s (%d)\n"
+
+#~ msgid "%s: only one -f parameter can be given\n"
+#~ msgstr "%s: ഒരു -f പരാമീറ്റര്‍ മാത്രമേ പാടുള്ളൂ\n"
+
+#~ msgid ""
+#~ "%s: cannot use -i option with -a, -m, --listen, --remote or --selinux\n"
+#~ msgstr ""
+#~ "%s: -a, -m, --listen, --remote അല്ലെങ്കില്‍ --selinux എന്നിവയ്ക്കൊപ്പം -i ഉപാധി "
+#~ "ഉപയോഗിക്കുവാന്‍ സാധ്യമല്ല\n"
+
+#~ msgid "%s: -i requires a libvirt domain or path(s) to disk image(s)\n"
+#~ msgstr ""
+#~ "%s: -i-യ്ക്കു് ഒരു libvirt ഡൊമെയിന്‍ അല്ലെങ്കില്‍ ഡിസ്ക് ഇമേജുകളിലേക്കുള്ള പാഥുകള്‍ ആവശ്യമുണ്ടു്\n"
+
+#~ msgid "%s: virt-inspector command too long for fixed-size buffer\n"
+#~ msgstr "%s: virt-inspector കമാന്‍ഡ് സ്ഥിരമായ വ്യാപ്തിയുള്ള ബഫറിനേക്കാള്‍ വലുതാണു്\n"
+
+#~ msgid "%s: cannot use --listen and --remote options at the same time\n"
+#~ msgstr "%s: ഒരേ സമയത്തു് --listen, --remote എന്നീ ഉപാധികള്‍ ഉപയോഗിക്കുവാന്‍ സാധ്യമല്ല\n"
+
+#~ msgid "%s: extra parameters on the command line with --listen flag\n"
+#~ msgstr "%s: --listen ഫ്ലാഗിനൊപ്പം കമാന്‍ഡ് ലൈനില്‍ അധികമായ പരാമീറ്ററുകള്‍\n"
+
+#~ msgid "%s: cannot use --listen and --file options at the same time\n"
+#~ msgstr "%s: ഒരേ സമയത്തു് --listen, --file എന്നീ ഉപാധികള്‍ ഉപയോഗിക്കുവാന്‍ സാധ്യമല്ല\n"
+
+#~ msgid "%s: unterminated double quote\n"
+#~ msgstr "%s: അപൂര്‍ണ്ണമായ ഡബിള്‍ കോട്ട്\n"
+
+#~ msgid "%s: command arguments not separated by whitespace\n"
+#~ msgstr "%s: കമാന്‍ഡ് ആര്‍ഗ്യുമെന്റുകള്‍ വൈറ്റ്സ്പെയിസ് ഉപയോഗിച്ചു് വേര്‍തിരിച്ചിട്ടില്ല\n"
+
+#~ msgid "%s: unterminated single quote\n"
+#~ msgstr "%s: അപൂര്‍ണ്ണമായ സിംഗിള്‍ കോട്ട്\n"
+
+#~ msgid "%s: internal error parsing string at '%s'\n"
+#~ msgstr "%s: '%s'-ല്‍ സ്ട്രിങ് പാഴ്സ് ചെയ്യുമ്പോള്‍ ഇന്റേര്‍ണല്‍ പിശക്\n"
+
+#~ msgid "%s: too many arguments\n"
+#~ msgstr "%s: അനവധി ആര്‍ഗ്യുമെന്റുകള്‍\n"
+
+#~ msgid "%s: empty command on command line\n"
+#~ msgstr "%s: കമാന്‍ഡ് ലൈനില്‍ കാലിയായ കമാന്‍ഡ്\n"
+
+#~ msgid "display a list of commands or help on a command"
+#~ msgstr "കമാന്‍ഡുകളുടെ ഒരു പട്ടിക അല്ലെങ്കില്‍ ഒരു കമാന്‍ഡിനുള്ള സഹായം കാണിക്കുക"
+
+#~ msgid "quit guestfish"
+#~ msgstr "guestfish-ല്‍ നിന്നും പുറത്തു് കടക്കുക"
+
+#~ msgid "allocate an image"
+#~ msgstr "ഒരു ചിത്രം അനുവദിക്കുക"
+
+#~ msgid "display a line of text"
+#~ msgstr "ഒരു വരി കാണിക്കുക"
+
+#~ msgid "edit a file in the image"
+#~ msgstr "ചിത്രത്തില്‍ ഒരു ഫയലില്‍ മാറ്റം വരുത്തുക"
+
+#~ msgid "local change directory"
+#~ msgstr "പ്രാദേശികമായി മാറ്റുവാനുള്ള ഡയറക്ടറി"
+
+#~ msgid "expand wildcards in command"
+#~ msgstr "കമാന്‍ഡില്‍ വൈള്‍ഡ്കാര്‍ഡുകള്‍ വികസിപ്പിക്കുക"
+
+#~ msgid "view a file in the pager"
+#~ msgstr "പേജറില്‍ ഒരു ഫയല്‍ കാണുക"
+
+#~ msgid "close and reopen libguestfs handle"
+#~ msgstr "libguestfs ഹാന്‍ഡില്‍ അടയ്ക്കുക, ശേഷം വീണ്ടും തുറക്കുക"
+
+#~ msgid "allocate a sparse image file"
+#~ msgstr "ഒരു സ്പാഴ്സ് ഇമേജ് ഫയല്‍ അനുവദിക്കുക"
+
+#~ msgid "measure time taken to run command"
+#~ msgstr "ഒരു കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുന്നതിനുള്ള സമയം അളക്കുക"
+
+#~ msgid ""
+#~ "alloc - allocate an image\n"
+#~ "     alloc <filename> <size>\n"
+#~ "\n"
+#~ "    This creates an empty (zeroed) file of the given size,\n"
+#~ "    and then adds so it can be further examined.\n"
+#~ "\n"
+#~ "    For more advanced image creation, see qemu-img utility.\n"
+#~ "\n"
+#~ "    Size can be specified (where <nn> means a number):\n"
+#~ "    <nn>             number of kilobytes\n"
+#~ "      eg: 1440       standard 3.5\" floppy\n"
+#~ "    <nn>K or <nn>KB  number of kilobytes\n"
+#~ "    <nn>M or <nn>MB  number of megabytes\n"
+#~ "    <nn>G or <nn>GB  number of gigabytes\n"
+#~ "    <nn>T or <nn>TB  number of terabytes\n"
+#~ "    <nn>P or <nn>PB  number of petabytes\n"
+#~ "    <nn>E or <nn>EB  number of exabytes\n"
+#~ "    <nn>sects        number of 512 byte sectors\n"
+#~ msgstr ""
+#~ "alloc - allocate an image\n"
+#~ "     alloc <filename> <size>\n"
+#~ "\n"
+#~ "    This creates an empty (zeroed) file of the given size,\n"
+#~ "    and then adds so it can be further examined.\n"
+#~ "\n"
+#~ "    For more advanced image creation, see qemu-img utility.\n"
+#~ "\n"
+#~ "    Size can be specified (where <nn> means a number):\n"
+#~ "    <nn>             number of kilobytes\n"
+#~ "      eg: 1440       standard 3.5\" floppy\n"
+#~ "    <nn>K or <nn>KB  number of kilobytes\n"
+#~ "    <nn>M or <nn>MB  number of megabytes\n"
+#~ "    <nn>G or <nn>GB  number of gigabytes\n"
+#~ "    <nn>T or <nn>TB  number of terabytes\n"
+#~ "    <nn>P or <nn>PB  number of petabytes\n"
+#~ "    <nn>E or <nn>EB  number of exabytes\n"
+#~ "    <nn>sects        number of 512 byte sectors\n"
+
+#~ msgid ""
+#~ "echo - display a line of text\n"
+#~ "     echo [<params> ...]\n"
+#~ "\n"
+#~ "    This echos the parameters to the terminal.\n"
+#~ msgstr ""
+#~ "echo - display a line of text\n"
+#~ "     echo [<params> ...]\n"
+#~ "\n"
+#~ "    പരാമീറ്ററുകള്‍ ടെര്‍മിനലിലേക്കു് എക്കോ ചെയ്യുന്നു.\n"
+
+#~ msgid ""
+#~ "edit - edit a file in the image\n"
+#~ "     edit <filename>\n"
+#~ "\n"
+#~ "    This is used to edit a file.\n"
+#~ "\n"
+#~ "    It is the equivalent of (and is implemented by)\n"
+#~ "    running \"cat\", editing locally, and then \"write-file\".\n"
+#~ "\n"
+#~ "    Normally it uses $EDITOR, but if you use the aliases\n"
+#~ "    \"vi\" or \"emacs\" you will get those editors.\n"
+#~ "\n"
+#~ "    NOTE: This will not work reliably for large files\n"
+#~ "    (> 2 MB) or binary files containing \\0 bytes.\n"
+#~ msgstr ""
+#~ "edit - edit a file in the image\n"
+#~ "     edit <filename>\n"
+#~ "\n"
+#~ "    This is used to edit a file.\n"
+#~ "\n"
+#~ "    It is the equivalent of (and is implemented by)\n"
+#~ "    running \"cat\", editing locally, and then \"write-file\".\n"
+#~ "\n"
+#~ "    Normally it uses $EDITOR, but if you use the aliases\n"
+#~ "    \"vi\" or \"emacs\" you will get those editors.\n"
+#~ "\n"
+#~ "    NOTE: This will not work reliably for large files\n"
+#~ "    (> 2 MB) or binary files containing \\0 bytes.\n"
+
+#~ msgid ""
+#~ "lcd - local change directory\n"
+#~ "    lcd <directory>\n"
+#~ "\n"
+#~ "    Change guestfish's current directory. This command is\n"
+#~ "    useful if you want to download files to a particular\n"
+#~ "    place.\n"
+#~ msgstr ""
+#~ "lcd - local change directory\n"
+#~ "    lcd <directory>\n"
+#~ "\n"
+#~ "    guestfish-ന്റെ ഇപ്പോഴുള്ള ഡയറക്ടറി മാറ്റുക. ഒരു പ്രത്യേക സ്ഥലത്തേക്കു്\n"
+#~ "    ഫയലുകള്‍ ഡൌണ്‍ലോഡ് ചെയ്യുന്നതിനായി ഈ കമാന്‍ഡ്\n"
+#~ "    ഉപയോഗപ്പെടുന്നു.\n"
+
+#~ msgid ""
+#~ "glob - expand wildcards in command\n"
+#~ "    glob <command> [<args> ...]\n"
+#~ "\n"
+#~ "    Glob runs <command> with wildcards expanded in any\n"
+#~ "    command args.  Note that the command is run repeatedly\n"
+#~ "    once for each expanded argument.\n"
+#~ msgstr ""
+#~ "glob - expand wildcards in command\n"
+#~ "    glob <command> [<args> ...]\n"
+#~ "\n"
+#~ "    എത്ര കമാന്‍ഡ് ആര്‍ഗ്യുമെന്റുകളിലും വികസിപ്പിച്ച വൈള്‍ഡ്കാര്‍ഡിനൊപ്പം\n"
+#~ "    Glob <command> പ്രവര്‍ത്തിപ്പിക്കുന്നു. ഓരോ വികസിച്ച ആര്‍ഗ്യുമെന്റിനും\n"
+#~ "    കമാന്‍ഡ് ഓരോ തവണ ആവര്‍ത്തിക്കുന്നു.\n"
+
+#~ msgid ""
+#~ "help - display a list of commands or help on a command\n"
+#~ "     help cmd\n"
+#~ "     help\n"
+#~ msgstr ""
+#~ "help - കമാന്‍ഡുകളുടെ ഒരു പട്ടിക അല്ലെങ്കില്‍ ഒരു കമാന്‍ഡിനുള്ള സഹായം കാണിക്കുന്നു\n"
+#~ "     help cmd\n"
+#~ "     help\n"
+
+#~ msgid ""
+#~ "more - view a file in the pager\n"
+#~ "     more <filename>\n"
+#~ "\n"
+#~ "    This is used to view a file in the pager.\n"
+#~ "\n"
+#~ "    It is the equivalent of (and is implemented by)\n"
+#~ "    running \"cat\" and using the pager.\n"
+#~ "\n"
+#~ "    Normally it uses $PAGER, but if you use the alias\n"
+#~ "    \"less\" then it always uses \"less\".\n"
+#~ "\n"
+#~ "    NOTE: This will not work reliably for large files\n"
+#~ "    (> 2 MB) or binary files containing \\0 bytes.\n"
+#~ msgstr ""
+#~ "more - view a file in the pager\n"
+#~ "     more <filename>\n"
+#~ "\n"
+#~ "    This is used to view a file in the pager.\n"
+#~ "\n"
+#~ "    It is the equivalent of (and is implemented by)\n"
+#~ "    running \"cat\" and using the pager.\n"
+#~ "\n"
+#~ "    Normally it uses $PAGER, but if you use the alias\n"
+#~ "    \"less\" then it always uses \"less\".\n"
+#~ "\n"
+#~ "    NOTE: This will not work reliably for large files\n"
+#~ "    (> 2 MB) or binary files containing \\0 bytes.\n"
+
+#~ msgid ""
+#~ "quit - quit guestfish\n"
+#~ "     quit\n"
+#~ msgstr ""
+#~ "quit - quit guestfish\n"
+#~ "     quit\n"
+
+#~ msgid ""
+#~ "reopen - close and reopen the libguestfs handle\n"
+#~ "     reopen\n"
+#~ "\n"
+#~ "Close and reopen the libguestfs handle.  It is not necessary to use\n"
+#~ "this normally, because the handle is closed properly when guestfish\n"
+#~ "exits.  However this is occasionally useful for testing.\n"
+#~ msgstr ""
+#~ "reopen - close and reopen the libguestfs handle\n"
+#~ "     reopen\n"
+#~ "\n"
+#~ "libguestfs ഹാന്‍ഡില്‍ അടച്ചു് വീണ്ടും തുറക്കുക.  ഇതു് സാധാരണയായി ഉപയോഗിക്കേണ്ടതില്ല,\n"
+#~ "കാരണം guestfish പുറത്തുകടക്കുമ്പോള്‍ ഹാന്‍ഡില്‍ ശരിയായി അടയ്ക്കപ്പെടുന്നു.\n"
+#~ "എന്നിരുന്നാലും , ചില പരീക്ഷണങ്ങള്‍ക്കായി ഇതു് ഉപയോഗപ്പെടുന്നു.\n"
+
+#~ msgid ""
+#~ "sparse - allocate a sparse image file\n"
+#~ "     sparse <filename> <size>\n"
+#~ "\n"
+#~ "    This creates an empty sparse file of the given size,\n"
+#~ "    and then adds so it can be further examined.\n"
+#~ "\n"
+#~ "    In all respects it works the same as the 'alloc'\n"
+#~ "    command, except that the image file is allocated\n"
+#~ "    sparsely, which means that disk blocks are not assigned\n"
+#~ "    to the file until they are needed.  Sparse disk files\n"
+#~ "    only use space when written to, but they are slower\n"
+#~ "    and there is a danger you could run out of real disk\n"
+#~ "    space during a write operation.\n"
+#~ "\n"
+#~ "    For more advanced image creation, see qemu-img utility.\n"
+#~ "\n"
+#~ "    Size can be specified (where <nn> means a number):\n"
+#~ "    <nn>             number of kilobytes\n"
+#~ "      eg: 1440       standard 3.5\" floppy\n"
+#~ "    <nn>K or <nn>KB  number of kilobytes\n"
+#~ "    <nn>M or <nn>MB  number of megabytes\n"
+#~ "    <nn>G or <nn>GB  number of gigabytes\n"
+#~ "    <nn>T or <nn>TB  number of terabytes\n"
+#~ "    <nn>P or <nn>PB  number of petabytes\n"
+#~ "    <nn>E or <nn>EB  number of exabytes\n"
+#~ "    <nn>sects        number of 512 byte sectors\n"
+#~ msgstr ""
+#~ "sparse - allocate a sparse image file\n"
+#~ "     sparse <filename> <size>\n"
+#~ "\n"
+#~ "    This creates an empty sparse file of the given size,\n"
+#~ "    and then adds so it can be further examined.\n"
+#~ "\n"
+#~ "    In all respects it works the same as the 'alloc'\n"
+#~ "    command, except that the image file is allocated\n"
+#~ "    sparsely, which means that disk blocks are not assigned\n"
+#~ "    to the file until they are needed.  Sparse disk files\n"
+#~ "    only use space when written to, but they are slower\n"
+#~ "    and there is a danger you could run out of real disk\n"
+#~ "    space during a write operation.\n"
+#~ "\n"
+#~ "    For more advanced image creation, see qemu-img utility.\n"
+#~ "\n"
+#~ "    Size can be specified (where <nn> means a number):\n"
+#~ "    <nn>             number of kilobytes\n"
+#~ "      eg: 1440       standard 3.5\" floppy\n"
+#~ "    <nn>K or <nn>KB  number of kilobytes\n"
+#~ "    <nn>M or <nn>MB  number of megabytes\n"
+#~ "    <nn>G or <nn>GB  number of gigabytes\n"
+#~ "    <nn>T or <nn>TB  number of terabytes\n"
+#~ "    <nn>P or <nn>PB  number of petabytes\n"
+#~ "    <nn>E or <nn>EB  number of exabytes\n"
+#~ "    <nn>sects        number of 512 byte sectors\n"
+
+#~ msgid ""
+#~ "time - measure time taken to run command\n"
+#~ "    time <command> [<args> ...]\n"
+#~ "\n"
+#~ "    This runs <command> as usual, and prints the elapsed\n"
+#~ "    time afterwards.\n"
+#~ msgstr ""
+#~ "time - ഒരു കമാന്‍ഡ് പ്രവര്‍ത്തിപ്പിക്കുന്നതിനുള്ള സമയം അളക്കുന്നു\n"
+#~ "    time <command> [<args> ...]\n"
+#~ "\n"
+#~ "    പതിവു് പോലെ ഇതു് <command> പ്രവര്‍ത്തിപ്പിക്കുന്നു, കൂടാതെ അതിനുശേഷമുള്ള\n"
+#~ "    സമയം പ്രിന്റ് ചെയ്യുന്നു.\n"
+
+#~ msgid "%s: command not known, use -h to list all commands\n"
+#~ msgstr "%s: കമാന്‍ഡ് അപരിചിതം, എല്ലാ കമാന്‍ഡുകളും ലഭ്യമാക്കുന്നതിനായി -h ഉപയോഗിക്കുക\n"
+
+#~ msgid "Runaway quote in string \"%s\"\n"
+#~ msgstr "Runaway quote in string \"%s\"\n"
+
+#~ msgid "use 'glob command [args...]'\n"
+#~ msgstr "'glob command [args...]' ഉപയോഗിക്കുക\n"
+
+#~ msgid "glob: guestfs_glob_expand call failed: %s\n"
+#~ msgstr "glob: guestfs_glob_expand കോള്‍ പരാജയപ്പെട്ടു: %s\n"
+
+#~ msgid "use 'lcd directory' to change local directory\n"
+#~ msgstr "ലോക്കല്‍ ഡയറക്ടറി മാറ്റുന്നതിനായി 'lcd directory' ഉപയോഗിക്കുക\n"
+
+#~ msgid "use '%s filename' to page a file\n"
+#~ msgstr "ഒരു ഫയല്‍ താളിലാക്കുന്നതിനായി '%s filename' ഉപയോഗിക്കുക\n"
+
+#~ msgid "guestfish: protocol error: could not read 'hello' message\n"
+#~ msgstr "guestfish: protocol error: 'hello' സന്ദേശം വായിക്കുവാന്‍ സാധ്യമല്ല\n"
+
+#~ msgid ""
+#~ "guestfish: protocol error: version mismatch, server version '%s' does not "
+#~ "match client version '%s'.  The two versions must match exactly.\n"
+#~ msgstr ""
+#~ "guestfish: protocol error: പതിപ്പില്‍ പൊരുത്തപ്പേടു്, '%s' എന്ന സര്‍വര്‍ പതിപ്പു് ക്ലയന്റ് "
+#~ "പതിപ്പു് '%s'-മായി പൊരുത്തപ്പെടുന്നില്ല.  രണ്ടും ഒരേപോലെ ആയിരിക്കണം.\n"
+
+#~ msgid "guestfish: remote: looks like the server is not running\n"
+#~ msgstr "guestfish: remote: സര്‍വര്‍ പ്രവര്‍ത്തിക്കുന്നില്ല\n"
+
+#~ msgid ""
+#~ "guestfish: protocol error: could not send initial greeting to server\n"
+#~ msgstr ""
+#~ "guestfish: protocol error: പ്രാരംഭ സന്ദേശം സര്‍വറിലേക്ക് അയയ്ക്കുവാന്‍ സാധ്യമായില്ല\n"
+
+#~ msgid "guestfish: protocol error: could not decode reply from server\n"
+#~ msgstr ""
+#~ "guestfish: protocol error:സര്‍വറില്‍ നിന്നുള്ള മറുപടി ഡീക്കോഡ് ചെയ്യുവാന്‍ സാധ്യമല്ല\n"
+
+#~ msgid "'reopen' command takes no parameters\n"
+#~ msgstr "'reopen' കമാന്‍ഡ് പരാമീറ്ററുകള്‍ സ്വീകരിക്കുന്നില്ല\n"
+
+#~ msgid "reopen: guestfs_create: failed to create handle\n"
+#~ msgstr "reopen: guestfs_create: ഹാന്‍ഡില്‍ ഉണ്ടാക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "use 'time command [args...]'\n"
+#~ msgstr "'time command [args...]' ഉപയോഗിക്കുക\n"
+
+#~ msgid ""
+#~ "%s: FUSE module for libguestfs\n"
+#~ "%s lets you mount a virtual machine filesystem\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  %s [--options] [-- [--FUSE-options]] mountpoint\n"
+#~ "Options:\n"
+#~ "  -a|--add image       Add image\n"
+#~ "  --dir-cache-timeout  Set readdir cache timeout (default 5 sec)\n"
+#~ "  --fuse-help          Display extra FUSE options\n"
+#~ "  --help               Display help message and exit\n"
+#~ "  -m|--mount dev[:mnt] Mount dev on mnt (if omitted, /)\n"
+#~ "  -n|--no-sync         Don't autosync\n"
+#~ "  -o|--option opt      Pass extra option to FUSE\n"
+#~ "  -r|--ro              Mount read-only\n"
+#~ "  --selinux            Enable SELinux support\n"
+#~ "  --trace              Trace guestfs API calls (to stderr)\n"
+#~ "  -v|--verbose         Verbose messages\n"
+#~ "  -V|--version         Display version and exit\n"
+#~ msgstr ""
+#~ "%s: FUSE module for libguestfs\n"
+#~ "%s lets you mount a virtual machine filesystem\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  %s [--options] [-- [--FUSE-options]] mountpoint\n"
+#~ "Options:\n"
+#~ "  -a|--add image       Add image\n"
+#~ "  --dir-cache-timeout  Set readdir cache timeout (default 5 sec)\n"
+#~ "  --fuse-help          Display extra FUSE options\n"
+#~ "  --help               Display help message and exit\n"
+#~ "  -m|--mount dev[:mnt] Mount dev on mnt (if omitted, /)\n"
+#~ "  -n|--no-sync         Don't autosync\n"
+#~ "  -o|--option opt      Pass extra option to FUSE\n"
+#~ "  -r|--ro              Mount read-only\n"
+#~ "  --selinux            Enable SELinux support\n"
+#~ "  --trace              Trace guestfs API calls (to stderr)\n"
+#~ "  -v|--verbose         Verbose messages\n"
+#~ "  -V|--version         Display version and exit\n"
+
+#~ msgid "%s: must have at least one -a and at least one -m option\n"
+#~ msgstr "%s: കുറഞ്ഞതു് ഒരു -a ഉപാധിയും ഒരു -m ഉപാധിയും ആവശ്യമുണ്ടു്\n"
+
+#~ msgid "%s: you must specify a mountpoint in the host filesystem\n"
+#~ msgstr "%s: ഹോസ്റ്റ് ഫയല്‍സിസ്റ്റത്തില്‍ ഒരു മൌണ്ട് പോയിന്റ് നല്‍കണം\n"
+
+#~ msgid "guestfs_close: called twice on the same handle\n"
+#~ msgstr "guestfs_close: ഒരേ ഹാന്‍ഡിലില്‍ രണ്ടു് തവണ വിളിച്ചിരിക്കുന്നു\n"
+
+#~ msgid "libguestfs: error: %s\n"
+#~ msgstr "libguestfs: പിശക്: %s\n"
+
+#~ msgid "command line cannot be altered after qemu subprocess launched"
+#~ msgstr "qemu ഉപപ്രക്രിയ വിന്യസിച്ചശേഷം കമാന്‍ഡ് ലൈനില്‍ മാറ്റം വരുത്തുവാന്‍ സാധ്യമല്ല"
+
+#~ msgid "guestfs_config: parameter must begin with '-' character"
+#~ msgstr "guestfs_config: പരാമീറ്റര്‍ '-' ഉപയോഗിച്ചു് ആരംഭിക്കണം"
+
+#~ msgid "guestfs_config: parameter '%s' not allowed"
+#~ msgstr "guestfs_config: പരാമീറ്റര്‍ '%s' അനുവദിച്ചിട്ടില്ല"
+
+#~ msgid "filename cannot contain ',' (comma) character"
+#~ msgstr "ഫയല്‍നാമത്തില്‍ ',' (കോമാ) അടങ്ങുന്നു"
+
+#~ msgid "you must call guestfs_add_drive before guestfs_launch"
+#~ msgstr "guestfs_launch-നു് മുമ്പു് guestfs_add_drive വിളിക്കേണ്ടതു്"
+
+#~ msgid "qemu has already been launched"
+#~ msgstr "qemu നിലവില്‍ വിന്യസിച്ചിരിക്കുന്നു"
+
+#~ msgid "%s: cannot create temporary directory"
+#~ msgstr "%s: താല്‍ക്കാലിക ഡയറക്ടറി ഉണ്ടാക്കുവാന്‍ സാധ്യമല്ല"
+
+#~ msgid "cannot find %s or %s on LIBGUESTFS_PATH (current path = %s)"
+#~ msgstr "LIBGUESTFS_PATH-ല്‍ %s അല്ലെങ്കില്‍ %s ലഭ്യമല്ല (ഇപ്പോഴുള്ള പാഥ് = %s)"
+
+#~ msgid "failed to connect to vmchannel socket"
+#~ msgstr "vmchannel സോക്കറ്റിലേക്കു് കണക്ട് ചെയ്യുന്നതില്‍ പരാജയപ്പെട്ടു"
+
+#~ msgid "guestfs_launch failed, see earlier error messages"
+#~ msgstr "guestfs_launch പരാജയപ്പെട്ടു, മുമ്പുള്ള പിശക് സന്ദേശങ്ങള്‍ കാണുക"
+
+#~ msgid "qemu launched and contacted daemon, but state != READY"
+#~ msgstr "qemu വിന്യസിച്ചു് ഡെമണുമായി ബന്ധപ്പെട്ടു, പക്ഷേ state != READY"
+
+#~ msgid "external command failed: %s"
+#~ msgstr "എക്സ്റ്റേണല്‍ കമാന്‍ഡ് പരാജയപ്പെട്ടു: %s"
+
+#~ msgid ""
+#~ "%s: command failed: If qemu is located on a non-standard path, try "
+#~ "setting the LIBGUESTFS_QEMU environment variable."
+#~ msgstr ""
+#~ "%s: കമാന്‍ഡ് പരാജയപ്പെട്ടു: നിലവാരമില്ലാത്ത പാഥിലാണു് qemu ലഭ്യമെങ്കില്‍, "
+#~ "LIBGUESTFS_QEMU എന്‍വയോണ്മെന്റ് വേരിയബിള്‍ സജ്ജമാക്കുവാന്‍ ശ്രമിക്കുക."
+
+#~ msgid "qemu has not been launched yet"
+#~ msgstr "qemu ഇതുവരെ വിന്യസിച്ചിട്ടില്ല"
+
+#~ msgid "no subprocess to kill"
+#~ msgstr "ഇല്ലാതാക്കുന്നതിനായി ഉപപ്രക്രിയകളില്ല"
+
+#~ msgid "guestfs_set_busy: called when in state %d != READY"
+#~ msgstr "guestfs_set_busy: %d != READY അവസ്ഥയില്‍ വിളിച്ചിരിക്കുന്നു"
+
+#~ msgid "guestfs_end_busy: called when in state %d"
+#~ msgstr "guestfs_end_busy: %d അവസ്ഥയില്‍ വിളിച്ചിരിക്കുന്നു"
+
+#~ msgid ""
+#~ "check_for_daemon_cancellation_or_eof: read 0x%x from daemon, expected 0x%"
+#~ "x\n"
+#~ msgstr ""
+#~ "check_for_daemon_cancellation_or_eof: read 0x%x from daemon, expected 0x%"
+#~ "x\n"
+
+#~ msgid "unexpected end of file when reading from daemon"
+#~ msgstr "ഡെമണില്‍ നിന്നും വായിക്കുമ്പോള്‍ അപ്രതീക്ഷിതമായി ഫയല്‍ അവസാനിച്ചിരിക്കുന്നു"
+
+#~ msgid "received magic signature from guestfsd, but in state %d"
+#~ msgstr "guestfsd-ല്‍ നിന്നും ഒപ്പ് ലഭിച്ചു, പക്ഷേ %d അവസ്ഥയില്‍"
+
+#~ msgid "message length (%u) > maximum possible size (%d)"
+#~ msgstr "സന്ദേശത്തിന്റെ നീളം (%u) > ഏറ്റവും കൂടിയ സാധ്യമായ വ്യാപ്തി (%d)"
+
+#~ msgid "guestfs___send: state %d != BUSY"
+#~ msgstr "guestfs___send: അവസ്ഥ %d != BUSY"
+
+#~ msgid "xdr_guestfs_message_header failed"
+#~ msgstr "xdr_guestfs_message_header പരാജയപ്പെട്ടു"
+
+#~ msgid "dispatch failed to marshal args"
+#~ msgstr "മാര്‍ഷല്‍ ആര്‍ഗ്യുമെന്റുകളിലേക്കു് നല്‍കുന്നതു് പരാജയപ്പെട്ടു"
+
+#~ msgid "send_file_chunk: state %d != READY"
+#~ msgstr "send_file_chunk: അവസ്ഥ %d != READY"
+
+#~ msgid "xdr_guestfs_chunk failed (buf = %p, buflen = %zu)"
+#~ msgstr "xdr_guestfs_chunk പരാജയപ്പെട്ടു (buf = %p, buflen = %zu)"
+
+#~ msgid "%s: error in chunked encoding"
+#~ msgstr "%s: ചങ്ക്ഡ് എന്‍കോഡിങില്‍ പിശക്"
+
+#~ msgid "write to daemon socket"
+#~ msgstr "ഡെമണ്‍ സോക്കറ്റിലേക്ക് സൂക്ഷിക്കുക"
+
+#~ msgid "receive_file_data: parse error in reply callback"
+#~ msgstr "receive_file_data: parse error in reply callback"
+
+#~ msgid "receive_file_data: unexpected flag received when reading file chunks"
+#~ msgstr "receive_file_data: ഫയല്‍ ലഭ്യമാക്കുമ്പോള്‍ അപ്രതീക്ഷിതമായ ഫ്ലാഗ് ലഭിച്ചിരിക്കുന്നു"
+
+#~ msgid "failed to parse file chunk"
+#~ msgstr "ഫയല്‍ പാഴ്സ് ചെയ്യുന്നതില്‍ പരാജയപ്പെട്ടു"
+
+#~ msgid "file receive cancelled by daemon"
+#~ msgstr "ഫയല്‍ ലഭ്യമാക്കുന്നതു് ഡെമണ്‍ റദ്ദാക്കിയിരിക്കുന്നു"
+
+#~ msgid ""
+#~ "libguestfs-test-tool: interactive test tool\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  libguestfs-test-tool [--options]\n"
+#~ "Options:\n"
+#~ "  --help         Display usage\n"
+#~ "  --helper libguestfs-test-tool-helper\n"
+#~ "                 Helper program (default: %s)\n"
+#~ "  --qemudir dir  Specify QEMU source directory\n"
+#~ "  --qemu qemu    Specify QEMU binary\n"
+#~ "  --timeout n\n"
+#~ "  -t n           Set launch timeout (default: %d seconds)\n"
+#~ msgstr ""
+#~ "libguestfs-test-tool: interactive test tool\n"
+#~ "Copyright (C) 2009 Red Hat Inc.\n"
+#~ "Usage:\n"
+#~ "  libguestfs-test-tool [--options]\n"
+#~ "Options:\n"
+#~ "  --help         Display usage\n"
+#~ "  --helper libguestfs-test-tool-helper\n"
+#~ "                 Helper program (default: %s)\n"
+#~ "  --qemudir dir  Specify QEMU source directory\n"
+#~ "  --qemu qemu    Specify QEMU binary\n"
+#~ "  --timeout n\n"
+#~ "  -t n           Set launch timeout (default: %d seconds)\n"
+
+#~ msgid "libguestfs-test-tool: unknown long option: %s (%d)\n"
+#~ msgstr "libguestfs-test-tool: അപരിചിതമായ ലോങ് ഉപാധി: %s (%d)\n"
+
+#~ msgid "libguestfs-test-tool: invalid timeout: %s\n"
+#~ msgstr "libguestfs-test-tool: invalid timeout: %s\n"
+
+#~ msgid "libguestfs-test-tool: unexpected command line option 0x%x\n"
+#~ msgstr "libguestfs-test-tool: അപ്രതീക്ഷിതമായ കമാന്‍ഡ് ലൈന്‍ ഉപാധി 0x%x\n"
+
+#~ msgid "libguestfs-test-tool: failed to create libguestfs handle\n"
+#~ msgstr "libguestfs-test-tool: libguestfs ഹാന്‍ഡില്‍ ഉണ്ടാക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to add drive '%s'\n"
+#~ msgstr "libguestfs-test-tool: ഡ്രൈവ് '%s' ചേര്‍ക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: guestfs_version failed\n"
+#~ msgstr "libguestfs-test-tool: guestfs_version പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to launch appliance\n"
+#~ msgstr "libguestfs-test-tool: പ്രയോഗം ലഭ്യമാക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to run sfdisk\n"
+#~ msgstr "libguestfs-test-tool: sfdisk പ്രവര്‍ത്തിപ്പിക്കുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to mkfs.ext2\n"
+#~ msgstr "libguestfs-test-tool: mkfs.ext2 പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to mount /dev/sda1 on /\n"
+#~ msgstr "libguestfs-test-tool: /dev/sda1 /-ല്‍ മൌണ്ട് ചെയ്യുന്നതില്‍ പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to mkdir /iso\n"
+#~ msgstr "libguestfs-test-tool: mkdir /iso പരാജയപ്പെട്ടു\n"
+
+#~ msgid "libguestfs-test-tool: failed to mount /dev/sdb on /iso\n"
+#~ msgstr "libguestfs-test-tool: /dev/sdb /iso-ല്‍ മൌണ്ട് ചെയ്യുന്നതില്‍ പരാജയം\n"
+
+#~ msgid ""
+#~ "libguestfs-test-tool: could not run helper program, or helper failed\n"
+#~ msgstr ""
+#~ "libguestfs-test-tool: സഹായത്തിനുള്ള പ്രോഗ്രാം പ്രവര്‍ത്തിക്കുവാന്‍ സാധ്യമായില്ല, "
+#~ "അല്ലെങ്കില്‍ സഹായി പരാജയപ്പെട്ടു\n"
+
+#~ msgid ""
+#~ "LIBGUESTFS_QEMU environment variable is already set, so\n"
+#~ "--qemu/--qemudir options cannot be used.\n"
+#~ msgstr ""
+#~ "LIBGUESTFS_QEMU എന്‍വയോണ്മെന്റ് വേരിയബിള്‍ നിലവില്‍ സജ്ജമാണു്, അതിനാല്‍\n"
+#~ "--qemu/--qemudir ഉപാധികള്‍ ഉപയോഗിക്കുവാന്‍ സാധ്യമല്ല.\n"
+
+#~ msgid "Binary '%s' does not exist or is not executable\n"
+#~ msgstr "ബൈനറി '%s' നിലവിലില്ല അല്ലെങ്കില്‍ പ്രവര്‍ത്തിക്കുന്നില്ല\n"
+
+#~ msgid "%s: does not look like a qemu source directory\n"
+#~ msgstr "%s: qemu ഉറവിട ഡയറക്ടറിയില്‍ നിന്നും വ്യത്യസ്ഥമാണു്\n"
+
+#~ msgid ""
+#~ "Test tool helper program 'libguestfs-test-tool-helper' is not\n"
+#~ "available.  Expected to find it in '%s'\n"
+#~ "\n"
+#~ "Use the --helper option to specify the location of this program.\n"
+#~ msgstr ""
+#~ "പരീക്ഷണ പ്രയോഗ സഹായത്തിനുള്ള പ്രോഗ്രാം 'libguestfs-test-tool-helper' ലഭ്യമല്ല.\n"
+#~ "'%s'-ല്‍ ലഭ്യമാകുമെന്നു് പ്രതീക്ഷിക്കുന്നു\n"
+#~ "\n"
+#~ "ഈ പ്രോഗ്രാമിന്റെ സ്ഥാനം വ്യക്തമാകുന്നതിനായി --helper ഉപാധി ഉപയോഗിക്കുക.\n"
+
+#~ msgid "command failed: %s"
+#~ msgstr "കമാന്‍ഡ് പരാജയപ്പെട്ടു: %s"
+
+#~ msgid ""
+#~ "Test tool helper program %s\n"
+#~ "is not statically linked.  This is a build error when this test tool\n"
+#~ "was built.\n"
+#~ msgstr ""
+#~ "പരീക്ഷണ പ്രയോഗ സഹായത്തിനുള്ള പ്രോഗ്രാം %s\n"
+#~ "സ്റ്റാറ്റിക്കായി ലിങ്ക് ചെയ്തിട്ടില്ല. ഈ പരീക്ഷണ പ്രയോഗം സജ്ജമാക്കുമ്പോള്‍ ഉണ്ടായ\n"
+#~ "പിശകാണിതു്.\n"
+
+#~ msgid "mkisofs command failed: %s\n"
+#~ msgstr "mkisofs കമാന്‍ഡ് പരാജയപ്പെട്ടു: %s\n"
