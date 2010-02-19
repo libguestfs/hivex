@@ -28,6 +28,10 @@ hivex/*.3
 hivex/hivexsh
 hivex/hivexml
 hivex/tools/*.opt
+html/hivex.3.html
+html/hivexget.1.html
+html/hivexml.1.html
+html/hivexsh.1.html
 install-sh
 *.la
 .libs
