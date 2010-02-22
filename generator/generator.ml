@@ -733,7 +733,10 @@ struct hive_set_value {
   char *value;
 };
 typedef struct hive_set_value hive_set_value;
+
 ";
+
+  pr "/* Functions. */\n";
 
   (* Function declarations. *)
   List.iter (
