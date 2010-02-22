@@ -23,7 +23,6 @@ EXTRA_DIST = \
 	hivexget.pod \
 	hivexget \
 	hivexsh.pod \
-	LICENSE \
 	example1 \
 	example2 \
 	example3 \

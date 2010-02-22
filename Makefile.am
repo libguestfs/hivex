@@ -19,7 +19,7 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = gnulib/lib hivex gnulib/tests po
 
-EXTRA_DIST = hivex.pc hivex.pc.in
+EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
 # Generate the ChangeLog automatically from the gitlog.
 dist-hook:
