@@ -68,6 +68,8 @@ hivexsh_CFLAGS = \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
+include_HEADERS = hivex.h
+
 man_MANS = hivex.3 hivexml.1 hivexget.1 hivexsh.1
 
 hivex.3: hivex.pod
