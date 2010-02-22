@@ -582,7 +582,8 @@ let copyright_years =
 
 (* Generate a header block in a number of standard styles. *)
 type comment_style =
-    CStyle | CPlusPlusStyle | HashStyle | OCamlStyle | HaskellStyle
+  | CStyle | CPlusPlusStyle | HashStyle | OCamlStyle | HaskellStyle
+  | PODCommentStyle
 type license = GPLv2plus | LGPLv2plus | GPLv2 | LGPLv2
 
 let generate_header ?(extra_inputs = []) comment license =
@@ -592,7 +593,8 @@ let generate_header ?(extra_inputs = []) comment license =
     | CPlusPlusStyle -> pr "// "; "//"
     | HashStyle ->      pr "# ";  "#"
     | OCamlStyle ->     pr "(* "; " *"
-    | HaskellStyle ->   pr "{- "; "  " in
+    | HaskellStyle ->   pr "{- "; "  "
+    | PODCommentStyle -> pr "=begin comment\n\n "; "" in
   pr "hivex generated file\n";
   pr "%s WARNING: THIS FILE IS GENERATED FROM:\n" c;
   List.iter (pr "%s   %s\n" c) inputs;
@@ -670,6 +672,7 @@ let generate_header ?(extra_inputs = []) comment license =
    | HashStyle -> ()
    | OCamlStyle -> pr " *)\n"
    | HaskellStyle -> pr "-}\n"
+   | PODCommentStyle -> pr "\n=end comment\n"
   );
   pr "\n"
 
@@ -812,6 +815,8 @@ and generate_c_prototype ?(extern = false) name style =
   pr ");\n"
 
 and generate_c_pod () =
+  generate_header PODCommentStyle GPLv2;
+
   pr "\
   =encoding utf8
 
@@ -821,8 +826,19 @@ hivex - Windows Registry \"hive\" extraction library
 
 =head1 SYNOPSIS
 
- hive_h *hivex_open (const char *filename, int flags);
- int hivex_close (hive_h *h);
+ #include <hivex.h>
+ 
+";
+  List.iter (
+    fun (shortname, style, _, _) ->
+      let name = "hivex_" ^ shortname in
+      pr " ";
+      generate_c_prototype ~extern:false name style;
+  ) functions;
+
+  pr "\
+
+Link with I<-lhivex>.
 
 =head1 DESCRIPTION
 
@@ -834,24 +850,21 @@ Unlike many other tools in this area, it doesn't use the textual .REG
 format for output, because parsing that is as much trouble as parsing
 the original binary format.  Instead it makes the file available
 through a C API, or there is a separate program to export the hive as
-XML (see L<hivexml(1)>), or to get individual keys (see
-L<hivexget(1)>).
+XML (see L<hivexml(1)>), or to navigate the file (see L<hivexsh(1)>).
 
-=head2 TYPES
+=head1 TYPES
 
-=over 4
-
-=item hive_h *
+=head2 hive_h *
 
 This handle describes an open hive file.
 
-=item hive_node_h
+=head2 hive_node_h
 
 This is a node handle, an integer but opaque outside the library.
 Valid node handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=item hive_type
+=head2 hive_type
 
 The enum below describes the possible types for the value(s)
 stored at each node.  Note that you should not trust the
@@ -870,13 +883,13 @@ programs store everything (including strings) in binary blobs.
   pr "\
  };
 
-=item hive_value_h
+=head2 hive_value_h
 
 This is a value handle, an integer but opaque outside the library.
 Valid value handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=item hive_set_value
+=head2 hive_set_value
 
 The typedef C<hive_set_value> is used in conjunction with the
 C<hivex_node_set_values> call described below.
@@ -901,17 +914,13 @@ in the registry, the version of Windows, and sometimes even changes
 between versions of Windows for the same key.  We don't document it
 here.  Often it's not documented at all.
 
-=back
-
-=head2 FUNCTIONS
-
-=over 4
+=head1 FUNCTIONS
 
 ";
   List.iter (
     fun (shortname, style, _, longdesc) ->
       let name = "hivex_" ^ shortname in
-      pr "=item %s\n" name;
+      pr "=head2 %s\n" name;
       pr "\n";
       generate_c_prototype ~extern:false name style;
       pr "\n";
@@ -969,9 +978,7 @@ On error this returns NULL and sets errno.\n\n"
   ) functions;
 
   pr "\
-=back
-
-=head2 WRITING TO HIVE FILES
+=head1 WRITING TO HIVE FILES
 
 The hivex library supports making limited modifications to hive files.
 We have tried to implement this very conservatively in order to reduce
@@ -1007,7 +1014,7 @@ documented at all) and we play it safe by not attempting to modify
 them.  Apart from wasting a little bit of disk space, it is not
 thought that unreachable blocks are a problem.
 
-=head3 WRITE OPERATIONS WHICH ARE NOT SUPPORTED
+=head2 WRITE OPERATIONS WHICH ARE NOT SUPPORTED
 
 =over 4
 
@@ -1033,7 +1040,7 @@ are well-understood and we could add support if it was required
 
 =back
 
-=head2 VISITING ALL NODES
+=head1 VISITING ALL NODES
 
 The visitor pattern is useful if you want to visit all nodes
 in the tree or all nodes below a certain point in the tree.
@@ -1258,7 +1265,7 @@ useful for debugging problems with the library itself.
 =head1 SEE ALSO
 
 L<hivexml(1)>,
-L<hivexget(1)>,
+L<hivexsh(1)>,
 L<virt-win-reg(1)>,
 L<guestfs(3)>,
 L<http://libguestfs.org/>,
@@ -1283,14 +1290,12 @@ Copyright (C) 2000-2004 Markus Stephany.
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public
 License as published by the Free Software Foundation;
-version 2.1 of the License.
+version 2.1 of the License only.
 
 This library is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
-
-See file LICENSE for the full license.
 "
 
 let output_to filename k =
