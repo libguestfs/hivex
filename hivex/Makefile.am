@@ -51,7 +51,6 @@ hivexml_SOURCES = \
 
 hivexml_LDADD = libhivex.la $(LIBXML2_LIBS) ../gnulib/lib/libgnu.la
 hivexml_CFLAGS = \
-  -I$(top_srcdir)/src \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
   $(LIBXML2_CFLAGS) \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
@@ -64,7 +63,6 @@ hivexsh_SOURCES = \
 hivexsh_LDADD = libhivex.la ../gnulib/lib/libgnu.la  $(LIBREADLINE)
 hivexsh_CFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
-  -I$(top_srcdir)/src \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
