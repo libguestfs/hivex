@@ -21,10 +21,14 @@ config.sub
 configure
 depcomp
 .deps
+generator/.pod2text.data
+generator/stamp-generator
 hivex.pc
 hivex-*.tar.gz
 hivex/*.1
 hivex/*.3
+hivex/hivex.h
+hivex/hivex.pod
 hivex/hivexsh
 hivex/hivexml
 hivex/tools/*.opt

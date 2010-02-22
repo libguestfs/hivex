@@ -42,6 +42,12 @@ if [ ! -z "$BUILDDIR" ]; then
     CONFIGUREDIR=..
 fi
 
+# Rerun the generator (requires OCaml interpreter).  This is *not* for
+# anything that is required at configure-time when configure is run
+# from a distribution tarball.  From those, nothing ocaml-related is
+# required.
+./generator/generator.ml
+
 # If no arguments were specified and configure has run before, use the previous
 # arguments
 if [ $# == 0 -a -x ./config.status ]; then

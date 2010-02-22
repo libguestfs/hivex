@@ -268,6 +268,8 @@ header_checksum (const hive_h *h)
   return sum;
 }
 
+#define HIVEX_OPEN_MSGLVL_MASK (HIVEX_OPEN_VERBOSE|HIVEX_OPEN_DEBUG)
+
 hive_h *
 hivex_open (const char *filename, int flags)
 {
