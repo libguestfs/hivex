@@ -49,10 +49,41 @@ TESTS_ENVIRONMENT = \
 	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs \
 	$(VG)
 
-TESTS = t/hivex_005_load
+TESTS = \
+	t/hivex_005_load \
+	t/hivex_010_open \
+	t/hivex_020_root \
+	t/hivex_100_errors \
+	t/hivex_110_gc_handle \
+	t/hivex_200_write \
+	t/hivex_300_fold
 noinst_DATA += $(TESTS)
 
 t/hivex_005_load: t/hivex_005_load.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_010_open: t/hivex_010_open.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_020_root: t/hivex_020_root.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_100_errors: t/hivex_100_errors.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_110_gc_handle: t/hivex_110_gc_handle.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_200_write: t/hivex_200_write.cmx mlhivex.cmxa
+	mkdir -p t
+	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+
+t/hivex_300_fold: t/hivex_300_fold.cmx mlhivex.cmxa
 	mkdir -p t
 	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
 
