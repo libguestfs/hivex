@@ -239,158 +239,158 @@ AC_SUBST(PYTHON_SITE_PACKAGES)
 AM_CONDITIONAL([HAVE_PYTHON],
     [test "x$PYTHON_INCLUDEDIR" != "x" -a "x$PYTHON_SITE_PACKAGES" != "x"])
 
-dnl Check for Ruby and rake (optional, for Ruby bindings).
-AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
-AC_CHECK_PROG([RAKE],[rake],[rake],[no])
+dnl dnl Check for Ruby and rake (optional, for Ruby bindings).
+dnl AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
+dnl AC_CHECK_PROG([RAKE],[rake],[rake],[no])
 
-AM_CONDITIONAL([HAVE_RUBY],
-    [test "x$RAKE" != "xno" -a -n "$HAVE_LIBRUBY"])
+dnl AM_CONDITIONAL([HAVE_RUBY],
+dnl     [test "x$RAKE" != "xno" -a -n "$HAVE_LIBRUBY"])
 
-dnl Check for Java.
-AC_ARG_WITH(java_home,
-    [AS_HELP_STRING([--with-java-home],
-        [specify path to JDK directory @<:@default=check@:>@])],
-    [],
-    [with_java_home=check])
+dnl dnl Check for Java.
+dnl AC_ARG_WITH(java_home,
+dnl     [AS_HELP_STRING([--with-java-home],
+dnl         [specify path to JDK directory @<:@default=check@:>@])],
+dnl     [],
+dnl     [with_java_home=check])
 
-if test "x$with_java_home" != "xno"; then
-    if test "x$with_java_home" != "xyes" -a "x$with_java_home" != "xcheck"
-    then
-        # Reject unsafe characters in $JAVA_HOME
-        jh_lf='
-'
-        case $JAVA_HOME in
-          *[\\\"\#\$\&\'\`$jh_lf\ \	]*)
-            AC_MSG_FAILURE([unsafe \$JAVA_HOME directory (use --with-java-home=no to disable Java support)]);;
-        esac
-        if test -d "$with_java_home"; then
-            JAVA_HOME="$with_java_home"
-        else
-            AC_MSG_FAILURE([$with_java_home is not a directory (use --with-java-home=no to disable Java support)])
-        fi
-    fi
+dnl if test "x$with_java_home" != "xno"; then
+dnl     if test "x$with_java_home" != "xyes" -a "x$with_java_home" != "xcheck"
+dnl     then
+dnl         # Reject unsafe characters in $JAVA_HOME
+dnl         jh_lf='
+dnl '
+dnl         case $JAVA_HOME in
+dnl           *[\\\"\#\$\&\'\`$jh_lf\ \	]*)
+dnl             AC_MSG_FAILURE([unsafe \$JAVA_HOME directory (use --with-java-home=no to disable Java support)]);;
+dnl         esac
+dnl         if test -d "$with_java_home"; then
+dnl             JAVA_HOME="$with_java_home"
+dnl         else
+dnl             AC_MSG_FAILURE([$with_java_home is not a directory (use --with-java-home=no to disable Java support)])
+dnl         fi
+dnl     fi
 
-    if test "x$JAVA_HOME" = "x"; then
-        # Look for Java in some likely locations.
-        for d in \
-            /usr/lib/jvm/java \
-            /usr/lib/jvm/java-6-openjdk
-        do
-            if test -d $d -a -f $d/bin/java; then
-                JAVA_HOME=$d
-                break
-            fi
-        done
-    fi
+dnl     if test "x$JAVA_HOME" = "x"; then
+dnl         # Look for Java in some likely locations.
+dnl         for d in \
+dnl             /usr/lib/jvm/java \
+dnl             /usr/lib/jvm/java-6-openjdk
+dnl         do
+dnl             if test -d $d -a -f $d/bin/java; then
+dnl                 JAVA_HOME=$d
+dnl                 break
+dnl             fi
+dnl         done
+dnl     fi
 
-    if test "x$JAVA_HOME" != "x"; then
-        AC_MSG_CHECKING(for JDK in $JAVA_HOME)
-        if test ! -x "$JAVA_HOME/bin/java"; then
-            AC_MSG_ERROR([missing $JAVA_HOME/bin/java binary (use --with-java-home=no to disable Java support)])
-        else
-            JAVA="$JAVA_HOME/bin/java"
-        fi
-        if test ! -x "$JAVA_HOME/bin/javac"; then
-            AC_MSG_ERROR([missing $JAVA_HOME/bin/javac binary])
-        else
-            JAVAC="$JAVA_HOME/bin/javac"
-        fi
-        if test ! -x "$JAVA_HOME/bin/javah"; then
-            AC_MSG_ERROR([missing $JAVA_HOME/bin/javah binary])
-        else
-            JAVAH="$JAVA_HOME/bin/javah"
-        fi
-        if test ! -x "$JAVA_HOME/bin/javadoc"; then
-            AC_MSG_ERROR([missing $JAVA_HOME/bin/javadoc binary])
-        else
-            JAVADOC="$JAVA_HOME/bin/javadoc"
-        fi
-        if test ! -x "$JAVA_HOME/bin/jar"; then
-            AC_MSG_ERROR([missing $JAVA_HOME/bin/jar binary])
-        else
-            JAR="$JAVA_HOME/bin/jar"
-        fi
-        java_version=`$JAVA -version 2>&1 | grep "java version"`
-        AC_MSG_RESULT(found $java_version in $JAVA_HOME)
+dnl     if test "x$JAVA_HOME" != "x"; then
+dnl         AC_MSG_CHECKING(for JDK in $JAVA_HOME)
+dnl         if test ! -x "$JAVA_HOME/bin/java"; then
+dnl             AC_MSG_ERROR([missing $JAVA_HOME/bin/java binary (use --with-java-home=no to disable Java support)])
+dnl         else
+dnl             JAVA="$JAVA_HOME/bin/java"
+dnl         fi
+dnl         if test ! -x "$JAVA_HOME/bin/javac"; then
+dnl             AC_MSG_ERROR([missing $JAVA_HOME/bin/javac binary])
+dnl         else
+dnl             JAVAC="$JAVA_HOME/bin/javac"
+dnl         fi
+dnl         if test ! -x "$JAVA_HOME/bin/javah"; then
+dnl             AC_MSG_ERROR([missing $JAVA_HOME/bin/javah binary])
+dnl         else
+dnl             JAVAH="$JAVA_HOME/bin/javah"
+dnl         fi
+dnl         if test ! -x "$JAVA_HOME/bin/javadoc"; then
+dnl             AC_MSG_ERROR([missing $JAVA_HOME/bin/javadoc binary])
+dnl         else
+dnl             JAVADOC="$JAVA_HOME/bin/javadoc"
+dnl         fi
+dnl         if test ! -x "$JAVA_HOME/bin/jar"; then
+dnl             AC_MSG_ERROR([missing $JAVA_HOME/bin/jar binary])
+dnl         else
+dnl             JAR="$JAVA_HOME/bin/jar"
+dnl         fi
+dnl         java_version=`$JAVA -version 2>&1 | grep "java version"`
+dnl         AC_MSG_RESULT(found $java_version in $JAVA_HOME)
 
-        dnl Find jni.h.
-        AC_MSG_CHECKING([for jni.h])
-        if test -f "$JAVA_HOME/include/jni.h"; then
-            JNI_CFLAGS="-I$JAVA_HOME/include"
-        else
-            if test "`find $JAVA_HOME -name jni.h`" != ""; then
-                head=`find $JAVA_HOME -name jni.h | tail -1`
-                dir=`dirname "$head"`
-                JNI_CFLAGS="-I$dir"
-            else
-                AC_MSG_FAILURE([missing jni.h header file])
-            fi
-        fi
-        AC_MSG_RESULT([$JNI_CFLAGS])
+dnl         dnl Find jni.h.
+dnl         AC_MSG_CHECKING([for jni.h])
+dnl         if test -f "$JAVA_HOME/include/jni.h"; then
+dnl             JNI_CFLAGS="-I$JAVA_HOME/include"
+dnl         else
+dnl             if test "`find $JAVA_HOME -name jni.h`" != ""; then
+dnl                 head=`find $JAVA_HOME -name jni.h | tail -1`
+dnl                 dir=`dirname "$head"`
+dnl                 JNI_CFLAGS="-I$dir"
+dnl             else
+dnl                 AC_MSG_FAILURE([missing jni.h header file])
+dnl             fi
+dnl         fi
+dnl         AC_MSG_RESULT([$JNI_CFLAGS])
 
-        dnl Find jni_md.h.
-        AC_MSG_CHECKING([for jni_md.h])
-        case "$build_os" in
-        *linux*) system="linux" ;;
-        *SunOS*) system="solaris" ;;
-        *cygwin*) system="win32" ;;
-        *) system="$build_os" ;;
-        esac
-        if test -f "$JAVA_HOME/include/$system/jni_md.h"; then
-            JNI_CFLAGS="$JNI_CFLAGS -I$JAVA_HOME/include/$system"
-        else
-            if test "`find $JAVA_HOME -name jni_md.h`" != ""; then
-                head=`find $JAVA_HOME -name jni_md.h | tail -1`
-                dir=`dirname "$head"`
-                JNI_CFLAGS="$JNI_CFLAGS -I$dir"
-            else
-                AC_MSG_FAILURE([missing jni_md.h header file])
-            fi
-        fi
-        AC_MSG_RESULT([$JNI_CFLAGS])
+dnl         dnl Find jni_md.h.
+dnl         AC_MSG_CHECKING([for jni_md.h])
+dnl         case "$build_os" in
+dnl         *linux*) system="linux" ;;
+dnl         *SunOS*) system="solaris" ;;
+dnl         *cygwin*) system="win32" ;;
+dnl         *) system="$build_os" ;;
+dnl         esac
+dnl         if test -f "$JAVA_HOME/include/$system/jni_md.h"; then
+dnl             JNI_CFLAGS="$JNI_CFLAGS -I$JAVA_HOME/include/$system"
+dnl         else
+dnl             if test "`find $JAVA_HOME -name jni_md.h`" != ""; then
+dnl                 head=`find $JAVA_HOME -name jni_md.h | tail -1`
+dnl                 dir=`dirname "$head"`
+dnl                 JNI_CFLAGS="$JNI_CFLAGS -I$dir"
+dnl             else
+dnl                 AC_MSG_FAILURE([missing jni_md.h header file])
+dnl             fi
+dnl         fi
+dnl         AC_MSG_RESULT([$JNI_CFLAGS])
 
-        dnl Need extra version flag?
-        AC_MSG_CHECKING([extra javac flags])
-        JAVAC_FLAGS=
-        javac_version=`$JAVAC -version 2>&1`
-        case "$javac_version" in
-        *Eclipse*)
-            JAVAC_FLAGS="-source 1.5" ;;
-        esac
-        AC_MSG_RESULT([$JAVAC_FLAGS])
+dnl         dnl Need extra version flag?
+dnl         AC_MSG_CHECKING([extra javac flags])
+dnl         JAVAC_FLAGS=
+dnl         javac_version=`$JAVAC -version 2>&1`
+dnl         case "$javac_version" in
+dnl         *Eclipse*)
+dnl             JAVAC_FLAGS="-source 1.5" ;;
+dnl         esac
+dnl         AC_MSG_RESULT([$JAVAC_FLAGS])
 
-        dnl Where to install jarfiles.
-        dnl XXX How to make it configurable?
-        JAR_INSTALL_DIR=\${prefix}/share/java
-        JNI_INSTALL_DIR=\${libdir}
+dnl         dnl Where to install jarfiles.
+dnl         dnl XXX How to make it configurable?
+dnl         JAR_INSTALL_DIR=\${prefix}/share/java
+dnl         JNI_INSTALL_DIR=\${libdir}
 
-        dnl JNI version.
-        jni_major_version=`echo "$VERSION" | awk -F. '{print $1}'`
-        jni_minor_version=`echo "$VERSION" | awk -F. '{print $2}'`
-        jni_micro_version=`echo "$VERSION" | awk -F. '{print $3}'`
-        JNI_VERSION_INFO=`expr "$jni_major_version" + "$jni_minor_version"`":$jni_micro_version:$jni_minor_version"
-    fi
-fi
+dnl         dnl JNI version.
+dnl         jni_major_version=`echo "$VERSION" | awk -F. '{print $1}'`
+dnl         jni_minor_version=`echo "$VERSION" | awk -F. '{print $2}'`
+dnl         jni_micro_version=`echo "$VERSION" | awk -F. '{print $3}'`
+dnl         JNI_VERSION_INFO=`expr "$jni_major_version" + "$jni_minor_version"`":$jni_micro_version:$jni_minor_version"
+dnl     fi
+dnl fi
 
-AC_SUBST(JAVA_HOME)
-AC_SUBST(JAVA)
-AC_SUBST(JAVAC)
-AC_SUBST(JAVAH)
-AC_SUBST(JAVADOC)
-AC_SUBST(JAR)
-AC_SUBST(JNI_CFLAGS)
-AC_SUBST(JAVAC_FLAGS)
-AC_SUBST(JAR_INSTALL_DIR)
-AC_SUBST(JNI_INSTALL_DIR)
-AC_SUBST(JNI_VERSION_INFO)
+dnl AC_SUBST(JAVA_HOME)
+dnl AC_SUBST(JAVA)
+dnl AC_SUBST(JAVAC)
+dnl AC_SUBST(JAVAH)
+dnl AC_SUBST(JAVADOC)
+dnl AC_SUBST(JAR)
+dnl AC_SUBST(JNI_CFLAGS)
+dnl AC_SUBST(JAVAC_FLAGS)
+dnl AC_SUBST(JAR_INSTALL_DIR)
+dnl AC_SUBST(JNI_INSTALL_DIR)
+dnl AC_SUBST(JNI_VERSION_INFO)
 
-AM_CONDITIONAL([HAVE_JAVA],[test -n "$JAVAC"])
+dnl AM_CONDITIONAL([HAVE_JAVA],[test -n "$JAVAC"])
 
-dnl Check for Haskell (GHC).
-AC_CHECK_PROG([GHC],[ghc],[ghc],[no])
+dnl dnl Check for Haskell (GHC).
+dnl AC_CHECK_PROG([GHC],[ghc],[ghc],[no])
 
-AM_CONDITIONAL([HAVE_HASKELL],
-    [test "x$GHC" != "xno"])
+dnl AM_CONDITIONAL([HAVE_HASKELL],
+dnl     [test "x$GHC" != "xno"])
 
 dnl Produce output files.
 AC_CONFIG_HEADERS([config.h])
@@ -420,12 +420,12 @@ echo -n "Perl bindings ....................... "
 if test "x$HAVE_PERL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 echo -n "Python bindings ..................... "
 if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Ruby bindings ....................... "
-if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Java bindings ....................... "
-if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Haskell bindings .................... "
-if test "x$HAVE_HASKELL" = "x"; then echo "yes"; else echo "no"; fi
+dnl echo -n "Ruby bindings ....................... "
+dnl if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+dnl echo -n "Java bindings ....................... "
+dnl if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+dnl echo -n "Haskell bindings .................... "
+dnl if test "x$HAVE_HASKELL" = "x"; then echo "yes"; else echo "no"; fi
 echo
 echo "If any optional component is configured 'no' when you expected 'yes'"
 echo "then you should check the preceeding messages."
