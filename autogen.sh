@@ -46,6 +46,7 @@ fi
 # anything that is required at configure-time when configure is run
 # from a distribution tarball.  From those, nothing ocaml-related is
 # required.
+mkdir -p perl/lib/Win
 ./generator/generator.ml
 
 # If no arguments were specified and configure has run before, use the previous

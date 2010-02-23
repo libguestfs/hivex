@@ -1,0 +1,3 @@
+hivex.cmi:
+hivex.cmo: hivex.cmi
+hivex.cmx: hivex.cmi

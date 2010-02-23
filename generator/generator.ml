@@ -1301,6 +1301,29 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
 "
 
+and generate_ocaml_interface () =
+  generate_header OCamlStyle LGPLv2plus;
+  pr "val open_file : unit\n"
+
+and generate_ocaml_implementation () =
+  generate_header OCamlStyle LGPLv2plus;
+  pr "let open_file = ()\n"
+
+and generate_ocaml_c () =
+  generate_header CStyle LGPLv2plus
+
+and generate_perl_pm () =
+  generate_header HashStyle LGPLv2plus
+
+and generate_perl_xs () =
+  generate_header CStyle LGPLv2plus
+
+and generate_python_py () =
+  generate_header HashStyle LGPLv2plus
+
+and generate_python_c () =
+  generate_header CStyle LGPLv2plus
+
 let output_to filename k =
   let filename_new = filename ^ ".new" in
   chan := open_out filename_new;
@@ -1355,6 +1378,16 @@ Run it from the top source directory using the command
 
   output_to "lib/hivex.h" generate_c_header;
   output_to "lib/hivex.pod" generate_c_pod;
+
+  output_to "ocaml/hivex.mli" generate_ocaml_interface;
+  output_to "ocaml/hivex.ml" generate_ocaml_implementation;
+  output_to "ocaml/hivex_c.c" generate_ocaml_c;
+
+  output_to "perl/lib/Win/Hivex.pm" generate_perl_pm;
+  output_to "perl/Hivex.xs" generate_perl_xs;
+
+  output_to "python/hivex.py" generate_python_py;
+  output_to "python/hivex-py.c" generate_python_c;
 
   (* Always generate this file last, and unconditionally.  It's used
    * by the Makefile to know when we must re-run the generator.

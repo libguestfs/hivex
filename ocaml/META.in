@@ -1,0 +1,6 @@
+name="hivex"
+version="@PACKAGE_VERSION@"
+description="Windows Registry hive file bindings for OCaml"
+requires="unix"
+archive(byte)="mlhivex.cma"
+archive(native)="mlhivex.cmxa"

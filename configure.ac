@@ -401,7 +401,10 @@ AC_CONFIG_FILES([Makefile
                  images/Makefile
                  lib/Makefile
                  lib/tools/Makefile
+                 ocaml/Makefile ocaml/META
+                 perl/Makefile perl/Makefile.PL
                  po/Makefile.in
+                 python/Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_OUTPUT

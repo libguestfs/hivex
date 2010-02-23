@@ -19,6 +19,18 @@ ACLOCAL_AMFLAGS = -I m4
 
 SUBDIRS = gnulib/lib lib images gnulib/tests sh xml po
 
+if HAVE_OCAML
+SUBDIRS += ocaml
+endif
+
+if HAVE_PERL
+SUBDIRS += perl
+endif
+
+if HAVE_PYTHON
+SUBDIRS += python
+endif
+
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
 # Generate the ChangeLog automatically from the gitlog.
