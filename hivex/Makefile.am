@@ -38,6 +38,7 @@ libhivex_la_SOURCES = \
   byte_conversions.h \
   gettext.h
 
+libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la
 libhivex_la_LDFLAGS = -version-info 0:0:0 $(LTLIBINTL) $(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 libhivex_la_CPPFLAGS = -I$(top_srcdir)/gnulib/lib
@@ -49,7 +50,7 @@ noinst_SCRIPTS = example1 example2 example3 example4 example5 example6
 hivexml_SOURCES = \
   hivexml.c
 
-hivexml_LDADD = libhivex.la $(LIBXML2_LIBS) ../gnulib/lib/libgnu.la
+hivexml_LDADD = libhivex.la $(LIBXML2_LIBS)
 hivexml_CFLAGS = \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
   $(LIBXML2_CFLAGS) \
@@ -60,7 +61,7 @@ hivexsh_SOURCES = \
   hivex.h \
   byte_conversions.h
 
-hivexsh_LDADD = libhivex.la ../gnulib/lib/libgnu.la  $(LIBREADLINE)
+hivexsh_LDADD = libhivex.la $(LIBREADLINE)
 hivexsh_CFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
