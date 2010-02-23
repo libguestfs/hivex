@@ -1792,6 +1792,10 @@ allocate_page (hive_h *h, size_t allocation_hint)
  * record.  The block bitmap is updated to show this block as valid.
  * The rest of the contents of the block will be zero.
  *
+ * **NB** Because allocate_block may reallocate the memory, all
+ * pointers into the memory become potentially invalid.  I really
+ * love writing in C, can't you tell?
+ *
  * Returns:
  * > 0 : offset of new block
  * 0   : error (errno set)
@@ -2056,9 +2060,17 @@ insert_lf_record (hive_h *h, size_t old_offs, size_t posn,
   nr_keys++; /* in new record ... */
 
   size_t seg_len = sizeof (struct ntreg_lf_record) + (nr_keys-1) * 8;
-  size_t new_offs = allocate_block (h, seg_len, old_lf->id);
+
+  /* Copy the old_lf->id in case it moves during allocate_block. */
+  char id[2];
+  memcpy (id, old_lf->id, sizeof id);
+
+  size_t new_offs = allocate_block (h, seg_len, id);
   if (new_offs == 0)
     return 0;
+
+  /* old_lf could have been invalidated by allocate_block. */
+  old_lf = (struct ntreg_lf_record *) (h->addr + old_offs);
 
   struct ntreg_lf_record *new_lf =
     (struct ntreg_lf_record *) (h->addr + new_offs);
@@ -2202,6 +2214,12 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
       return 0;
     }
 
+    /* Recalculate pointers that could have been invalidated by
+     * previous call to allocate_block (via new_lh_record).
+     */
+    nk = (struct ntreg_nk_record *) (h->addr + node);
+    parent_nk = (struct ntreg_nk_record *) (h->addr + parent);
+
     if (h->msglvl >= 2)
       fprintf (stderr, "hivex_node_add_child: no keys, allocated new lh-record at 0x%zx\n", lh_offs);
 
@@ -2242,6 +2260,12 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
       free (blocks);
       return 0;
     }
+
+    /* Recalculate pointers that could have been invalidated by
+     * previous call to allocate_block (via insert_lf_record).
+     */
+    nk = (struct ntreg_nk_record *) (h->addr + node);
+    parent_nk = (struct ntreg_nk_record *) (h->addr + parent);
 
     if (h->msglvl >= 2)
       fprintf (stderr, "hivex_node_add_child: new lh-record at 0x%zx\n",
@@ -2525,6 +2549,12 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
     if (vk_offs == 0)
       return -1;
 
+    /* Recalculate pointers that could have been invalidated by
+     * previous call to allocate_block.
+     */
+    nk = (struct ntreg_nk_record *) (h->addr + node);
+    vallist = (struct ntreg_value_list *) (h->addr + vallist_offs);
+
     vallist->offset[i] = htole32 (vk_offs - 0x1000);
 
     struct ntreg_vk_record *vk = (struct ntreg_vk_record *) (h->addr + vk_offs);
@@ -2544,6 +2574,14 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
       size_t offs = allocate_block (h, values[i].len + 4, nul_id);
       if (offs == 0)
         return -1;
+
+      /* Recalculate pointers that could have been invalidated by
+       * previous call to allocate_block.
+       */
+      nk = (struct ntreg_nk_record *) (h->addr + node);
+      vallist = (struct ntreg_value_list *) (h->addr + vallist_offs);
+      vk = (struct ntreg_vk_record *) (h->addr + vk_offs);
+
       memcpy (h->addr + offs + 4, values[i].value, values[i].len);
       vk->data_offset = htole32 (offs - 0x1000);
     }
