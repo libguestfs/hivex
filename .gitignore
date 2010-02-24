@@ -33,12 +33,9 @@ images/large
 images/mklarge
 install-sh
 *.la
-lib/*.1
 lib/*.3
 lib/hivex.h
 lib/hivex.pod
-lib/hivexsh
-lib/hivexml
 lib/tools/*.opt
 .libs
 libtool
@@ -74,7 +71,11 @@ po/en@quot.header
 po/insert-header.sin
 po/quot.sed
 po/remove-potcdate.sin
+sh/*.1
+sh/hivexsh
 stamp-h1
+xml/*.1
+xml/hivexml
 /GNUmakefile
 /maint.mk
 /build-aux

@@ -401,7 +401,9 @@ AC_CONFIG_FILES([Makefile
                  images/Makefile
                  lib/Makefile
                  lib/tools/Makefile
-                 po/Makefile.in])
+                 po/Makefile.in
+                 sh/Makefile
+                 xml/Makefile])
 AC_OUTPUT
 
 dnl Produce summary.

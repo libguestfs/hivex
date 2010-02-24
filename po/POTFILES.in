@@ -1,4 +1,4 @@
 images/mklarge.c
 lib/hivex.c
-lib/hivexml.c
-lib/hivexsh.c
+sh/hivexsh.c
+xml/hivexml.c
