@@ -398,9 +398,9 @@ AC_CONFIG_FILES([Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
                  hivex.pc
-                 hivex/Makefile
-                 hivex/tools/Makefile
                  images/Makefile
+                 lib/Makefile
+                 lib/tools/Makefile
                  po/Makefile.in])
 AC_OUTPUT
 

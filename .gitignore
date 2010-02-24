@@ -25,13 +25,6 @@ generator/.pod2text.data
 generator/stamp-generator
 hivex.pc
 hivex-*.tar.gz
-hivex/*.1
-hivex/*.3
-hivex/hivex.h
-hivex/hivex.pod
-hivex/hivexsh
-hivex/hivexml
-hivex/tools/*.opt
 html/hivex.3.html
 html/hivexget.1.html
 html/hivexml.1.html
@@ -40,6 +33,13 @@ images/large
 images/mklarge
 install-sh
 *.la
+lib/*.1
+lib/*.3
+lib/hivex.h
+lib/hivex.pod
+lib/hivexsh
+lib/hivexml
+lib/tools/*.opt
 .libs
 libtool
 *.lo

@@ -23,9 +23,9 @@ EXTRA_DIST = minimal
 noinst_PROGRAMS = mklarge
 mklarge_SOURCES = mklarge.c
 mklarge_CFLAGS = \
-	-I$(srcdir)/../hivex \
+	-I$(srcdir)/../lib \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
-mklarge_LDADD = ../hivex/libhivex.la
+mklarge_LDADD = ../lib/libhivex.la
 
 noinst_DATA = large
 

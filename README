@@ -22,7 +22,7 @@ This library was derived from several sources:
    versions of Samba, so you have to go back in the source repository
    to find it (GPLv2+)
  . http://amnesia.gtisc.gatech.edu/~moyix/suzibandit.ltd.uk/MSc/
- . reverse engineering the format (see hivex/tools/visualizer.ml)
+ . reverse engineering the format (see lib/tools/visualizer.ml)
 
 Like NTREG, this library only attempts to read Windows NT registry
 files (ie. not Windows 3.1 or Windows 95/98/ME).  See the link above

@@ -115,7 +115,7 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivex.3.html \
-	  hivex/hivex.pod
+	  lib/hivex.pod
 
 $(top_builddir)/html/hivexml.1.html: hivexml.pod
 	mkdir -p $(top_builddir)/html
@@ -123,7 +123,7 @@ $(top_builddir)/html/hivexml.1.html: hivexml.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexml.1.html \
-	  hivex/hivexml.pod
+	  lib/hivexml.pod
 
 $(top_builddir)/html/hivexget.1.html: hivexget.pod
 	mkdir -p $(top_builddir)/html
@@ -131,7 +131,7 @@ $(top_builddir)/html/hivexget.1.html: hivexget.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexget.1.html \
-	  hivex/hivexget.pod
+	  lib/hivexget.pod
 
 $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
 	mkdir -p $(top_builddir)/html
@@ -139,4 +139,4 @@ $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexsh.1.html \
-	  hivex/hivexsh.pod
+	  lib/hivexsh.pod
