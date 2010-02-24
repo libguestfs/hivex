@@ -1,5 +1,5 @@
-# libguestfs
-# Copyright (C) 2009 Red Hat Inc.
+# hivex
+# Copyright (C) 2009-2010 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -16,3 +16,18 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 EXTRA_DIST = minimal
+
+# 'large' is a large hive used for testing purposes.  It is generated
+# by the mklarge C program, to avoid having to distribute this large
+# binary blob.
+noinst_PROGRAMS = mklarge
+mklarge_SOURCES = mklarge.c
+mklarge_CFLAGS = \
+	-I$(srcdir)/../hivex \
+	$(WARN_CFLAGS) $(WERROR_CFLAGS)
+mklarge_LDADD = ../hivex/libhivex.la
+
+noinst_DATA = large
+
+large: mklarge
+	./mklarge $(srcdir)/minimal large

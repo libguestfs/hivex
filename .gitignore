@@ -36,6 +36,8 @@ html/hivex.3.html
 html/hivexget.1.html
 html/hivexml.1.html
 html/hivexsh.1.html
+images/large
+images/mklarge
 install-sh
 *.la
 .libs
