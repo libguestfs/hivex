@@ -654,7 +654,7 @@ let generate_header ?(extra_inputs = []) comment license =
    | LGPLv2 ->
        pr "%s This library is free software; you can redistribute it and/or\n" c;
        pr "%s modify it under the terms of the GNU Lesser General Public\n" c;
-       pr "%s License as published by the Free Software Foundation; either\n" c;
+       pr "%s License as published by the Free Software Foundation;\n" c;
        pr "%s version 2.1 of the License only.\n" c;
        pr "%s\n" c;
        pr "%s This library is distributed in the hope that it will be useful,\n" c;
