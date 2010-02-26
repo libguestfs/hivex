@@ -946,11 +946,13 @@ cmd_setval (char *nrvals_str)
                  "setval", "dword", "xstrtol", xerr);
         goto error;
       }
+#if SIZEOF_LONG > 4
       if (n < 0 || n > UINT32_MAX) {
         fprintf (stderr, _("%s: %s: integer out of range\n"),
                  "setval", "dword");
         goto error;
       }
+#endif
       uint32_t u32 = htole32 (n);
       memcpy (values[i].value, &u32, 4);
     }
@@ -999,11 +1001,13 @@ cmd_setval (char *nrvals_str)
                  "setval", "hex", "xstrtol", xerr);
         goto error;
       }
+#if SIZEOF_LONG > 4
       if (t < 0 || t > UINT32_MAX) {
         fprintf (stderr, _("%s: %s: integer out of range\n"),
                  "setval", "hex");
         goto error;
       }
+#endif
       values[i].t = t;
 
       /* Read the hex data. */
