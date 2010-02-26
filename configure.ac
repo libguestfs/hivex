@@ -190,54 +190,54 @@ fi
 AM_CONDITIONAL([HAVE_PERL],
     [test "x$PERL" != "xno" -a "x$missing_perl_modules" != "xyes"])
 
-dnl Check for Python (optional, for Python bindings).
-AC_CHECK_PROG([PYTHON],[python],[python],[no])
+dnl dnl Check for Python (optional, for Python bindings).
+dnl AC_CHECK_PROG([PYTHON],[python],[python],[no])
 
-PYTHON_PREFIX=
-PYTHON_VERSION=
-PYTHON_INCLUDEDIR=
-PYTHON_SITE_PACKAGES=
+dnl PYTHON_PREFIX=
+dnl PYTHON_VERSION=
+dnl PYTHON_INCLUDEDIR=
+dnl PYTHON_SITE_PACKAGES=
 
-if test "x$PYTHON" != "xno"; then
-    PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
-    PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
-    for d in \
-        $PYTHON_PREFIX/include/python$PYTHON_VERSION \
-        /usr/include/python$PYTHON_VERSION \
-        /usr/local/include/python$PYTHON_VERSION
-    do
-        AC_MSG_CHECKING([Python.h in $d])
-        if test -r "$d/Python.h"; then
-            AC_MSG_RESULT([found])
-            PYTHON_INCLUDEDIR=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-    for d in \
-        $PYTHON_PREFIX/lib64/python$PYTHON_VERSION/site-packages \
-        $PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages \
-        /usr/lib64/python$PYTHON_VERSION/site-packages \
-        /usr/lib/python$PYTHON_VERSION/site-packages \
-        /usr/local/lib/python$PYTHON_VERSION/site-packages
-    do
-        AC_MSG_CHECKING([for $d])
-        if test -d "$d"; then
-            AC_MSG_RESULT([found])
-            PYTHON_SITE_PACKAGES=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-fi
+dnl if test "x$PYTHON" != "xno"; then
+dnl     PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
+dnl     PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
+dnl     for d in \
+dnl         $PYTHON_PREFIX/include/python$PYTHON_VERSION \
+dnl         /usr/include/python$PYTHON_VERSION \
+dnl         /usr/local/include/python$PYTHON_VERSION
+dnl     do
+dnl         AC_MSG_CHECKING([Python.h in $d])
+dnl         if test -r "$d/Python.h"; then
+dnl             AC_MSG_RESULT([found])
+dnl             PYTHON_INCLUDEDIR=$d
+dnl             break
+dnl         fi
+dnl         AC_MSG_RESULT([not found])
+dnl     done
+dnl     for d in \
+dnl         $PYTHON_PREFIX/lib64/python$PYTHON_VERSION/site-packages \
+dnl         $PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages \
+dnl         /usr/lib64/python$PYTHON_VERSION/site-packages \
+dnl         /usr/lib/python$PYTHON_VERSION/site-packages \
+dnl         /usr/local/lib/python$PYTHON_VERSION/site-packages
+dnl     do
+dnl         AC_MSG_CHECKING([for $d])
+dnl         if test -d "$d"; then
+dnl             AC_MSG_RESULT([found])
+dnl             PYTHON_SITE_PACKAGES=$d
+dnl             break
+dnl         fi
+dnl         AC_MSG_RESULT([not found])
+dnl     done
+dnl fi
 
-AC_SUBST(PYTHON_PREFIX)
-AC_SUBST(PYTHON_VERSION)
-AC_SUBST(PYTHON_INCLUDEDIR)
-AC_SUBST(PYTHON_SITE_PACKAGES)
+dnl AC_SUBST(PYTHON_PREFIX)
+dnl AC_SUBST(PYTHON_VERSION)
+dnl AC_SUBST(PYTHON_INCLUDEDIR)
+dnl AC_SUBST(PYTHON_SITE_PACKAGES)
 
-AM_CONDITIONAL([HAVE_PYTHON],
-    [test "x$PYTHON_INCLUDEDIR" != "x" -a "x$PYTHON_SITE_PACKAGES" != "x"])
+dnl AM_CONDITIONAL([HAVE_PYTHON],
+dnl     [test "x$PYTHON_INCLUDEDIR" != "x" -a "x$PYTHON_SITE_PACKAGES" != "x"])
 
 dnl dnl Check for Ruby and rake (optional, for Ruby bindings).
 dnl AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
@@ -404,7 +404,6 @@ AC_CONFIG_FILES([Makefile
                  ocaml/Makefile ocaml/META
                  perl/Makefile perl/Makefile.PL
                  po/Makefile.in
-                 python/Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_OUTPUT
@@ -421,8 +420,8 @@ echo -n "OCaml bindings ...................... "
 if test "x$HAVE_OCAML_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 echo -n "Perl bindings ....................... "
 if test "x$HAVE_PERL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Python bindings ..................... "
-if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+dnl echo -n "Python bindings ..................... "
+dnl if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 dnl echo -n "Ruby bindings ....................... "
 dnl if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 dnl echo -n "Java bindings ....................... "

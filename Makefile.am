@@ -27,9 +27,10 @@ if HAVE_PERL
 SUBDIRS += perl
 endif
 
-if HAVE_PYTHON
-SUBDIRS += python
-endif
+# Not yet written.
+#if HAVE_PYTHON
+#SUBDIRS += python
+#endif
 
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 

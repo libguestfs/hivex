@@ -2507,8 +2507,11 @@ Run it from the top source directory using the command
   output_to "perl/lib/Win/Hivex.pm" generate_perl_pm;
   output_to "perl/Hivex.xs" generate_perl_xs;
 
+(*
+  We ran out of time before we could write the Python bindings.
   output_to "python/hivex.py" generate_python_py;
   output_to "python/hivex-py.c" generate_python_c;
+*)
 
   (* Always generate this file last, and unconditionally.  It's used
    * by the Makefile to know when we must re-run the generator.
