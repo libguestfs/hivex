@@ -251,7 +251,8 @@ C<hive_t_string>, C<hive_t_expand_string> or C<hive_t_link>.";
     "return value as multiple strings",
     "\
 If this value is a multiple-string, return the strings reencoded
-as UTF-8 (as a NULL-terminated array of C strings).  This only
+as UTF-8 (in C, as a NULL-terminated array of C strings, in other
+language bindings, as a list of strings).  This only
 works for values which have type C<hive_t_multiple_strings>.";
 
   "value_dword", (RInt32, [AHive; AValue "val"]),
@@ -271,14 +272,14 @@ works for values which have type C<hive_t_qword>.";
     "\
 Commit (write) any changes which have been made.
 
-C<filename> is the new file to write.  If C<filename> is NULL then we
-overwrite the original file (ie. the file name that was passed to
-C<hivex_open>).  C<flags> is not used, always pass 0.
+C<filename> is the new file to write.  If C<filename> is null/undefined
+then we overwrite the original file (ie. the file name that was passed to
+C<hivex_open>).
 
 Note this does not close the hive handle.  You can perform further
 operations on the hive after committing, including making more
-modifications.  If you no longer wish to use the hive, call
-C<hivex_close> after this.";
+modifications.  If you no longer wish to use the hive, then you
+should close the handle after committing.";
 
   "node_add_child", (RNode, [AHive; ANode "parent"; AString "name"]),
     "add child node",
@@ -302,18 +303,11 @@ subnodes become invalid.  You cannot delete the root node.";
   "node_set_values", (RErr, [AHive; ANode "node"; ASetValues; AUnusedFlags]),
     "set (key, value) pairs at a node",
     "\
-This call can be used to set all the (key, value) pairs stored in C<node>.
+This call can be used to set all the (key, value) pairs
+stored in C<node>.  Note that this library does not offer
+a way to modify just a single key at a node.
 
-C<node> is the node to modify.  C<values> is an array of (key, value)
-pairs.  There should be C<nr_values> elements in this array.  C<flags>
-is not used, always pass 0.
-
-Any existing values stored at the node are discarded, and their
-C<hive_value_h> handles become invalid.  Thus you can remove all
-values stored at C<node> by passing C<nr_values = 0>.
-
-Note that this library does not offer a way to modify just a single
-key at a node.  We don't implement a way to do this efficiently.";
+C<node> is the node to modify.";
 ]
 
 (* Used to memoize the result of pod2text. *)
@@ -931,6 +925,18 @@ here.  Often it's not documented at all.
       pr "\n";
       pr "%s\n" longdesc;
       pr "\n";
+
+      if List.mem AUnusedFlags (snd style) then
+	pr "The flags parameter is unused.  Always pass 0.\n\n";
+
+      if List.mem ASetValues (snd style) then
+	pr "C<values> is an array of (key, value) pairs.  There
+should be C<nr_values> elements in this array.
+
+Any existing values stored at the node are discarded, and their
+C<hive_value_h> handles become invalid.  Thus you can remove all
+values stored at C<node> by passing C<nr_values = 0>.\n\n";
+
       (match fst style with
        | RErr ->
            pr "\
@@ -1852,10 +1858,586 @@ Val_hiveh (hive_h *h)
 " max_hive_type
 
 and generate_perl_pm () =
-  generate_header HashStyle LGPLv2plus
+  generate_header HashStyle LGPLv2plus;
+
+  pr "\
+=pod
+
+=head1 NAME
+
+Win::Hivex - Perl bindings for reading and writing Windows Registry hive files
+
+=head1 SYNOPSIS
+
+ use Win::Hivex;
+
+ $h = Win::Hivex->open ('SOFTWARE');
+ $root_node = $h->root ();
+ print $h->node_name ($root_node);
+
+=head1 DESCRIPTION
+
+The C<Win::Hivex> module provides a Perl XS binding to the
+L<hivex(3)> API for reading and writing Windows Registry binary
+hive files.
+
+=head1 ERRORS
+
+All errors turn into calls to C<croak> (see L<Carp(3)>).
+
+=head1 METHODS
+
+=over 4
+
+=cut
+
+package Win::Hivex;
+
+use strict;
+use warnings;
+
+require XSLoader;
+XSLoader::load ('Win::Hivex');
+
+=item open
+
+ $h = Win::Hivex::open ($filename,";
+
+  List.iter (
+    fun (_, flag, _) ->
+      pr "\n                        [%s => 1,]" (String.lowercase flag)
+  ) open_flags;
+
+  pr ")
+
+Open a Windows Registry binary hive file.
+
+The C<verbose> and C<debug> flags enable different levels of
+debugging messages.
+
+The C<write> flag is required if you will be modifying the
+hive file (see L<hivex(3)/WRITING TO HIVE FILES>).
+
+This function returns a hive handle.  The hive handle is
+closed automatically when its reference count drops to 0.
+
+=cut
+
+sub open {
+  my $proto = shift;
+  my $class = ref ($proto) || $proto;
+  my $filename = shift;
+  my %%flags = @_;
+  my $flags = 0;
+
+";
+
+  List.iter (
+    fun (n, flag, description) ->
+      pr "  # %s\n" description;
+      pr "  $flags += %d if $flags{%s};\n" n (String.lowercase flag)
+  ) open_flags;
+
+  pr "\
+
+  my $self = Win::Hivex::_open ($filename, $flags);
+  bless $self, $class;
+  return $self;
+}
+
+";
+
+  List.iter (
+    fun (name, style, _, longdesc) ->
+      (* The close call isn't explicit in Perl: handles are closed
+       * when their reference count drops to 0.
+       *
+       * The open call is coded specially in Perl.
+       *
+       * Therefore we don't generate prototypes for these two calls:
+       *)
+      if fst style <> RErrDispose && List.hd (snd style) = AHive then (
+	let longdesc = replace_str longdesc "C<hivex_" "C<" in
+	pr "=item %s\n\n " name;
+	generate_perl_prototype name style;
+	pr "\n\n";
+	pr "%s\n\n" longdesc;
+
+	(match fst style with
+	 | RErr
+	 | RErrDispose
+	 | RHive
+	 | RString
+	 | RStringList
+	 | RLenType
+	 | RLenTypeVal
+	 | RInt32
+	 | RInt64 -> ()
+	 | RNode ->
+	     pr "\
+This returns a node handle.\n\n"
+	 | RNodeNotFound ->
+	     pr "\
+This returns a node handle, or C<undef> if the node was not found.\n\n"
+	 | RNodeList ->
+	     pr "\
+This returns a list of node handles.\n\n"
+	 | RValue ->
+	     pr "\
+This returns a value handle.\n\n"
+	 | RValueList ->
+	     pr "\
+This returns a list of value handles.\n\n"
+	);
+
+	if List.mem ASetValues (snd style) then
+	  pr "C<@values> is an array of (keys, value) pairs.
+Each element should be a hashref containing C<key>, C<t> (type)
+and C<data>.
+
+Any existing values stored at the node are discarded, and their
+C<value> handles become invalid.  Thus you can remove all
+values stored at C<node> by passing C<@values = []>.\n\n"
+      )
+  ) functions;
+
+  pr "\
+=cut
+
+1;
+
+=back
+
+=head1 COPYRIGHT
+
+Copyright (C) %s Red Hat Inc.
+
+=head1 LICENSE
+
+Please see the file COPYING.LIB for the full license.
+
+=head1 SEE ALSO
+
+L<hivex(3)>,
+L<hivexsh(1)>,
+L<http://libguestfs.org>,
+L<Sys::Guestfs(3)>.
+
+=cut
+" copyright_years
+
+and generate_perl_prototype name style =
+  (* Return type. *)
+  (match fst style with
+   | RErr
+   | RErrDispose -> ()
+   | RHive -> pr "$h = "
+   | RNode
+   | RNodeNotFound -> pr "$node = "
+   | RNodeList -> pr "@nodes = "
+   | RValue -> pr "$value = "
+   | RValueList -> pr "@values = "
+   | RString -> pr "$string = "
+   | RStringList -> pr "@strings = "
+   | RLenType -> pr "($type, $len) = "
+   | RLenTypeVal -> pr "($type, $data) = "
+   | RInt32 -> pr "$int32 = "
+   | RInt64 -> pr "$int64 = "
+  );
+
+  let args = List.tl (snd style) in
+
+  (* AUnusedFlags is dropped in the bindings. *)
+  let args = List.filter ((<>) AUnusedFlags) args in
+
+  pr "$h->%s (" name;
+
+  let comma = ref false in
+  List.iter (
+    fun arg ->
+      if !comma then pr ", "; comma := true;
+      match arg with
+      | AHive -> pr "$h"
+      | ANode n
+      | AValue n
+      | AString n -> pr "$%s" n
+      | AStringNullable n -> pr "[$%s|undef]" n
+      | AOpenFlags -> pr "[flags]"
+      | AUnusedFlags -> assert false
+      | ASetValues -> pr "\\@values"
+  ) args;
+
+  pr ")"
 
 and generate_perl_xs () =
-  generate_header CStyle LGPLv2plus
+  generate_header CStyle LGPLv2plus;
+
+  pr "\
+#include \"EXTERN.h\"
+#include \"perl.h\"
+#include \"XSUB.h\"
+
+#include <string.h>
+#include <hivex.h>
+
+#ifndef PRId64
+#define PRId64 \"lld\"
+#endif
+
+static SV *
+my_newSVll(long long val) {
+#ifdef USE_64_BIT_ALL
+  return newSViv(val);
+#else
+  char buf[100];
+  int len;
+  len = snprintf(buf, 100, \"%%\" PRId64, val);
+  return newSVpv(buf, len);
+#endif
+}
+
+#ifndef PRIu64
+#define PRIu64 \"llu\"
+#endif
+
+#if 0
+static SV *
+my_newSVull(unsigned long long val) {
+#ifdef USE_64_BIT_ALL
+  return newSVuv(val);
+#else
+  char buf[100];
+  int len;
+  len = snprintf(buf, 100, \"%%\" PRIu64, val);
+  return newSVpv(buf, len);
+#endif
+}
+#endif
+
+#if 0
+/* http://www.perlmonks.org/?node_id=680842 */
+static char **
+XS_unpack_charPtrPtr (SV *arg) {
+  char **ret;
+  AV *av;
+  I32 i;
+
+  if (!arg || !SvOK (arg) || !SvROK (arg) || SvTYPE (SvRV (arg)) != SVt_PVAV)
+    croak (\"array reference expected\");
+
+  av = (AV *)SvRV (arg);
+  ret = malloc ((av_len (av) + 1 + 1) * sizeof (char *));
+  if (!ret)
+    croak (\"malloc failed\");
+
+  for (i = 0; i <= av_len (av); i++) {
+    SV **elem = av_fetch (av, i, 0);
+
+    if (!elem || !*elem)
+      croak (\"missing element in list\");
+
+    ret[i] = SvPV_nolen (*elem);
+  }
+
+  ret[i] = NULL;
+
+  return ret;
+}
+#endif
+
+/* Handle set_values parameter. */
+typedef struct pl_set_values {
+  size_t nr_values;
+  hive_set_value *values;
+} pl_set_values;
+
+static pl_set_values
+unpack_pl_set_values (SV *sv)
+{
+  pl_set_values ret;
+  AV *av;
+  I32 i;
+
+  if (!sv || !SvOK (sv) || !SvROK (sv) || SvTYPE (SvRV (sv)) != SVt_PVAV)
+    croak (\"array reference expected\");
+
+  av = (AV *)SvRV(sv);
+  ret.nr_values = av_len (av) + 1;
+  ret.values = malloc (ret.nr_values * sizeof (hive_set_value));
+  if (!ret.values)
+    croak (\"malloc failed\");
+
+  for (i = 0; i <= av_len (av); i++) {
+    SV **hvp = av_fetch (av, i, 0);
+
+    if (!hvp || !*hvp || !SvROK (*hvp) || SvTYPE (SvRV (*hvp)) != SVt_PVHV)
+      croak (\"missing element in list or not a hash ref\");
+
+    HV *hv = (HV *)SvRV(*hvp);
+
+    SV **svp;
+    svp = hv_fetch (hv, \"key\", 3, 0);
+    if (!svp || !*svp)
+      croak (\"missing 'key' in hash\");
+    ret.values[i].key = SvPV_nolen (*svp);
+
+    svp = hv_fetch (hv, \"t\", 1, 0);
+    if (!svp || !*svp)
+      croak (\"missing 't' in hash\");
+    ret.values[i].t = SvIV (*svp);
+
+    svp = hv_fetch (hv, \"value\", 5, 0);
+    if (!svp || !*svp)
+      croak (\"missing 'value' in hash\");
+    ret.values[i].value = SvPV (*svp, ret.values[i].len);
+  }
+
+  return ret;
+}
+
+MODULE = Win::Hivex  PACKAGE = Win::Hivex
+
+PROTOTYPES: ENABLE
+
+hive_h *
+_open (filename, flags)
+      char *filename;
+      int flags;
+   CODE:
+      RETVAL = hivex_open (filename, flags);
+      if (!RETVAL)
+        croak (\"hivex_open: %%s: %%s\", filename, strerror (errno));
+ OUTPUT:
+      RETVAL
+
+void
+DESTROY (h)
+      hive_h *h;
+ PPCODE:
+      if (hivex_close (h) == -1)
+        croak (\"hivex_close: %%s\", strerror (errno));
+
+";
+
+  List.iter (
+    fun (name, style, _, longdesc) ->
+      (* The close and open calls are handled specially above. *)
+      if fst style <> RErrDispose && List.hd (snd style) = AHive then (
+	(match fst style with
+	 | RErr -> pr "void\n"
+	 | RErrDispose -> failwith "perl bindings cannot handle a call which disposes of the handle"
+	 | RHive -> failwith "perl bindings cannot handle a call which returns a handle"
+	 | RNode
+	 | RNodeNotFound
+	 | RValue
+	 | RString -> pr "SV *\n"
+	 | RNodeList
+	 | RValueList
+	 | RStringList
+	 | RLenType
+	 | RLenTypeVal -> pr "void\n"
+	 | RInt32 -> pr "SV *\n"
+	 | RInt64 -> pr "SV *\n"
+	);
+
+	(* Call and arguments. *)
+	let perl_params =
+	  filter_map (function
+		      | AUnusedFlags -> None
+		      | arg -> Some (name_of_argt arg)) (snd style) in
+
+	let c_params =
+	  List.map (function
+		    | AUnusedFlags -> "0"
+		    | ASetValues -> "values.nr_values, values.values"
+		    | arg -> name_of_argt arg) (snd style) in
+
+	pr "%s (%s)\n" name (String.concat ", " perl_params);
+	iteri (
+          fun i ->
+            function
+            | AHive ->
+		pr "      hive_h *h;\n"
+	    | ANode n
+	    | AValue n ->
+		pr "      int %s;\n" n
+	    | AString n ->
+		pr "      char *%s;\n" n
+            | AStringNullable n ->
+		(* http://www.perlmonks.org/?node_id=554277 *)
+		pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
+	    | AOpenFlags ->
+		pr "      int flags;\n"
+	    | AUnusedFlags -> ()
+	    | ASetValues ->
+		pr "      pl_set_values values = unpack_pl_set_values (ST(%d));\n" i
+	) (snd style);
+
+	let free_args () =
+	  List.iter (
+	    function
+	    | ASetValues ->
+		pr "      free (values.values);\n"
+	    | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
+	    | AOpenFlags | AUnusedFlags -> ()
+	  ) (snd style)
+	in
+
+	(* Code. *)
+	(match fst style with
+	 | RErr ->
+             pr "PREINIT:\n";
+             pr "      int r;\n";
+             pr " PPCODE:\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == -1)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+
+	 | RErrDispose -> assert false
+	 | RHive -> assert false
+
+	 | RInt32
+	 | RNode
+	 | RValue ->
+             pr "PREINIT:\n";
+	     pr "      /* hive_node_h = hive_value_h = size_t so we cheat\n";
+	     pr "         here to simplify the generator */\n";
+             pr "      size_t r;\n";
+             pr "   CODE:\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == 0)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      RETVAL = newSViv (r);\n";
+             pr " OUTPUT:\n";
+             pr "      RETVAL\n"
+
+	 | RNodeNotFound ->
+             pr "PREINIT:\n";
+             pr "      hive_node_h r;\n";
+             pr "   CODE:\n";
+	     pr "      errno = 0;\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == 0 && errno != 0)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+	     pr "      if (r == 0)\n";
+             pr "        RETVAL = &PL_sv_undef;\n";
+	     pr "      else\n";
+             pr "        RETVAL = newSViv (r);\n";
+             pr " OUTPUT:\n";
+             pr "      RETVAL\n"
+
+	 | RString ->
+             pr "PREINIT:\n";
+             pr "      char *r;\n";
+             pr "   CODE:\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == NULL)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      RETVAL = newSVpv (r, 0);\n";
+	     pr "      free (r);\n";
+             pr " OUTPUT:\n";
+             pr "      RETVAL\n"
+
+	 | RNodeList
+	 | RValueList ->
+             pr "PREINIT:\n";
+             pr "      size_t *r;\n";
+             pr "      int i, n;\n";
+             pr " PPCODE:\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == NULL)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      for (n = 0; r[n] != 0; ++n) /**/;\n";
+             pr "      EXTEND (SP, n);\n";
+             pr "      for (i = 0; i < n; ++i)\n";
+             pr "        PUSHs (sv_2mortal (newSViv (r[i])));\n";
+             pr "      free (r);\n";
+
+	 | RStringList ->
+             pr "PREINIT:\n";
+             pr "      char **r;\n";
+             pr "      int i, n;\n";
+             pr " PPCODE:\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == NULL)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      for (n = 0; r[n] != NULL; ++n) /**/;\n";
+             pr "      EXTEND (SP, n);\n";
+             pr "      for (i = 0; i < n; ++i) {\n";
+             pr "        PUSHs (sv_2mortal (newSVpv (r[i], 0)));\n";
+             pr "        free (r[i]);\n";
+             pr "      }\n";
+             pr "      free (r);\n";
+
+	 | RLenType ->
+	     pr "PREINIT:\n";
+	     pr "      int r;\n";
+	     pr "      size_t len;\n";
+	     pr "      hive_type type;\n";
+	     pr " PPCODE:\n";
+             pr "      r = hivex_%s (%s, &len, &type);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == -1)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+	     pr "      EXTEND (SP, 2);\n";
+	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
+	     pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
+
+	 | RLenTypeVal ->
+	     pr "PREINIT:\n";
+	     pr "      char *r;\n";
+	     pr "      size_t len;\n";
+	     pr "      hive_type type;\n";
+	     pr " PPCODE:\n";
+             pr "      r = hivex_%s (%s, &len, &type);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == NULL)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+	     pr "      EXTEND (SP, 2);\n";
+	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
+	     pr "      PUSHs (sv_2mortal (newSVpv (r, len)));\n";
+	     pr "      free (r);\n";
+
+	 | RInt64 ->
+             pr "PREINIT:\n";
+             pr "      int64_t r;\n";
+             pr "   CODE:\n";
+	     pr "      errno = 0;\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == -1 && errno != 0)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      RETVAL = my_newSVll (r);\n";
+             pr " OUTPUT:\n";
+             pr "      RETVAL\n"
+	);
+	pr "\n"
+      )
+  ) functions
 
 and generate_python_py () =
   generate_header HashStyle LGPLv2plus
