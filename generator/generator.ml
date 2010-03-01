@@ -1493,7 +1493,29 @@ and generate_ocaml_c () =
 #include <caml/memory.h>
 #include <caml/mlvalues.h>
 #include <caml/signals.h>
+
+#ifdef HAVE_CAML_UNIXSUPPORT_H
 #include <caml/unixsupport.h>
+#else
+extern value unix_error_of_code (int errcode);
+#endif
+
+#ifndef HAVE_CAML_RAISE_WITH_ARGS
+static void
+caml_raise_with_args (value tag, int nargs, value args[])
+{
+  CAMLparam1 (tag);
+  CAMLxparamN (args, nargs);
+  value bucket;
+  int i;
+
+  bucket = caml_alloc_small (1 + nargs, 0);
+  Field(bucket, 0) = tag;
+  for (i = 0; i < nargs; i++) Field(bucket, 1 + i) = args[i];
+  caml_raise(bucket);
+  CAMLnoreturn;
+}
+#endif
 
 #include <hivex.h>
 

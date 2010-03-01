@@ -167,6 +167,35 @@ AC_PROG_OCAML
 AC_PROG_FINDLIB
 AM_CONDITIONAL([HAVE_OCAML],[test "x$OCAMLC" != "xno" -a "x$OCAMLFIND" != "xno"])
 
+if test "x$OCAMLC" != "xno"; then
+    dnl Check if we have caml/unixsupport.h header (OCaml bindings only).
+    old_CFLAGS="$CFLAGS"
+    CFLAGS="$CFLAGS -I$OCAMLLIB"
+    AC_CHECK_HEADERS([caml/unixsupport.h],[],[],
+    [
+    #include <caml/config.h>
+    #include <caml/mlvalues.h>
+    ])
+    CFLAGS="$old_CFLAGS"
+
+    dnl Do we have function caml_raise_with_args?
+    f=caml_raise_with_args
+    AC_MSG_CHECKING([for function $f])
+    echo "char $f (); char foo() { return $f (); }" > conftest.c
+    rm -f conftest_ml.ml
+    touch conftest_ml.ml
+    if $OCAMLOPT -c conftest.c 2>/dev/null && \
+       $OCAMLOPT -c conftest_ml.ml 2>/dev/null && \
+       $OCAMLOPT conftest.o conftest_ml.cmx -o conftest 2>/dev/null ; then
+        AC_DEFINE([HAVE_CAML_RAISE_WITH_ARGS],[1],
+                  [Defined if function caml_raise_with_args exists.])
+        AC_MSG_RESULT([found])
+    else
+        AC_MSG_RESULT([not found])
+    fi
+    rm -f conftest conftest.* conftest_ml.*
+fi
+
 dnl Check for Perl (optional, for Perl bindings).
 dnl XXX This isn't quite right, we should check for Perl devel library.
 AC_CHECK_PROG([PERL],[perl],[perl],[no])
