@@ -32,8 +32,8 @@ noinst_SCRIPTS = example1 example2 example3 example4 example5 example6
 
 hivexsh_SOURCES = \
   hivexsh.c \
-  hivex.h \
-  byte_conversions.h
+  ../lib/hivex.h \
+  ../lib/byte_conversions.h
 
 hivexsh_LDADD = ../lib/libhivex.la $(LIBREADLINE)
 hivexsh_CFLAGS = \
