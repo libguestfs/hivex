@@ -1923,7 +1923,7 @@ XSLoader::load ('Win::Hivex');
 
 =item open
 
- $h = Win::Hivex::open ($filename,";
+ $h = Win::Hivex->open ($filename,";
 
   List.iter (
     fun (_, flag, _) ->
