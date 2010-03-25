@@ -3,5 +3,6 @@ lib/hivex.c
 ocaml/hivex_c.c
 perl/Hivex.c
 perl/lib/Win/Hivex.pm
+perl/lib/Win/Hivex/Regedit.pm
 sh/hivexsh.c
 xml/hivexml.c

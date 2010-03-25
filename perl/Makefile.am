@@ -19,6 +19,7 @@ EXTRA_DIST = \
 	Makefile.PL.in \
 	run-perl-tests \
 	lib/Win/Hivex.pm \
+	lib/Win/Hivex/Regedit.pm \
 	Hivex.xs \
 	t/*.t \
 	typemap
