@@ -2415,7 +2415,7 @@ DESTROY (h)
 	     pr "      size_t len;\n";
 	     pr "      hive_type type;\n";
 	     pr " PPCODE:\n";
-             pr "      r = hivex_%s (%s, &len, &type);\n"
+             pr "      r = hivex_%s (%s, &type, &len);\n"
 	       name (String.concat ", " c_params);
 	     free_args ();
              pr "      if (r == -1)\n";
@@ -2431,7 +2431,7 @@ DESTROY (h)
 	     pr "      size_t len;\n";
 	     pr "      hive_type type;\n";
 	     pr " PPCODE:\n";
-             pr "      r = hivex_%s (%s, &len, &type);\n"
+             pr "      r = hivex_%s (%s, &type, &len);\n"
 	       name (String.concat ", " c_params);
 	     free_args ();
              pr "      if (r == NULL)\n";
