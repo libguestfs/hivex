@@ -2439,7 +2439,7 @@ DESTROY (h)
 	       name;
 	     pr "      EXTEND (SP, 2);\n";
 	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
-	     pr "      PUSHs (sv_2mortal (newSVpv (r, len)));\n";
+	     pr "      PUSHs (sv_2mortal (newSVpvn (r, len)));\n";
 	     pr "      free (r);\n";
 
 	 | RInt64 ->
