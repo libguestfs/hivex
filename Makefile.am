@@ -43,15 +43,9 @@ dist-hook:
 all-local:
 	cd $(srcdir); \
 	find $(DIST_SUBDIRS) \
-	    -name '*.c' -o -name '*.pl' -o -name '*.pm' -o \
-	    -name 'virt-cat' -o \
-	    -name 'virt-df' -o \
-	    -name 'virt-edit' -o \
-	    -name 'virt-inspector' -o \
-	    -name 'virt-ls' -o \
-	    -name 'virt-rescue' -o \
-	    -name 'virt-tar' | \
+	    -name '*.c' -o -name '*.pl' -o -name '*.pm' | \
 	grep -v '^gnulib/' | \
+	grep -v 'perl/blib/' | \
 	LC_ALL=C sort | \
 	sed 's,^\./,,' > po/POTFILES.in
 
