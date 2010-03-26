@@ -56,7 +56,7 @@
 #include "byte_conversions.h"
 
 /* These limits are in place to stop really stupid stuff and/or exploits. */
-#define HIVEX_MAX_SUBKEYS       10000
+#define HIVEX_MAX_SUBKEYS       15000
 #define HIVEX_MAX_VALUES         1000
 #define HIVEX_MAX_VALUE_LEN   1000000
 #define HIVEX_MAX_ALLOCATION  1000000
