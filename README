@@ -92,6 +92,9 @@ python/
 	are welcome (please modify generator/generator.ml to
 	add them).
 
+regedit/
+        Regedit-like registry merging tool.
+
 sh/
 
 	Interactive shell.  This also contains the old 'hivexget'

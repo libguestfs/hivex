@@ -1,0 +1,296 @@
+#!/usr/bin/perl -w
+# Copyright (C) 2010 Red Hat Inc.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+
+use warnings;
+use strict;
+
+use Win::Hivex;
+use Win::Hivex::Regedit qw(reg_import reg_export);
+
+use Pod::Usage;
+use Getopt::Long;
+
+=encoding utf8
+
+=head1 NAME
+
+hivexregedit - Merge and export Registry changes from regedit-format files.
+
+=head1 SYNOPSIS
+
+ hivexregedit --merge [--prefix prefix] [--encoding enc] \
+         hivefile [regfile]
+
+ hivexregedit --export [--prefix prefix] hivefile key > regfile
+
+=head1 DESCRIPTION
+
+Please note hivexregedit is a low-level tool for manipulating hive
+files directly.  To merge or export registry changes to Windows
+virtual machines it's better to use L<virt-win-reg(1)>.
+
+Given a local binary ("hive") file, there are two modes.  C<--merge>
+imports (merges) changes from a regedit-format file into the hive.  It
+is similar to using the C</s> switch in Windows regedit.exe.
+
+C<--export> exports a Registry key (recursively) into the regedit format.
+
+=head2 ENCODING
+
+C<hivexregedit> expects that regedit files have already been reencoded
+in the local encoding.  Usually on Linux hosts, this means UTF-8 with
+Unix-style line endings.  Since Windows regedit files are often in
+UTF-16LE with Windows-style line endings, you may need to reencode the
+whole file before or after processing.
+
+To reencode a file from Windows format to Linux (before processing it
+with the C<--merge> option), you would do something like this:
+
+ iconv -f utf-16le -t utf-8 < win.reg | dos2unix > linux.reg
+
+To go in the opposite direction, after using C<--export> and before
+sending the file to a Windows user, do something like this:
+
+ unix2dos linux.reg | iconv -f utf-8 -t utf-16le > win.reg
+
+For more information about encoding, see L<Win::Hivex::Regedit(3)>.
+
+If you are unsure about the current encoding, use the L<file(1)>
+command.  Recent versions of Windows regedit.exe produce a UTF-16LE
+file with Windows-style (CRLF) line endings, like this:
+
+ $ file software.reg
+ software.reg: Little-endian UTF-16 Unicode text, with very long lines,
+ with CRLF line terminators
+
+This file would need conversion before you could C<--merge> it.
+
+=head2 SHELL QUOTING
+
+Be careful when passing parameters containing C<\> (backslash) in the
+shell.  Usually you will have to use 'single quotes' or double
+backslashes (but not both) to protect them from the shell.
+
+=head2 CurrentControlSet etc.
+
+Registry keys like C<CurrentControlSet> don't really exist in the
+Windows Registry at the level of the hive file, and therefore you
+cannot modify these.  Replace this with C<ControlSet001>, and
+similarly for other C<Current...> keys.
+
+=head1 EXAMPLE
+
+ $ virt-cat WindowsGuest /Windows/System32/config/software > software.hive
+ $ hivexregedit --export \
+     --prefix 'HKEY_LOCAL_MACHINE\SOFTWARE' \
+     software.hive '\Microsoft' > ms-keys.reg
+
+ $ hivexregedit --merge system.hive \
+     --prefix 'HKEY_LOCAL_MACHINE\SYSTEM' additions.reg
+
+=head1 OPTIONS
+
+=over 4
+
+=cut
+
+my $help;
+
+=item B<--help>
+
+Display help.
+
+=cut
+
+my $debug;
+
+=item B<--debug>
+
+Enable debugging in the hivex library.  This is useful for diagnosing
+bugs and also malformed hive files.
+
+=cut
+
+my $merge;
+
+=item B<--merge>
+
+ hivexregedit --merge [--prefix prefix] [--encoding enc] \
+         hivefile [regfile]
+
+Merge C<regfile> (a regedit-format text file) into the hive
+C<hivefile>.  If C<regfile> is omitted, then the program reads from
+standard input.  (Also you can give multiple input files).
+
+C<--prefix> specifies the Windows Registry prefix.  It is almost
+always necessary to use this when dealing with real hive files.
+
+C<--encoding> specifies the encoding for unmarked strings in the
+input.  It defaults to C<UTF-16LE> which should work for recent
+versions of Windows.  Another possibility is to use C<ASCII>.
+
+=cut
+
+my $export;
+
+=item B<--export>
+
+ hivexregedit --export [--prefix prefix] hivefile key > regfile
+
+C<key> is a path within the hive C<hivefile>.  (The key should not
+contain any prefix and should be quoted to defend backslashes from the
+shell).  The key is exported, recursively, to standard output in the
+textual regedit format.
+
+C<--prefix> specifies the Windows Registry prefix.  It is almost
+always necessary to use this when dealing with real hive files.
+
+=cut
+
+my $prefix;
+
+=item B<--prefix> prefix
+
+Hive files and Windows Registry key names are indirectly related.  For
+example, inside the software hive, all keys are stored relative to
+C<HKEY_LOCAL_MACHINE\SOFTWARE>.  Thus
+C<HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft> appears in the hive file as
+C<\Microsoft>.
+
+The hive format itself does not store this prefix, so you have to
+supply it based on outside knowledge.  (L<virt-win-reg(1)>, amongst
+other things, already knows about this).
+
+Usually it is sufficient to pass the parameter
+C<--prefix 'HKEY_LOCAL_MACHINE\SOFTWARE'> or similar when doing
+merges and exports.
+
+=cut
+
+my $encoding;
+
+=item B<--encoding> UTF-16LE|ASCII
+
+When merging (only), you may need to specify the encoding for strings
+to be used in the hive file.  This is explained in detail in
+L<Win::Hivex::Regedit(3)/ENCODING STRINGS>.
+
+The default is to use UTF-16LE, which should work with recent versions
+of Windows.
+
+=back
+
+=cut
+
+GetOptions ("help|?" => \$help,
+            "debug" => \$debug,
+            "merge|import" => \$merge,
+            "export" => \$export,
+            "prefix=s" => \$prefix,
+            "encoding=s" => \$encoding,
+    ) or pod2usage (2);
+pod2usage (1) if $help;
+
+if ($merge && $export) {
+    die "hivexregedit: cannot use --merge and --export at the same time\n"
+}
+
+unless ($merge || $export) {
+    die "hivexregedit: use --merge or --export, see the manpage for help\n"
+}
+
+if ($export && defined $encoding) {
+    die "hivexregedit: --encoding has no effect when used with --export\n"
+}
+
+if ($merge) {                   # --merge (reg_import)
+    if (@ARGV < 1) {
+        die "hivexregedit --merge hivefile [input.reg ...]\n"
+    }
+
+    my $hivefile = shift @ARGV;
+
+    my $h = Win::Hivex->open ($hivefile, write => 1, debug => $debug);
+
+    # Read from stdin unless other files have been specified.
+    unshift (@ARGV, '-') unless @ARGV;
+
+    foreach (@ARGV) {
+        open FILE, $_ or die "$_: $!";
+        reg_import (\*FILE, sub {
+            local $_ = shift;
+            # Remove prefix from the start of the path, matching
+            # case insensitively.
+            if (defined $prefix) {
+                my $len = length $prefix;
+                if (length $_ >= $len &&
+                    lc (substr ($_, 0, $len)) eq lc ($prefix)) {
+                    $_ = substr ($_, $len);
+                }
+            }
+            ($h, $_)
+        });
+    }
+
+    $h->commit (undef);
+} else {                        # --export (reg_export)
+    if (@ARGV != 2) {
+        die "hivexregedit --export hivefile key\n"
+    }
+
+    my $hivefile = shift @ARGV;
+    my $key = shift @ARGV;
+
+    my $h = Win::Hivex->open ($hivefile, debug => $debug);
+
+    print "Windows Registry Editor Version 5.00\n\n";
+
+    reg_export ($h, $key, \*STDOUT, prefix => $prefix);
+}
+
+=head1 SEE ALSO
+
+L<virt-win-reg(1)>,
+L<Win::Hivex::Regedit(3)>,
+L<Win::Hivex(3)>,
+L<hivexsh(1)>,
+L<dos2unix(1)>,
+L<unix2dos(1)>,
+L<iconv(1)>,
+L<http://libguestfs.org/>.
+
+=head1 AUTHOR
+
+Richard W.M. Jones L<http://people.redhat.com/~rjones/>
+
+=head1 COPYRIGHT
+
+Copyright (C) 2010 Red Hat Inc.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.

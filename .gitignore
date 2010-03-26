@@ -28,6 +28,7 @@ hivex-*.tar.gz
 html/hivex.3.html
 html/hivexget.1.html
 html/hivexml.1.html
+html/hivexregedit.1.html
 html/hivexsh.1.html
 images/large
 images/mklarge
@@ -95,6 +96,7 @@ po/remove-potcdate.sin
 python/*.pyc
 python/hivex-py.c
 python/hivex.py
+regedit/hivexregedit.1
 sh/*.1
 sh/hivexsh
 stamp-h1

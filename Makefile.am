@@ -24,7 +24,7 @@ SUBDIRS += ocaml
 endif
 
 if HAVE_PERL
-SUBDIRS += perl
+SUBDIRS += perl regedit
 endif
 
 # Not yet written.
