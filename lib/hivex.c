@@ -727,6 +727,9 @@ get_children (hive_h *h, hive_node_h node,
 
   /* Arbitrarily limit the number of subkeys we will ever deal with. */
   if (nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex: get_children: returning ERANGE because nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS (%zu > %d)\n",
+               nr_subkeys_in_nk, HIVEX_MAX_SUBKEYS);
     errno = ERANGE;
     goto error;
   }
@@ -997,6 +1000,9 @@ get_values (hive_h *h, hive_node_h node,
 
   /* Arbitrarily limit the number of values we will ever deal with. */
   if (nr_values > HIVEX_MAX_VALUES) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex: get_values: returning ERANGE because nr_values > HIVEX_MAX_VALUES (%zu > %d)\n",
+               nr_values, HIVEX_MAX_VALUES);
     errno = ERANGE;
     goto error;
   }
@@ -1195,6 +1201,9 @@ hivex_value_value (hive_h *h, hive_value_h value,
 
   /* Arbitrarily limit the length that we will read. */
   if (len > HIVEX_MAX_VALUE_LEN) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_value_value: returning ERANGE because data length > HIVEX_MAX_VALUE_LEN (%zu > %d)\n",
+               len, HIVEX_MAX_SUBKEYS);
     errno = ERANGE;
     return NULL;
   }
