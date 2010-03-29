@@ -1860,6 +1860,8 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
   struct ntreg_hbin_block *blockhdr =
     (struct ntreg_hbin_block *) (h->addr + offset);
 
+  memset (blockhdr, 0, seg_len);
+
   blockhdr->seg_len = htole32 (- (int32_t) seg_len);
   if (id[0] && id[1] && seg_len >= sizeof (struct ntreg_hbin_block)) {
     blockhdr->id[0] = id[0];
