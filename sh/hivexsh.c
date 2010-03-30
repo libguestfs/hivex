@@ -108,7 +108,7 @@ main (int argc, char *argv[])
 
   set_prompt_string ();
 
-  while ((c = getopt (argc, argv, "dfw")) != EOF) {
+  while ((c = getopt (argc, argv, "df:w")) != EOF) {
     switch (c) {
     case 'd':
       open_flags |= HIVEX_OPEN_DEBUG;
