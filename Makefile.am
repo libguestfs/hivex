@@ -52,3 +52,16 @@ all-local:
 # Pkgconfig.
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = hivex.pc
+
+# Maintainer website update.
+HTMLFILES = \
+	html/hivex.3.html \
+	html/hivexget.1.html \
+	html/hivexml.1.html \
+	html/hivexregedit.1.html \
+	html/hivexsh.1.html
+
+WEBSITEDIR = $(HOME)/d/redhat/websites/libguestfs
+
+website: $(HTMLFILES)
+	cp $(HTMLFILES) $(WEBSITEDIR)
