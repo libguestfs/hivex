@@ -50,4 +50,4 @@ $(top_builddir)/html/hivexml.1.html: hivexml.pod
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexml.1.html \
-	  lib/hivexml.pod
+	  xml/hivexml.pod
