@@ -1,0 +1,168 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C).
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Yulia <ypoyarko@redhat.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: ru\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-03-01 13:54+0000\n"
+"PO-Revision-Date: 2010-03-24 17:03+1100\n"
+"Last-Translator: Yulia <ypoyarko@redhat.com>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms:  nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: sh/hivexsh.c:149
+#, c-format
+msgid ""
+"\n"
+"Welcome to hivexsh, the hivex interactive shell for examining\n"
+"Windows Registry binary hive files.\n"
+"\n"
+"Type: 'help' for help summary\n"
+"      'quit' to quit the shell\n"
+"\n"
+msgstr ""
+"\n"
+"Добро пожаловать в hivexsh &mdash; интерактивную оболочку для\n"
+"анализа двоичных файлов куста реестра Windows.\n"
+"\n"
+"Введите «help» для получения помощи, \n"
+"     «quit» для выхода из оболочки\n"
+"\n"
+
+#: sh/hivexsh.c:263
+#, c-format
+msgid "hivexsh: error getting parent of node %zu\n"
+msgstr "hivexsh: ошибка получения родительского узла для %zu\n"
+
+#: sh/hivexsh.c:273
+#, c-format
+msgid "hivexsh: error getting node name of node %zx\n"
+msgstr "hivexsh: ошибка получения имени узла для %zx\n"
+
+#: sh/hivexsh.c:412
+#, c-format
+msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
+msgstr "hivexsh: сначала необходимо загрузить файл с помощью команды «load hivefile»\n"
+
+#: sh/hivexsh.c:433
+#, c-format
+msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
+msgstr "hivexsh: неизвестная команда «%s». Выполните «help» для получения помощи\n"
+
+#: sh/hivexsh.c:443
+#, c-format
+msgid "hivexsh: load: no hive file name given to load\n"
+msgstr "hivexsh: load: не задан файл для загрузки\n"
+
+#: sh/hivexsh.c:459
+#, c-format
+msgid ""
+"hivexsh: failed to open hive file: %s: %m\n"
+"\n"
+"If you think this file is a valid Windows binary hive file (_not_\n"
+"a regedit *.reg file) then please run this command again using the\n"
+"hivexsh option '-d' and attach the complete output _and_ the hive file\n"
+"which fails into a bug report at https://bugzilla.redhat.com/\n"
+"\n"
+msgstr ""
+"hivexsh: не удалось открыть файл %s: %m\n"
+"\n"
+"Если вы уверены, что этот файл является двоичным файлом куста Windows\n"
+"(НЕ файл *.reg), повторно выполните команду с опцией «-d»\n"
+"и включите её вывод и сам файл куста в отчёт Bugzilla:\n"
+"https://bugzilla.redhat.com/\n"
+"\n"
+
+#: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
+#, c-format
+msgid "hivexsh: '%s' command should not be given arguments\n"
+msgstr "hivexsh: не передавайте аргументы команде «%s»\n"
+
+#: sh/hivexsh.c:534
+#, c-format
+msgid ""
+"%s: %s: \\ characters in path are doubled - are you escaping the path "
+"parameter correctly?\n"
+msgstr "%s: %s: \\ символы в пути повторяются. Проверьте правильность управляющей последовательности.\n"
+
+#: sh/hivexsh.c:572
+#, c-format
+msgid "hivexsh: cd: subkey '%s' not found\n"
+msgstr "hivexsh: cd: подраздел «%s» не найден\n"
+
+#: sh/hivexsh.c:590
+#, c-format
+msgid ""
+"Navigate through the hive's keys using the 'cd' command, as if it\n"
+"contained a filesystem, and use 'ls' to list the subkeys of the\n"
+"current key.  Full documentation is in the hivexsh(1) manual page.\n"
+msgstr ""
+"Переход между разделами куста осуществляется с помощью команды «cd»,\n"
+"аналогично навигации в файловой системе.\n"
+"«ls» позволяет просмотреть список подразделов.\n"
+"Подробную информацию можно найти на странице помощи hivexsh(1).\n"
+
+#: sh/hivexsh.c:665
+#, c-format
+msgid "%s: %s: key not found\n"
+msgstr "%s: %s: раздел не найден\n"
+
+#: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+msgstr "%s: %s: недопустимое целое значение параметра (%s вернул %d)\n"
+
+#: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
+#, c-format
+msgid "%s: %s: integer out of range\n"
+msgstr "%s: %s: целое значение выходит за пределы диапазона\n"
+
+#: sh/hivexsh.c:868 sh/hivexsh.c:886
+#, c-format
+msgid "hivexsh: setval: unexpected end of input\n"
+msgstr "hivexsh: setval: непредвиденный конец ввода\n"
+
+#: sh/hivexsh.c:907 sh/hivexsh.c:926
+#, c-format
+msgid "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
+msgstr "hivexsh: string(utf16le): при вводе поддерживаются только 7-битные строки ASCII\n"
+
+#: sh/hivexsh.c:1037
+#, c-format
+msgid "hivexsh: setval: trailing garbage after hex string\n"
+msgstr "hivexsh: setval: мусор в конце шестнадцатеричной строки\n"
+
+#: sh/hivexsh.c:1044
+#, c-format
+msgid ""
+"hivexsh: setval: cannot parse value string, please refer to the man page "
+"hivexsh(1) for help: %s\n"
+msgstr "hivexsh: setval: не удалось разобрать значение. Обратитесь к странице помощи hivexsh(1): %s\n"
+
+#: sh/hivexsh.c:1073
+#, c-format
+msgid "hivexsh: del: the root node cannot be deleted\n"
+msgstr "hivexsh: del: невозможно удалить корневой элемент\n"
+
+#: xml/hivexml.c:70
+#, c-format
+msgid "%s: failed to write XML document\n"
+msgstr "%s: не удалось записать XML\n"
+
+#: xml/hivexml.c:101
+#, c-format
+msgid "hivexml: missing name of input file\n"
+msgstr "hivexml: отсутствует имя входного файла\n"
+
+#: xml/hivexml.c:120
+#, c-format
+msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
+msgstr "xmlNewTextWriterFilename: не удалось создать модуль записи XML\n"
+
