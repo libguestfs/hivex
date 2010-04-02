@@ -79,3 +79,5 @@ $(top_builddir)/html/hivexsh.1.html: hivexsh.pod
 	  --htmldir html \
 	  --outfile html/hivexsh.1.html \
 	  sh/hivexsh.pod
+
+CLEANFILES = $(man_MANS)

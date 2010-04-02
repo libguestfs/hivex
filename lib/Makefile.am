@@ -55,3 +55,5 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  --htmldir html \
 	  --outfile html/hivex.3.html \
 	  lib/hivex.pod
+
+CLEANFILES = $(man_MANS)

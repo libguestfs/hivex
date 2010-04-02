@@ -53,7 +53,7 @@ Makefile-pl: Makefile.PL
 
 clean-local:
 	-$(MAKE) -f Makefile-pl clean
-	rm -f Makefile-pl
+	rm -f Makefile-pl Makefile-pl.old
 
 install-data-hook:
 	$(MAKE) -f Makefile-pl DESTDIR=$(DESTDIR) install

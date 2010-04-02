@@ -41,3 +41,5 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
 	  --htmldir html \
 	  --outfile html/hivexregedit.1.html \
 	  regedit/hivexregedit
+
+CLEANFILES = $(man_MANS)

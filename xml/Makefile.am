@@ -51,3 +51,5 @@ $(top_builddir)/html/hivexml.1.html: hivexml.pod
 	  --htmldir html \
 	  --outfile html/hivexml.1.html \
 	  xml/hivexml.pod
+
+CLEANFILES = $(man_MANS)

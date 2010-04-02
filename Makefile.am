@@ -65,3 +65,5 @@ WEBSITEDIR = $(HOME)/d/redhat/websites/libguestfs
 
 website: $(HTMLFILES)
 	cp $(HTMLFILES) $(WEBSITEDIR)
+
+CLEANFILES = $(HTMLFILES) pod2*.tmp
