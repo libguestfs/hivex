@@ -143,7 +143,7 @@ AC_ARG_WITH([readline],
 LIBREADLINE=
 AS_IF([test "x$with_readline" != xno],
     [AC_CHECK_LIB([readline], [main],
-        [AC_SUBST([LIBREADLINE], ["-lreadline -lncurses"])
+        [AC_SUBST([LIBREADLINE], ["-lreadline"])
          AC_DEFINE([HAVE_LIBREADLINE], [1],
                    [Define if you have libreadline])
         ],
@@ -151,7 +151,7 @@ AS_IF([test "x$with_readline" != xno],
          AC_MSG_FAILURE(
              [--with-readline was given, but test for readline failed])
          fi
-        ], -lncurses)])
+        ])])
 
 dnl For i18n.
 AM_GNU_GETTEXT([external])
