@@ -51,13 +51,13 @@ C<--export> exports a Registry key (recursively) into the regedit format.
 
 =head2 ENCODING
 
-C<hivexregedit> expects that regedit files have already been reencoded
+C<hivexregedit> expects that regedit files have already been re-encoded
 in the local encoding.  Usually on Linux hosts, this means UTF-8 with
 Unix-style line endings.  Since Windows regedit files are often in
-UTF-16LE with Windows-style line endings, you may need to reencode the
+UTF-16LE with Windows-style line endings, you may need to re-encode the
 whole file before or after processing.
 
-To reencode a file from Windows format to Linux (before processing it
+To re-encode a file from Windows format to Linux (before processing it
 with the C<--merge> option), you would do something like this:
 
  iconv -f utf-16le -t utf-8 < win.reg | dos2unix > linux.reg
