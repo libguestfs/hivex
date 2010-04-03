@@ -18,7 +18,8 @@
 SUBDIRS = tools
 
 EXTRA_DIST = \
-	hivex.pod
+	hivex.pod \
+	hivex.syms
 
 lib_LTLIBRARIES = libhivex.la
 
@@ -26,10 +27,15 @@ libhivex_la_SOURCES = \
   hivex.c \
   hivex.h \
   byte_conversions.h \
-  gettext.h
+  gettext.h \
+  hivex.syms
 
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la
-libhivex_la_LDFLAGS = -version-info 0:0:0 $(LTLIBINTL) $(LTLIBTHREAD)
+libhivex_la_LDFLAGS = \
+	-version-info 0:0:0 \
+	$(VERSION_SCRIPT_FLAGS)hivex.syms \
+	$(LTLIBINTL) \
+	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 libhivex_la_CPPFLAGS = -I$(top_srcdir)/gnulib/lib
 

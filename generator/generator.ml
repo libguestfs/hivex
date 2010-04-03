@@ -1321,6 +1321,32 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
 Lesser General Public License for more details.
 "
 
+(* Generate the linker script which controls the visibility of
+ * symbols in the public ABI and ensures no other symbols get
+ * exported accidentally.
+ *)
+and generate_linker_script () =
+  generate_header HashStyle GPLv2plus;
+
+  let globals = [
+    "hivex_visit";
+    "hivex_visit_node"
+  ] in
+
+  let functions =
+    List.map (fun (name, _, _, _) -> "hivex_" ^ name)
+      functions in
+  let globals = List.sort compare (globals @ functions) in
+
+  pr "{\n";
+  pr "    global:\n";
+  List.iter (pr "        %s;\n") globals;
+  pr "\n";
+
+  pr "    local:\n";
+  pr "        *;\n";
+  pr "};\n"
+
 and generate_ocaml_interface () =
   generate_header OCamlStyle LGPLv2plus;
 
@@ -2521,6 +2547,8 @@ Run it from the top source directory using the command
 
   output_to "lib/hivex.h" generate_c_header;
   output_to "lib/hivex.pod" generate_c_pod;
+
+  output_to "lib/hivex.syms" generate_linker_script;
 
   output_to "ocaml/hivex.mli" generate_ocaml_interface;
   output_to "ocaml/hivex.ml" generate_ocaml_implementation;

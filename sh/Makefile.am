@@ -35,7 +35,7 @@ hivexsh_SOURCES = \
   ../lib/hivex.h \
   ../lib/byte_conversions.h
 
-hivexsh_LDADD = ../lib/libhivex.la $(LIBREADLINE)
+hivexsh_LDADD = ../lib/libhivex.la ../gnulib/lib/libgnu.la $(LIBREADLINE)
 hivexsh_CFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
   -I$(top_srcdir)/lib \

@@ -37,6 +37,7 @@ install-sh
 lib/*.3
 lib/hivex.h
 lib/hivex.pod
+lib/hivex.syms
 lib/tools/*.opt
 .libs
 libtool
