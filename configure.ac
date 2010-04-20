@@ -209,7 +209,7 @@ AC_CHECK_PROG([PERL],[perl],[perl],[no])
 dnl Check for Perl modules that must be present to compile and
 dnl test the Perl bindings.
 missing_perl_modules=no
-for pm in Test::More Test::Pod Test::Pod::Coverage ExtUtils::MakeMaker IO::Stringy; do
+for pm in Test::More ExtUtils::MakeMaker IO::Stringy; do
     AC_MSG_CHECKING([for $pm])
     if ! perl -M$pm -e1 >/dev/null 2>&1; then
         AC_MSG_RESULT([no])
