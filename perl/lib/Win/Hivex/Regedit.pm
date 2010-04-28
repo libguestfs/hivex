@@ -285,16 +285,19 @@ sub _parse_value
         $type = 1;
         $data = _parse_quoted_string ($1);
         return undef unless defined $data;
+        $data .= "\0"; # Value strings are implicitly ASCIIZ.
         $data = encode ($encoding, $data);
     } elsif (m/^str\(([[:xdigit:]]+)\):(".*")$/) {
         $type = hex ($1);
         $data = _parse_quoted_string ($2);
         return undef unless defined $data;
+        $data .= "\0"; # Value strings are implicitly ASCIIZ.
         $data = encode ($encoding, $data);
     } elsif (m/^(".*")$/) {
         $type = 1;
         $data = _parse_quoted_string ($1);
         return undef unless defined $data;
+        $data .= "\0"; # Value strings are implicitly ASCIIZ.
         $data = encode ($encoding, $data);
     } else {
         return undef;
