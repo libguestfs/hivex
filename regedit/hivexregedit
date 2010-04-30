@@ -89,8 +89,23 @@ backslashes (but not both) to protect them from the shell.
 
 Registry keys like C<CurrentControlSet> don't really exist in the
 Windows Registry at the level of the hive file, and therefore you
-cannot modify these.  Replace this with C<ControlSet001>, and
-similarly for other C<Current...> keys.
+cannot modify these.
+
+C<CurrentControlSet> is usually an alias for C<ControlSet001>.  In
+some circumstances it might refer to another control set.  The way
+to find out is to look at the C<HKLM\SYSTEM\Select> key:
+
+ $ hivexregedit --export SYSTEM '\Select'
+ [\Select]
+ "Current"=dword:00000001
+ "Default"=dword:00000001
+ "Failed"=dword:00000000
+ "LastKnownGood"=dword:00000002
+
+"Default" is the one which Windows will choose when it boots.
+
+Similarly, other C<Current...> keys in the path may need to
+be replaced.
 
 =head1 EXAMPLE
 
