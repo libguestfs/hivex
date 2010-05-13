@@ -18,7 +18,6 @@
 use strict;
 use warnings;
 
-use Encode qw(from_to);
 use IO::Scalar;
 
 use Test::More tests => 16;
@@ -102,12 +101,18 @@ $expected = '[\]
 
 run_test ($data, $expected);
 
+# In the next test, the value of ValueContainingEscapes in the
+# imported data is \\W\\, which will become \W\ in the final hive.
+# However Perl has complex and inconsistent rules on quoting
+# backslashes.  See:
+# http://en.wikibooks.org/wiki/Perl_Programming/Strings#Single_Quoted_Strings
 $data = '
 [\A]
 "NotExistant"=-
 
 [\A\B]
 "Key\"Containing\"Quotes"=hex(0):
+"ValueContainingEscapes"="\\\\W\\\\"
 ';
 $expected = '[\]
 
@@ -115,6 +120,7 @@ $expected = '[\]
 
 [\A\B]
 "Key\"Containing\"Quotes"=hex(0):
+"ValueContainingEscapes"=hex(1):5c,00,57,00,5c,00,00,00
 
 ';
 
@@ -123,6 +129,7 @@ run_test ($data, $expected);
 $data = '
 [\A\B]
 "Key\"Containing\"Quotes"=-
+"ValueContainingEscapes"=-
 
 -[\A]
 ';
