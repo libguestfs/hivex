@@ -990,7 +990,7 @@ On error this returns NULL and sets errno.\n\n"
        | RLenType ->
            pr "\
 Returns 0 on success.
-On error this returns NULL and sets errno.\n\n"
+On error this returns -1 and sets errno.\n\n"
        | RLenTypeVal ->
            pr "\
 The value is returned as an array of bytes (of length C<len>).
