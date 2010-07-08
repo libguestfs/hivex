@@ -71,6 +71,7 @@ and argt =                              (* Note, cannot be NULL/0 unless it
   | AOpenFlags                          (* HIVEX_OPEN_* flags list. *)
   | AUnusedFlags                        (* Flags arg that is always 0 *)
   | ASetValues                          (* See hivex_node_set_values. *)
+  | ASetValue                           (* See hivex_node_set_value. *)
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
@@ -304,8 +305,16 @@ subnodes become invalid.  You cannot delete the root node.";
     "set (key, value) pairs at a node",
     "\
 This call can be used to set all the (key, value) pairs
-stored in C<node>.  Note that this library does not offer
-a way to modify just a single key at a node.
+stored in C<node>.
+
+C<node> is the node to modify.";
+
+  "node_set_value", (RErr, [AHive; ANode "node"; ASetValue; AUnusedFlags]),
+    "set a single (key, value) pair at a given node",
+    "\
+This call can be used to replace a single (key, value) pair
+stored in C<node>. If the key does not already exist, then a
+new key is added. Key matching is case insensitive.
 
 C<node> is the node to modify.";
 ]
@@ -459,6 +468,7 @@ let name_of_argt = function
   | ANode n | AValue n | AString n | AStringNullable n -> n
   | AOpenFlags | AUnusedFlags -> "flags"
   | ASetValues -> "values"
+  | ASetValue -> "val"
 
 (* Check function names etc. for consistency. *)
 let check_functions () =
@@ -806,6 +816,7 @@ and generate_c_prototype ?(extern = false) name style =
       | AString n | AStringNullable n -> pr "const char *%s" n
       | AOpenFlags | AUnusedFlags -> pr "int flags"
       | ASetValues -> pr "size_t nr_values, const hive_set_value *values"
+      | ASetValue -> pr "const hive_set_value *val"
   ) (snd style);
   (match fst style with
    | RLenType | RLenTypeVal -> pr ", hive_type *t, size_t *len"
@@ -936,6 +947,11 @@ should be C<nr_values> elements in this array.
 Any existing values stored at the node are discarded, and their
 C<hive_value_h> handles become invalid.  Thus you can remove all
 values stored at C<node> by passing C<nr_values = 0>.\n\n";
+
+      if List.mem ASetValue (snd style) then
+	pr "C<value> is a single (key, value) pair.
+
+Existing C<hive_value_h> handles become invalid.\n\n";
 
       (match fst style with
        | RErr ->
@@ -1478,6 +1494,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
     | AOpenFlags -> pr "open_flag list -> "
     | AUnusedFlags -> ()
     | ASetValues -> pr "set_value array -> "
+    | ASetValue -> pr "set_value -> "
   ) (snd style);
   (match fst style with
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
@@ -1548,6 +1565,7 @@ caml_raise_with_args (value tag, int nargs, value args[])
 #define Hiveh_val(v) (*((hive_h **)Data_custom_val(v)))
 static value Val_hiveh (hive_h *);
 static int HiveOpenFlags_val (value);
+static hive_set_value *HiveSetValue_val (value);
 static hive_set_value *HiveSetValues_val (value);
 static hive_type HiveType_val (value);
 static value Val_hive_type (hive_type);
@@ -1621,6 +1639,8 @@ static void raise_closed (const char *) Noreturn;
         | ASetValues ->
             pr "  int nrvalues = Wosize_val (valuesv);\n";
             pr "  hive_set_value *values = HiveSetValues_val (valuesv);\n"
+	| ASetValue ->
+	    pr "  hive_set_value *val = HiveSetValue_val (valv);\n"
       ) (snd style);
       pr "\n";
 
@@ -1688,6 +1708,9 @@ static void raise_closed (const char *) Noreturn;
         | ASetValues ->
             pr "  free (values);\n";
             pr "\n";
+	| ASetValue ->
+	    pr "  free (val);\n";
+	    pr "\n";
       ) (snd style);
 
       (* Check for errors. *)
@@ -1747,6 +1770,19 @@ HiveOpenFlags_val (value v)
   }
 
   return flags;
+}
+
+static hive_set_value *
+HiveSetValue_val (value v)
+{
+  hive_set_value *val = malloc (sizeof (hive_set_value));
+
+  val->key = String_val (Field (v, 0));
+  val->t = HiveType_val (Field (v, 1));
+  val->len = caml_string_length (Field (v, 2));
+  val->value = String_val (Field (v, 2));
+
+  return val;
 }
 
 static hive_set_value *
@@ -2113,6 +2149,7 @@ and generate_perl_prototype name style =
       | AOpenFlags -> pr "[flags]"
       | AUnusedFlags -> assert false
       | ASetValues -> pr "\\@values"
+      | ASetValue -> pr "$val"
   ) args;
 
   pr ")"
@@ -2243,6 +2280,39 @@ unpack_pl_set_values (SV *sv)
   return ret;
 }
 
+static hive_set_value *
+unpack_set_value (SV *sv)
+{
+  hive_set_value *ret;
+
+  if (!sv || !SvROK (sv) || SvTYPE (SvRV (sv)) != SVt_PVHV)
+    croak (\"not a hash ref\");
+
+  ret = malloc (sizeof (hive_set_value));
+  if (ret == NULL)
+    croak (\"malloc failed\");
+
+  HV *hv = (HV *)SvRV(sv);
+
+  SV **svp;
+  svp = hv_fetch (hv, \"key\", 3, 0);
+  if (!svp || !*svp)
+    croak (\"missing 'key' in hash\");
+  ret->key = SvPV_nolen (*svp);
+
+  svp = hv_fetch (hv, \"t\", 1, 0);
+  if (!svp || !*svp)
+    croak (\"missing 't' in hash\");
+  ret->t = SvIV (*svp);
+
+  svp = hv_fetch (hv, \"value\", 5, 0);
+  if (!svp || !*svp)
+    croak (\"missing 'value' in hash\");
+  ret->value = SvPV (*svp, ret->len);
+
+  return ret;
+}
+
 MODULE = Win::Hivex  PACKAGE = Win::Hivex
 
 PROTOTYPES: ENABLE
@@ -2319,6 +2389,8 @@ DESTROY (h)
 	    | AUnusedFlags -> ()
 	    | ASetValues ->
 		pr "      pl_set_values values = unpack_pl_set_values (ST(%d));\n" i
+	    | ASetValue ->
+		pr "      hive_set_value *val = unpack_set_value (ST(%d));\n" i
 	) (snd style);
 
 	let free_args () =
@@ -2326,6 +2398,8 @@ DESTROY (h)
 	    function
 	    | ASetValues ->
 		pr "      free (values.values);\n"
+	    | ASetValue ->
+		pr "      free (val);\n"
 	    | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
 	    | AOpenFlags | AUnusedFlags -> ()
 	  ) (snd style)

@@ -2606,3 +2606,83 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
 
   return 0;
 }
+
+int
+hivex_node_set_value (hive_h *h, hive_node_h node,
+		      const hive_set_value *val, int flags)
+{
+  hive_value_h *prev_values = hivex_node_values (h, node);
+  if (prev_values == NULL)
+    return -1;
+
+  int retval = -1;
+
+  size_t nr_values = 0;
+  for (hive_value_h *itr = prev_values; *itr != 0; ++itr)
+    ++nr_values;
+
+  hive_set_value *values = malloc ((nr_values + 1) * (sizeof (hive_set_value)));
+  if (values == NULL)
+    goto leave_prev_values;
+
+  int alloc_ct = 0;
+  int idx_of_val = -1;
+  hive_value_h *prev_val;
+  for (prev_val = prev_values; *prev_val != 0; ++prev_val) {
+    size_t len;
+    hive_type t;
+
+    hive_set_value *value = &values[prev_val - prev_values];
+
+    char *valval = hivex_value_value (h, *prev_val, &t, &len);
+    if (valval == NULL) goto leave_partial;
+
+    ++alloc_ct;
+    value->value = valval;
+    value->t = t;
+    value->len = len;
+
+    char *valkey = hivex_value_key (h, *prev_val);
+    if (valkey == NULL) goto leave_partial;
+
+    ++alloc_ct;
+    value->key = valkey;
+
+    if (STRCASEEQ (valkey, val->key))
+      idx_of_val = prev_val - prev_values;
+  }
+
+  if (idx_of_val > -1) {
+    free (values[idx_of_val].key);
+    free (values[idx_of_val].value);
+  } else {
+    idx_of_val = nr_values;
+    ++nr_values;
+  }
+
+  hive_set_value *value = &values[idx_of_val];
+  *value = (hive_set_value){
+    .key = strdup (val->key),
+    .value = malloc (val->len),
+    .len = val->len,
+    .t = val->t
+  };
+
+  if (value->key == NULL || value->value == NULL) goto leave_partial;
+  memcpy (value->value, val->value, val->len);
+
+  retval = hivex_node_set_values (h, node, nr_values, values, 0);
+
+ leave_partial:
+  for (int i = 0; i < alloc_ct; i += 2) {
+    if (values[i / 2].value != NULL)
+      free (values[i / 2].value);
+    if (i + 1 < alloc_ct && values[i / 2].key != NULL)
+      free (values[i / 2].key);
+  }
+  free (values);
+
+ leave_prev_values:
+  free (prev_values);
+  return retval;
+}
