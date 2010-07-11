@@ -2421,7 +2421,6 @@ DESTROY (h)
 	 | RErrDispose -> assert false
 	 | RHive -> assert false
 
-	 | RInt32
 	 | RNode
 	 | RValue ->
              pr "PREINIT:\n";
@@ -2541,6 +2540,21 @@ DESTROY (h)
 	     pr "      PUSHs (sv_2mortal (newSViv (type)));\n";
 	     pr "      PUSHs (sv_2mortal (newSVpvn (r, len)));\n";
 	     pr "      free (r);\n";
+
+	 | RInt32 ->
+             pr "PREINIT:\n";
+             pr "      int32_t r;\n";
+             pr "   CODE:\n";
+	     pr "      errno = 0;\n";
+             pr "      r = hivex_%s (%s);\n"
+	       name (String.concat ", " c_params);
+	     free_args ();
+             pr "      if (r == -1 && errno != 0)\n";
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
+	       name;
+             pr "      RETVAL = newSViv (r);\n";
+             pr " OUTPUT:\n";
+             pr "      RETVAL\n"
 
 	 | RInt64 ->
              pr "PREINIT:\n";
