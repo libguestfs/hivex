@@ -62,6 +62,8 @@
 #define HIVEX_MAX_ALLOCATION  1000000
 
 static char *windows_utf16_to_utf8 (/* const */ char *input, size_t len);
+static size_t utf16_string_len_in_bytes (const char *str);
+static size_t utf16_string_len_in_bytes_max (const char *str, size_t len);
 
 struct hive_h {
   char *filename;
@@ -1319,6 +1321,20 @@ hivex_value_string (hive_h *h, hive_value_h value)
     return NULL;
   }
 
+  /* Deal with the case where Windows has allocated a large buffer
+   * full of random junk, and only the first few bytes of the buffer
+   * contain a genuine UTF-16 string.
+   *
+   * In this case, iconv would try to process the junk bytes as UTF-16
+   * and inevitably find an illegal sequence (EILSEQ).  Instead, stop
+   * after we find the first \0\0.
+   *
+   * (Found by Hilko Bengen in a fresh Windows XP SOFTWARE hive).
+   */
+  size_t slen = utf16_string_len_in_bytes_max (data, len);
+  if (slen > len)
+    len = slen;
+
   char *ret = windows_utf16_to_utf8 (data, len);
   free (data);
   if (ret == NULL)
@@ -1350,6 +1366,21 @@ utf16_string_len_in_bytes (const char *str)
   while (str[0] || str[1]) {
     str += 2;
     ret += 2;
+  }
+
+  return ret;
+}
+
+/* As for utf16_string_len_in_bytes but only read up to a maximum length. */
+static size_t
+utf16_string_len_in_bytes_max (const char *str, size_t len)
+{
+  size_t ret = 0;
+
+  while (len > 0 && (str[0] || str[1])) {
+    str += 2;
+    ret += 2;
+    len -= 2;
   }
 
   return ret;
