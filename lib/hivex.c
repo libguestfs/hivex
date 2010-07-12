@@ -1275,12 +1275,16 @@ windows_utf16_to_utf8 (/* const */ char *input, size_t len)
   size_t r = iconv (ic, &inp, &inlen, &outp, &outlen);
   if (r == (size_t) -1) {
     if (errno == E2BIG) {
+      int err = errno;
       size_t prev = outalloc;
       /* Try again with a larger output buffer. */
       free (out);
       outalloc *= 2;
-      if (outalloc < prev)
+      if (outalloc < prev) {
+        iconv_close (ic);
+        errno = err;
         return NULL;
+      }
       goto again;
     }
     else {
