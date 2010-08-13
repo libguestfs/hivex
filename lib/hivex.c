@@ -543,6 +543,9 @@ hivex_close (hive_h *h)
   free (h->filename);
   free (h);
 
+  if (h->msglvl >= 1)
+    fprintf (stderr, "hivex_close\n");
+
   return r;
 }
 
