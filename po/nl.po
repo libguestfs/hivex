@@ -1,0 +1,175 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# Geert Warrink <geert.warrink@onsnet.nu>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: hivex 1.2.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-04-28 15:07+0100\n"
+"PO-Revision-Date: 2010-08-16 16:15+0200\n"
+"Last-Translator: Geert Warrink <geert.warrink@onsnet.nu>\n"
+"Language-Team: Fedora\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: nl\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.6.1\n"
+
+#: sh/hivexsh.c:149
+#, c-format
+msgid ""
+"\n"
+"Welcome to hivexsh, the hivex interactive shell for examining\n"
+"Windows Registry binary hive files.\n"
+"\n"
+"Type: 'help' for help summary\n"
+"      'quit' to quit the shell\n"
+"\n"
+msgstr ""
+"\n"
+"Welkom bij hivexsh, de hivex interactieve shell voor het bekijken van\n"
+"Windows Registry binaire hive bestanden.\n"
+"\n"
+"Type: 'help' voor een hulp samenvatting\n"
+"      'quit' om de shell te verlaten\n"
+"\n"
+
+#: sh/hivexsh.c:263
+#, c-format
+msgid "hivexsh: error getting parent of node %zu\n"
+msgstr "hivexsh: fout bij het verkrijgen van ouder van node %zu\n"
+
+#: sh/hivexsh.c:273
+#, c-format
+msgid "hivexsh: error getting node name of node %zx\n"
+msgstr "hivexsh: fout bij het verkrijgen van naam van node %zu\n"
+
+#: sh/hivexsh.c:412
+#, c-format
+msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
+msgstr "hivexsh: je moet eerst een hive bestand laden met 'load hivefile'\n"
+
+#: sh/hivexsh.c:433
+#, c-format
+msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
+msgstr ""
+"hivexsh: onbekend commando '%s', gebruik 'help' voor een hulp samenvatting\n"
+
+#: sh/hivexsh.c:443
+#, c-format
+msgid "hivexsh: load: no hive file name given to load\n"
+msgstr "hivexsh: load: er werd geen bestandsnaam opgegeven om te laden\n"
+
+#: sh/hivexsh.c:459
+#, c-format
+msgid ""
+"hivexsh: failed to open hive file: %s: %m\n"
+"\n"
+"If you think this file is a valid Windows binary hive file (_not_\n"
+"a regedit *.reg file) then please run this command again using the\n"
+"hivexsh option '-d' and attach the complete output _and_ the hive file\n"
+"which fails into a bug report at https://bugzilla.redhat.com/\n"
+"\n"
+msgstr ""
+"hivexsh: openen van hive bestand %s mislukte: %m\n"
+"\n"
+"Als je denkt dat dit een geldig Windows binair hive bestand is (_niet_\n"
+"een regedit *.reg bestand) draai dan dit commando opnieuw met de\n"
+"hivexsh optie '-d' en voeg de complete output _en_ het hive bestand\n"
+"dat faalt toe aan een bug rapport op https://bugzilla.redhat.com/\n"
+"\n"
+
+#: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
+#, c-format
+msgid "hivexsh: '%s' command should not be given arguments\n"
+msgstr "hivexsh: '%s' commando moet geen argumenten krijgen\n"
+
+#: sh/hivexsh.c:534
+#, c-format
+msgid ""
+"%s: %s: \\ characters in path are doubled - are you escaping the path "
+"parameter correctly?\n"
+msgstr ""
+"%s: %s: \\ karakters in pad zijn verdubbeld - weet je zeker dat de pad "
+"parameter correct met escape voorzien is?\n"
+
+#: sh/hivexsh.c:572
+#, c-format
+msgid "hivexsh: cd: subkey '%s' not found\n"
+msgstr "hivexsh: cd: sub-sleutel '%s' niet gevonden\n"
+
+#: sh/hivexsh.c:590
+#, c-format
+msgid ""
+"Navigate through the hive's keys using the 'cd' command, as if it\n"
+"contained a filesystem, and use 'ls' to list the subkeys of the\n"
+"current key.  Full documentation is in the hivexsh(1) manual page.\n"
+msgstr ""
+"Navigeer door de sleutels van hive met het 'cd' commando, alsof het\n"
+"een bestandssysteem bevat, en gebruik 'ls' om de sub-sleutels van de "
+"huidige\n"
+"sleutel te tonen. Volledige documentatie is in de hivexsh(1) manual pagina.\n"
+
+#: sh/hivexsh.c:665
+#, c-format
+msgid "%s: %s: key not found\n"
+msgstr "%s: %s: sleitel niet gevonden\n"
+
+#: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+msgstr "%s: %s: ongeldige integer parameter (%s gaf %d terug)\n"
+
+#: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
+#, c-format
+msgid "%s: %s: integer out of range\n"
+msgstr "%s: %s: integer ligt buiten de reeks\n"
+
+#: sh/hivexsh.c:868 sh/hivexsh.c:886
+#, c-format
+msgid "hivexsh: setval: unexpected end of input\n"
+msgstr "hivexsh: setval: onverwacht einde van input\n"
+
+#: sh/hivexsh.c:907 sh/hivexsh.c:926
+#, c-format
+msgid ""
+"hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
+msgstr ""
+"hivexsh: string(utf16le): als input worden slechts 7 bits ASCII tekenreeksen "
+"ondersteund\n"
+
+#: sh/hivexsh.c:1037
+#, c-format
+msgid "hivexsh: setval: trailing garbage after hex string\n"
+msgstr "hivexsh: setval: onnodige input na de hex tekenreeks\n"
+
+#: sh/hivexsh.c:1044
+#, c-format
+msgid ""
+"hivexsh: setval: cannot parse value string, please refer to the man page "
+"hivexsh(1) for help: %s\n"
+msgstr ""
+"hivexsh: setval: kan waarde van tekenreeks niet ontleden, refereer naar de "
+"manual pagina hivexsh(1) voor hulp: %s\n"
+
+#: sh/hivexsh.c:1073
+#, c-format
+msgid "hivexsh: del: the root node cannot be deleted\n"
+msgstr "hivexsh: del: de root node kan niet verwijderd worden\n"
+
+#: xml/hivexml.c:70
+#, c-format
+msgid "%s: failed to write XML document\n"
+msgstr "%s: het schrijven van XML document mislukte\n"
+
+#: xml/hivexml.c:101
+#, c-format
+msgid "hivexml: missing name of input file\n"
+msgstr "hivexml: naam van input bestand ontbreekt\n"
+
+#: xml/hivexml.c:120
+#, c-format
+msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
+msgstr "xmlNewTextWriterFilename: aanmaken van XML schrijver mislukte\n"
