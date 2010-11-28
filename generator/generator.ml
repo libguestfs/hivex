@@ -36,8 +36,6 @@
 
 #load "unix.cma";;
 #load "str.cma";;
-#directory "+xml-light";;
-#load "xml-light.cma";;
 
 open Unix
 open Printf
@@ -2575,11 +2573,510 @@ DESTROY (h)
       )
   ) functions
 
-and generate_python_py () =
-  generate_header HashStyle LGPLv2plus
-
 and generate_python_c () =
-  generate_header CStyle LGPLv2plus
+  generate_header CStyle LGPLv2plus;
+
+  pr "\
+#define PY_SSIZE_T_CLEAN 1
+#include <Python.h>
+
+#if PY_VERSION_HEX < 0x02050000
+typedef int Py_ssize_t;
+#define PY_SSIZE_T_MAX INT_MAX
+#define PY_SSIZE_T_MIN INT_MIN
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <assert.h>
+
+#include \"hivex.h\"
+
+#ifndef HAVE_PYCAPSULE_NEW
+typedef struct {
+  PyObject_HEAD
+  hive_h *h;
+} Pyhivex_Object;
+#endif
+
+static hive_h *
+get_handle (PyObject *obj)
+{
+  assert (obj);
+  assert (obj != Py_None);
+#ifndef HAVE_PYCAPSULE_NEW
+  return ((Pyhivex_Object *) obj)->h;
+#else
+  return (hive_h *) PyCapsule_GetPointer(obj, \"hive_h\");
+#endif
+}
+
+static PyObject *
+put_handle (hive_h *h)
+{
+  assert (h);
+#ifndef HAVE_PYCAPSULE_NEW
+  return
+    PyCObject_FromVoidPtrAndDesc ((void *) h, (char *) \"hive_h\", NULL);
+#else
+  return PyCapsule_New ((void *) h, \"hive_h\", NULL);
+#endif
+}
+
+/* This returns pointers into the Python objects, which should
+ * not be freed.
+ */
+static int
+get_value (PyObject *v, hive_set_value *ret)
+{
+  PyObject *obj;
+
+  obj = PyDict_GetItemString (v, \"key\");
+  if (!obj) {
+    PyErr_SetString (PyExc_RuntimeError, \"no 'key' element in dictionary\");
+    return -1;
+  }
+  if (!PyString_Check (obj)) {
+    PyErr_SetString (PyExc_RuntimeError, \"'key' element is not a string\");
+    return -1;
+  }
+  ret->key = PyString_AsString (obj);
+
+  obj = PyDict_GetItemString (v, \"t\");
+  if (!obj) {
+    PyErr_SetString (PyExc_RuntimeError, \"no 't' element in dictionary\");
+    return -1;
+  }
+  if (!PyInt_Check (obj)) {
+    PyErr_SetString (PyExc_RuntimeError, \"'t' element is not an integer\");
+    return -1;
+  }
+  ret->t = PyInt_AsLong (obj);
+
+  obj = PyDict_GetItemString (v, \"value\");
+  if (!obj) {
+    PyErr_SetString (PyExc_RuntimeError, \"no 'value' element in dictionary\");
+    return -1;
+  }
+  if (!PyString_Check (obj)) {
+    PyErr_SetString (PyExc_RuntimeError, \"'value' element is not a string\");
+    return -1;
+  }
+  ret->value = PyString_AsString (obj);
+  ret->len = PyString_Size (obj);
+
+  return 0;
+}
+
+typedef struct py_set_values {
+  size_t nr_values;
+  hive_set_value *values;
+} py_set_values;
+
+static int
+get_values (PyObject *v, py_set_values *ret)
+{
+  Py_ssize_t slen;
+  size_t len, i;
+
+  if (!PyList_Check (v)) {
+    PyErr_SetString (PyExc_RuntimeError, \"expecting a list parameter\");
+    return -1;
+  }
+
+  slen = PyList_Size (v);
+  if (slen < 0) {
+    PyErr_SetString (PyExc_RuntimeError, \"get_string_list: PyList_Size failure\");
+    return -1;
+  }
+  len = (size_t) slen;
+  ret->nr_values = len;
+  ret->values = malloc (len * sizeof (hive_set_value));
+  if (!ret->values) {
+    PyErr_SetString (PyExc_RuntimeError, strerror (errno));
+    return -1;
+  }
+
+  for (i = 0; i < len; ++i) {
+    if (get_value (PyList_GetItem (v, i), &(ret->values[i])) == -1) {
+      free (ret->values);
+      return -1;
+    }
+  }
+
+  return 0;
+}
+
+static PyObject *
+put_string_list (char * const * const argv)
+{
+  PyObject *list;
+  size_t argc, i;
+
+  for (argc = 0; argv[argc] != NULL; ++argc)
+    ;
+
+  list = PyList_New (argc);
+  for (i = 0; i < argc; ++i)
+    PyList_SetItem (list, i, PyString_FromString (argv[i]));
+
+  return list;
+}
+
+static void
+free_strings (char **argv)
+{
+  size_t argc;
+
+  for (argc = 0; argv[argc] != NULL; ++argc)
+    free (argv[argc]);
+  free (argv);
+}
+
+/* Since hive_node_t is the same as hive_value_t this also works for values. */
+static PyObject *
+put_node_list (hive_node_h *nodes)
+{
+  PyObject *list;
+  size_t argc, i;
+
+  for (argc = 0; nodes[argc] != 0; ++argc)
+    ;
+
+  list = PyList_New (argc);
+  for (i = 0; i < argc; ++i)
+    PyList_SetItem (list, i, PyLong_FromLongLong ((long) nodes[i]));
+
+  return list;
+}
+
+static PyObject *
+put_len_type (size_t len, hive_type t)
+{
+  PyObject *r = PyTuple_New (2);
+  PyTuple_SetItem (r, 0, PyInt_FromLong ((long) t));
+  PyTuple_SetItem (r, 1, PyLong_FromLongLong ((long) len));
+  return r;
+}
+
+static PyObject *
+put_val_type (char *val, size_t len, hive_type t)
+{
+  PyObject *r = PyTuple_New (2);
+  PyTuple_SetItem (r, 0, PyInt_FromLong ((long) t));
+  PyTuple_SetItem (r, 1, PyString_FromStringAndSize (val, len));
+  return r;
+}
+
+";
+
+  (* Generate functions. *)
+  List.iter (
+    fun (name, style, _, longdesc) ->
+      pr "static PyObject *\n";
+      pr "py_hivex_%s (PyObject *self, PyObject *args)\n" name;
+      pr "{\n";
+      pr "  PyObject *py_r;\n";
+
+      let error_code =
+	match fst style with
+        | RErr -> pr "  int r;\n"; "-1"
+	| RErrDispose -> pr "  int r;\n"; "-1"
+	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RNode -> pr "  hive_node_h r;\n"; "0"
+        | RNodeNotFound ->
+            pr "  errno = 0;\n";
+            pr "  hive_node_h r;\n";
+            "0 && errno != 0"
+        | RNodeList -> pr "  hive_node_h *r;\n"; "NULL"
+        | RValue -> pr "  hive_value_h r;\n"; "0"
+        | RValueList -> pr "  hive_value_h *r;\n"; "NULL"
+        | RString -> pr "  char *r;\n"; "NULL"
+        | RStringList -> pr "  char **r;\n"; "NULL"
+        | RLenType ->
+            pr "  int r;\n";
+            pr "  size_t len;\n";
+            pr "  hive_type t;\n";
+            "-1"
+        | RLenTypeVal ->
+            pr "  char *r;\n";
+            pr "  size_t len;\n";
+            pr "  hive_type t;\n";
+            "NULL"
+        | RInt32 ->
+            pr "  errno = 0;\n";
+            pr "  int32_t r;\n";
+            "-1 && errno != 0"
+        | RInt64 ->
+            pr "  errno = 0;\n";
+            pr "  int64_t r;\n";
+            "-1 && errno != 0" in
+
+      (* Call and arguments. *)
+      let c_params =
+	List.map (function
+		  | AUnusedFlags -> "0"
+		  | ASetValues -> "values.nr_values, values.values"
+                  | ASetValue -> "&val"
+		  | arg -> name_of_argt arg) (snd style) in
+      let c_params =
+        match fst style with
+        | RLenType | RLenTypeVal -> c_params @ ["&t"; "&len"]
+        | _ -> c_params in
+
+      List.iter (
+        function
+        | AHive ->
+	    pr "  hive_h *h;\n";
+            pr "  PyObject *py_h;\n"
+	| ANode n
+	| AValue n ->
+	    pr "  long %s;\n" n
+	| AString n
+        | AStringNullable n ->
+	    pr "  char *%s;\n" n
+	| AOpenFlags ->
+	    pr "  int flags;\n"
+	| AUnusedFlags -> ()
+	| ASetValues ->
+	    pr "  py_set_values values;\n";
+	    pr "  PyObject *py_values;\n"
+	| ASetValue ->
+	    pr "  hive_set_value val;\n";
+	    pr "  PyObject *py_val;\n"
+      ) (snd style);
+
+      pr "\n";
+
+      (* Convert the required parameters. *)
+      pr "  if (!PyArg_ParseTuple (args, (char *) \"";
+      List.iter (
+        function
+        | AHive ->
+	    pr "O"
+	| ANode n
+	| AValue n ->
+	    pr "L"
+	| AString n ->
+	    pr "s"
+        | AStringNullable n ->
+	    pr "z"
+	| AOpenFlags ->
+	    pr "i"
+	| AUnusedFlags -> ()
+	| ASetValues
+	| ASetValue ->
+            pr "O"
+      ) (snd style);
+
+      pr ":hivex_%s\"" name;
+
+      List.iter (
+        function
+        | AHive ->
+	    pr ", &py_h"
+	| ANode n
+	| AValue n ->
+	    pr ", &%s" n
+	| AString n
+        | AStringNullable n ->
+	    pr ", &%s" n
+	| AOpenFlags ->
+	    pr ", &flags"
+	| AUnusedFlags -> ()
+	| ASetValues ->
+            pr ", &py_values"
+	| ASetValue ->
+            pr ", &py_val"
+        ) (snd style);
+
+      pr "))\n";
+      pr "    return NULL;\n";
+
+      (* Convert some Python argument types to C. *)
+      List.iter (
+        function
+        | AHive ->
+            pr "  h = get_handle (py_h);\n"
+	| ANode _
+	| AValue _
+	| AString _
+        | AStringNullable _
+	| AOpenFlags
+	| AUnusedFlags -> ()
+	| ASetValues ->
+            pr "  if (get_values (py_values, &values) == -1)\n";
+            pr "    return NULL;\n"
+	| ASetValue ->
+            pr "  if (get_value (py_val, &val) == -1)\n";
+            pr "    return NULL;\n"
+      ) (snd style);
+
+      (* Call the C function. *)
+      pr "  r = hivex_%s (%s);\n" name (String.concat ", " c_params);
+
+      (* Free up arguments. *)
+      List.iter (
+        function
+	| AHive | ANode _ | AValue _
+        | AString _ | AStringNullable _
+	| AOpenFlags | AUnusedFlags -> ()
+	| ASetValues ->
+	    pr "  free (values.values);\n"
+	| ASetValue -> ()
+      ) (snd style);
+
+      (* Check for errors from C library. *)
+      pr "  if (r == %s) {\n" error_code;
+      pr "    PyErr_SetString (PyExc_RuntimeError,\n";
+      pr "                     strerror (errno));\n";
+      pr "    return NULL;\n";
+      pr "  }\n";
+      pr "\n";
+
+      (* Convert return value to Python. *)
+      (match fst style with
+       | RErr
+       | RErrDispose ->
+           pr "  Py_INCREF (Py_None);\n";
+           pr "  py_r = Py_None;\n"
+       | RHive ->
+           pr "  py_r = put_handle (r);\n"
+       | RNode ->
+           pr "  py_r = PyLong_FromLongLong (r);\n"
+       | RNodeNotFound ->
+           pr "  if (r)\n";
+           pr "    py_r = PyLong_FromLongLong (r);\n";
+           pr "  else {\n";
+           pr "    Py_INCREF (Py_None);\n";
+           pr "    py_r = Py_None;\n";
+           pr "  }\n";
+       | RNodeList
+       | RValueList ->
+           pr "  py_r = put_node_list (r);\n";
+           pr "  free (r);\n"
+       | RValue ->
+           pr "  py_r = PyLong_FromLongLong (r);\n"
+       | RString ->
+           pr "  py_r = PyString_FromString (r);\n";
+           pr "  free (r);"
+       | RStringList ->
+           pr "  py_r = put_string_list (r);\n";
+           pr "  free_strings (r);\n"
+       | RLenType ->
+           pr "  py_r = put_len_type (len, t);\n"
+       | RLenTypeVal ->
+           pr "  py_r = put_val_type (r, len, t);\n";
+           pr "  free (r);\n"
+       | RInt32 ->
+           pr "  py_r = PyInt_FromLong ((long) r);\n"
+       | RInt64 ->
+           pr "  py_r = PyLong_FromLongLong (r);\n"
+      );
+      pr "  return py_r;\n";
+      pr "}\n";
+      pr "\n"
+  ) functions;
+
+  (* Table of functions. *)
+  pr "static PyMethodDef methods[] = {\n";
+  List.iter (
+    fun (name, _, _, _) ->
+      pr "  { (char *) \"%s\", py_hivex_%s, METH_VARARGS, NULL },\n"
+        name name
+  ) functions;
+  pr "  { NULL, NULL, 0, NULL }\n";
+  pr "};\n";
+  pr "\n";
+
+  (* Init function. *)
+  pr "\
+void
+initlibhivexmod (void)
+{
+  static int initialized = 0;
+
+  if (initialized) return;
+  Py_InitModule ((char *) \"libhivexmod\", methods);
+  initialized = 1;
+}
+"
+  
+and generate_python_py () =
+  generate_header HashStyle LGPLv2plus;
+
+  pr "\
+u\"\"\"Python bindings for hivex
+
+import hivex
+h = hivex.Hivex (filename)
+
+The hivex module provides Python bindings to the hivex API for
+examining and modifying Windows Registry 'hive' files.
+
+Read the hivex(3) man page to find out how to use the API.
+\"\"\"
+
+import libhivexmod
+
+class Hivex:
+    \"\"\"Instances of this class are hivex API handles.\"\"\"
+
+    def __init__ (self, filename";
+
+  List.iter (
+    fun (_, flag, _) -> pr ", %s = False" (String.lowercase flag)
+  ) open_flags;
+
+  pr "):
+        \"\"\"Create a new hivex handle.\"\"\"
+        flags = 0
+";
+
+  List.iter (
+    fun (n, flag, description) ->
+      pr "        # %s\n" description;
+      pr "        if %s: flags += %d\n" (String.lowercase flag) n
+  ) open_flags;
+
+  pr "        self._o = libhivexmod.open (filename, flags)
+
+    def __del__ (self):
+        libhivexmod.close (self._o)
+
+";
+
+  List.iter (
+    fun (name, style, shortdesc, _) ->
+      (* The close and open calls are handled specially above. *)
+      if fst style <> RErrDispose && List.hd (snd style) = AHive then (
+        let args = List.tl (snd style) in
+        let args = List.filter (
+          function AOpenFlags | AUnusedFlags -> false
+          | _ -> true
+        ) args in
+
+        pr "    def %s (self" name;
+        List.iter (fun arg -> pr ", %s" (name_of_argt arg)) args;
+        pr "):\n";
+        pr "        u\"\"\"%s\"\"\"\n" shortdesc;
+        pr "        return libhivexmod.%s (self._o" name;
+        List.iter (
+          fun arg ->
+            pr ", ";
+            match arg with
+	    | AHive -> assert false
+            | ANode n | AValue n
+            | AString n | AStringNullable n -> pr "%s" n
+	    | AOpenFlags
+            | AUnusedFlags -> assert false
+	    | ASetValues -> pr "values"
+	    | ASetValue -> pr "val"
+        ) args;
+        pr ")\n";
+        pr "\n"
+      )
+  ) functions
 
 let output_to filename k =
   let filename_new = filename ^ ".new" in
@@ -2645,11 +3142,8 @@ Run it from the top source directory using the command
   output_to "perl/lib/Win/Hivex.pm" generate_perl_pm;
   output_to "perl/Hivex.xs" generate_perl_xs;
 
-(*
-  We ran out of time before we could write the Python bindings.
   output_to "python/hivex.py" generate_python_py;
   output_to "python/hivex-py.c" generate_python_c;
-*)
 
   (* Always generate this file last, and unconditionally.  It's used
    * by the Makefile to know when we must re-run the generator.

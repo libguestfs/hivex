@@ -4,5 +4,6 @@ ocaml/hivex_c.c
 perl/Hivex.c
 perl/lib/Win/Hivex.pm
 perl/lib/Win/Hivex/Regedit.pm
+python/hivex-py.c
 sh/hivexsh.c
 xml/hivexml.c

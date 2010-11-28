@@ -27,10 +27,9 @@ if HAVE_PERL
 SUBDIRS += perl regedit
 endif
 
-# Not yet written.
-#if HAVE_PYTHON
-#SUBDIRS += python
-#endif
+if HAVE_PYTHON
+SUBDIRS += python
+endif
 
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
