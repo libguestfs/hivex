@@ -1873,7 +1873,7 @@ copy_type_value (const char *r, size_t len, hive_type t)
   Store_field (rv, 0, v);
   v = caml_alloc_string (len);
   memcpy (String_val (v), r, len);
-  caml_modify (&Field (rv, 1), len);
+  caml_modify (&Field (rv, 1), v);
   CAMLreturn (rv);
 }
 
