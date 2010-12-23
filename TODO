@@ -1,0 +1,2 @@
+Add a command to hivexsh to allow updating a single value
+(ie. implement a shell equivalent of hivex_node_set_value).

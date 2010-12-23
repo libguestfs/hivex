@@ -156,8 +156,7 @@ but instead are lost.  See L<hivex(3)/WRITING TO HIVE FILES>.";
   "root", (RNode, [AHive]),
     "return the root node of the hive",
     "\
-Return root node of the hive.  All valid registries must contain
-a root node.";
+Return root node of the hive.  All valid hives must contain a root node.";
 
   "node_name", (RString, [AHive; ANode "node"]),
     "return the name of the node",
@@ -310,9 +309,9 @@ C<node> is the node to modify.";
   "node_set_value", (RErr, [AHive; ANode "node"; ASetValue; AUnusedFlags]),
     "set a single (key, value) pair at a given node",
     "\
-This call can be used to replace a single (key, value) pair
-stored in C<node>. If the key does not already exist, then a
-new key is added. Key matching is case insensitive.
+This call can be used to replace a single C<(key, value)> pair
+stored in C<node>.  If the key does not already exist, then a
+new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.";
 ]
@@ -850,29 +849,40 @@ Link with I<-lhivex>.
 
 =head1 DESCRIPTION
 
-libhivex is a library for extracting the contents of Windows Registry
+Hivex is a library for extracting the contents of Windows Registry
 \"hive\" files.  It is designed to be secure against buggy or malicious
 registry files.
 
-Unlike many other tools in this area, it doesn't use the textual .REG
-format for output, because parsing that is as much trouble as parsing
-the original binary format.  Instead it makes the file available
-through a C API, or there is a separate program to export the hive as
-XML (see L<hivexml(1)>), or to navigate the file (see L<hivexsh(1)>).
+Unlike other tools in this area, it doesn't use the textual .REG
+format, because parsing that is as much trouble as parsing the
+original binary format.  Instead it makes the file available
+through a C API, and then wraps this API in higher level scripting
+and GUI tools.
+
+There is a separate program to export the hive as XML
+(see L<hivexml(1)>), or to navigate the file (see L<hivexsh(1)>).
+There is also a Perl script to export and merge the
+file as a textual .REG (regedit) file, see L<hivexregedit(1)>.
+
+If you just want to export or modify the Registry of a Windows
+virtual machine, you should look at L<virt-win-reg(1)>.
+
+Hivex is also comes with language bindings for
+OCaml, Perl and Python.
 
 =head1 TYPES
 
-=head2 hive_h *
+=head2 C<hive_h *>
 
 This handle describes an open hive file.
 
-=head2 hive_node_h
+=head2 C<hive_node_h>
 
 This is a node handle, an integer but opaque outside the library.
 Valid node handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=head2 hive_type
+=head2 C<hive_type>
 
 The enum below describes the possible types for the value(s)
 stored at each node.  Note that you should not trust the
@@ -891,13 +901,13 @@ programs store everything (including strings) in binary blobs.
   pr "\
  };
 
-=head2 hive_value_h
+=head2 C<hive_value_h>
 
 This is a value handle, an integer but opaque outside the library.
 Valid value handles cannot be 0.  The library returns 0 in some
 situations to indicate an error.
 
-=head2 hive_set_value
+=head2 C<hive_set_value>
 
 The typedef C<hive_set_value> is used in conjunction with the
 C<hivex_node_set_values> call described below.
@@ -929,7 +939,7 @@ here.  Often it's not documented at all.
     fun (shortname, style, _, longdesc) ->
       let name = "hivex_" ^ shortname in
       pr "=head2 %s\n" name;
-      pr "\n";
+      pr "\n ";
       generate_c_prototype ~extern:false name style;
       pr "\n";
       pr "%s\n" longdesc;
@@ -1062,7 +1072,9 @@ Changing the root node.
 =item *
 
 Creating a new hive file from scratch.  This is impossible at present
-because not all fields in the header are understood.
+because not all fields in the header are understood.  In the hivex
+source tree is a file called C<images/minimal> which could be used as
+the basis for a new hive (but I<caveat emptor>).
 
 =item *
 
@@ -1177,18 +1189,21 @@ empty string for the default key).  The value is a typed object
 
 =head2 RELATIONSHIP TO .REG FILES
 
-Although this library does not care about or deal with Windows reg
-files, it's useful to look at the relationship between the registry
-itself and reg files because they are so common.
+The hivex C library does not care about or deal with Windows .REG
+files.  Instead we push this complexity up to the Perl
+L<Win::Hivex(3)> library and the Perl programs
+L<hivexregedit(1)> and L<virt-win-reg(1)>.
+Nevertheless it is useful to look at the relationship between the
+Registry and .REG files because they are so common.
 
-A reg file is a text representation of the registry, or part of the
+A .REG file is a textual representation of the registry, or part of the
 registry.  The actual registry hives that Windows uses are binary
 files.  There are a number of Windows and Linux tools that let you
-generate reg files, or merge reg files back into the registry hives.
+generate .REG files, or merge .REG files back into the registry hives.
 Notable amongst them is Microsoft's REGEDIT program (formerly known as
 REGEDT32).
 
-A typical reg file will contain many sections looking like this:
+A typical .REG file will contain many sections looking like this:
 
  [HKEY_LOCAL_MACHINE\\SOFTWARE\\Classes\\Stack]
  \"@\"=\"Generic Stack\"
@@ -1207,7 +1222,8 @@ Taking this one piece at a time:
 
 This is the path to this node in the registry tree.  The first part,
 C<HKEY_LOCAL_MACHINE\\SOFTWARE> means that this comes from a hive
-(file) called C<SOFTWARE>.  C<\\Classes\\Stack> is the real path part,
+file called C<C:\\WINDOWS\\SYSTEM32\\CONFIG\\SOFTWARE>.
+C<\\Classes\\Stack> is the real path part,
 starting at the root node of the C<SOFTWARE> hive.
 
 Below the node name is a list of zero or more key-value pairs.  Any
@@ -1217,7 +1233,7 @@ attached.
  \"@\"=\"Generic Stack\"
 
 This is the \"default key\".  In reality (ie. inside the binary hive)
-the key string is the empty string.  In reg files this is written as
+the key string is the empty string.  In .REG files this is written as
 C<@> but this has no meaning either in the hives themselves or in this
 library.  The value is a string (type 1 - see C<enum hive_type>
 above).
@@ -1226,8 +1242,8 @@ above).
 
 This is a regular (key, value) pair, with the value being a type 1
 string.  Note that inside the binary file the string is likely to be
-UTF-16 encoded.  This library converts to and from UTF-8 strings
-transparently.
+UTF-16LE encoded.  This library converts to and from UTF-8 strings
+transparently in some cases.
 
  \"TilePath\"=str(2):\"%%systemroot%%\\\\system32\"
 
@@ -1241,9 +1257,9 @@ The value in this case is a dword (type 4).
 
  \"FriendlyTypeName\"=hex(2):40,00,....
 
-This value is an expanded string (type 2) represented in the reg file
+This value is an expanded string (type 2) represented in the .REG file
 as a series of hex bytes.  In this case the string appears to be a
-UTF-16 string.
+UTF-16LE string.
 
 =head1 NOTE ON THE USE OF ERRNO
 
@@ -1301,9 +1317,12 @@ useful for debugging problems with the library itself.
 
 =head1 SEE ALSO
 
+L<hivexget(1)>,
 L<hivexml(1)>,
 L<hivexsh(1)>,
+L<hivexregedit(1)>,
 L<virt-win-reg(1)>,
+L<Win::Hivex(3)>,
 L<guestfs(3)>,
 L<http://libguestfs.org/>,
 L<virt-cat(1)>,

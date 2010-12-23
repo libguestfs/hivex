@@ -10,11 +10,13 @@ hivexget - Get subkey from a Windows Registry binary "hive" file
 
  hivexget hivefile '\Path\To\SubKey' name
 
-=head1 DESCRIPTION
+=head1 NOTE
 
-I<Note:> This is a low-level tool.  For a more convenient way to
-navigate the Windows Registry in Windows virtual machines, see
-L<virt-win-reg(1)>.
+This is a low-level tool.  For a more convenient way to navigate the
+Windows Registry in Windows virtual machines, see L<virt-win-reg(1)>.
+For proper regedit formatting, use L<hivexregedit(1)>.
+
+=head1 DESCRIPTION
 
 This program navigates through a Windows Registry binary "hive"
 file and extracts I<either> all the (key, value) data pairs
@@ -27,10 +29,10 @@ In the first form:
 C<hivefile> is some Windows Registry binary hive, and C<\Path\To\Subkey>
 is a path within that hive.  I<NB> the path is relative to the top
 of this hive, and is I<not> the full path as you would use in Windows
-(eg. C<\HKEY_LOCAL_MACHINE> is not a valid path).
+(eg. C<HKEY_LOCAL_MACHINE\SYSTEM> is not a valid path).
 
 If the subkey exists, then the output lists all data pairs under this
-subkey, in a format compatible with C<regedit> in Windows.
+subkey, in a format similar to C<regedit> in Windows.
 
 In the second form:
 
@@ -66,6 +68,7 @@ If it's a numeric value, it is printed as a decimal number.
 L<hivex(3)>,
 L<hivexml(1)>,
 L<hivexsh(1)>,
+L<hivexregedit(1)>,
 L<virt-win-reg(1)>,
 L<guestfs(3)>,
 L<http://libguestfs.org/>,
