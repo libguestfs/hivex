@@ -1,0 +1,179 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: hivex\n"
+"Report-Msgid-Bugs-To: https://bugzilla.redhat.com/\n"
+"POT-Creation-Date: 2010-12-02 15:28+0000\n"
+"PO-Revision-Date: 2011-03-22 15:29+0000\n"
+"Last-Translator: yurchor <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: uk\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+
+#: sh/hivexsh.c:149
+#, c-format
+msgid ""
+"\n"
+"Welcome to hivexsh, the hivex interactive shell for examining\n"
+"Windows Registry binary hive files.\n"
+"\n"
+"Type: 'help' for help summary\n"
+"      'quit' to quit the shell\n"
+"\n"
+msgstr ""
+"\n"
+"Ласкаво просимо до hivexsh, інтерактивної оболонки hivex для вивчення\n"
+"бінарних файлів гілок регістру Windows.\n"
+"\n"
+"Введіть: «help», щоб переглянути довідку\n"
+"         «quit», щоб вийти з оболонки\n"
+"\n"
+
+#: sh/hivexsh.c:263
+#, c-format
+msgid "hivexsh: error getting parent of node %zu\n"
+msgstr "hivexsh: помилка під час отримання батьківського елемента вузла %zu\n"
+
+#: sh/hivexsh.c:273
+#, c-format
+msgid "hivexsh: error getting node name of node %zx\n"
+msgstr "hivexsh: помилка під час спроби отримання назви вузла %zx\n"
+
+#: sh/hivexsh.c:412
+#, c-format
+msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
+msgstr ""
+"hivexsh: вам слід спочатку завантажити файл гілки за допомогою команди «load"
+" hivefile»\n"
+
+#: sh/hivexsh.c:433
+#, c-format
+msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
+msgstr ""
+"hivexsh: невідома команда «%s», скористайтеся командою «help», щоб "
+"переглянути довідку щодо команд\n"
+
+#: sh/hivexsh.c:443
+#, c-format
+msgid "hivexsh: load: no hive file name given to load\n"
+msgstr "hivexsh: load: у команді load не вказано назви файла гілки\n"
+
+#: sh/hivexsh.c:459
+#, c-format
+msgid ""
+"hivexsh: failed to open hive file: %s: %m\n"
+"\n"
+"If you think this file is a valid Windows binary hive file (_not_\n"
+"a regedit *.reg file) then please run this command again using the\n"
+"hivexsh option '-d' and attach the complete output _and_ the hive file\n"
+"which fails into a bug report at https://bugzilla.redhat.com/\n"
+"\n"
+msgstr ""
+"hivexsh: не вдалося відкрити файл гілки: %s: %m\n"
+"\n"
+"Якщо ви певні, що цей файл є коректним бінарним файлом гілки Windows (_не_\n"
+"файлом *.reg regedit), повторіть запуск команди з використанням параметра\n"
+"hivexsh «-d», і долучіть виведені дані _та_ файл гілки, який призвів до\n"
+"помилки, до звіту щодо вади на https://bugzilla.redhat.com/\n"
+"\n"
+
+#: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
+#, c-format
+msgid "hivexsh: '%s' command should not be given arguments\n"
+msgstr "hivexsh: команді «%s» не потрібно передавати жодних аргументів\n"
+
+#: sh/hivexsh.c:534
+#, c-format
+msgid ""
+"%s: %s: \\ characters in path are doubled - are you escaping the path "
+"parameter correctly?\n"
+msgstr ""
+"%s: %s: символи \\ у визначенні адреси здубльовано. Чи правильно екрановано "
+"параметр адреси?\n"
+
+#: sh/hivexsh.c:572
+#, c-format
+msgid "hivexsh: cd: subkey '%s' not found\n"
+msgstr "hivexsh: cd: не знайдено підключа «%s»\n"
+
+#: sh/hivexsh.c:590
+#, c-format
+msgid ""
+"Navigate through the hive's keys using the 'cd' command, as if it\n"
+"contained a filesystem, and use 'ls' to list the subkeys of the\n"
+"current key.  Full documentation is in the hivexsh(1) manual page.\n"
+msgstr ""
+"Перехід між ключами гілки можна здійснювати за допомогою команди «cd»,\n"
+"подібно до переходу теками файлової системи, за допомогою «ls»\n"
+"можна отримувати список підключів поточного ключа. З повною документацією\n"
+"можна ознайомитися за допомогою сторінки підручника (man) hivexsh(1).\n"
+
+#: sh/hivexsh.c:665
+#, c-format
+msgid "%s: %s: key not found\n"
+msgstr "%s: %s: ключ не знайдено\n"
+
+#: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+msgstr "%s: %s: некоректний цілий параметр (%s повернуто %d)\n"
+
+#: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
+#, c-format
+msgid "%s: %s: integer out of range\n"
+msgstr "%s: %s: ціле значення поза межами діапазону\n"
+
+#: sh/hivexsh.c:868 sh/hivexsh.c:886
+#, c-format
+msgid "hivexsh: setval: unexpected end of input\n"
+msgstr "hivexsh: setval: неочікуване завершення вхідних даних\n"
+
+#: sh/hivexsh.c:907 sh/hivexsh.c:926
+#, c-format
+msgid ""
+"hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
+msgstr ""
+"hivexsh: string(utf16le): передбачено підтримку введення лише 7-бітових "
+"рядків ASCII\n"
+
+#: sh/hivexsh.c:1037
+#, c-format
+msgid "hivexsh: setval: trailing garbage after hex string\n"
+msgstr ""
+"hivexsh: setval: помилкові кінцеві символи після шістнадцяткового рядка\n"
+
+#: sh/hivexsh.c:1044
+#, c-format
+msgid ""
+"hivexsh: setval: cannot parse value string, please refer to the man page "
+"hivexsh(1) for help: %s\n"
+msgstr ""
+"hivexsh: setval: не вдалося обробити рядок значення, будь ласка, зверніться "
+"до сторінки man hivexsh(1), щоб дізнатися більше: %s\n"
+
+#: sh/hivexsh.c:1073
+#, c-format
+msgid "hivexsh: del: the root node cannot be deleted\n"
+msgstr "hivexsh: del: не можна вилучати кореневий вузол\n"
+
+#: xml/hivexml.c:70
+#, c-format
+msgid "%s: failed to write XML document\n"
+msgstr "%s: не вдалося виконати запис документа XML\n"
+
+#: xml/hivexml.c:101
+#, c-format
+msgid "hivexml: missing name of input file\n"
+msgstr "hivexml: не вказано назви файла вхідних даних\n"
+
+#: xml/hivexml.c:120
+#, c-format
+msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
+msgstr "xmlNewTextWriterFilename: не вдалося створити процес запису XML\n"

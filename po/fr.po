@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: https://bugzilla.redhat.com/\n"
 "POT-Creation-Date: 2010-12-02 15:28+0000\n"
-"PO-Revision-Date: 2011-03-22 15:29+0000\n"
-"Last-Translator: rjones <rjones@redhat.com>\n"
-"Language-Team: Oriya <None>\n"
+"PO-Revision-Date: 2011-03-27 20:53+0000\n"
+"Last-Translator: bozzo <b.barnier@gmail.com>\n"
+"Language-Team: French <trans-fr@lists.fedoraproject.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: or\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
 
 #: sh/hivexsh.c:149
 #, c-format
@@ -28,31 +28,43 @@ msgid ""
 "      'quit' to quit the shell\n"
 "\n"
 msgstr ""
+"\n"
+"Bienvenue dans hivexsh, l'interpréteur de commandes interactif hivex pour examiner\n"
+"les fichiers « hive » du registre Windows.\n"
+"\n"
+"Tapez: « help » pour un résumé de l'aide\n"
+"      « quit » pour quitter l'interpréteur de commandes\n"
+"\n"
 
 #: sh/hivexsh.c:263
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr ""
+msgstr "hivexsh : erreur en récupérant le parent du nœud %zu\n"
 
 #: sh/hivexsh.c:273
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr ""
+msgstr "hivexsh : erreur en récupérant le nom du nœud %zx\n"
 
 #: sh/hivexsh.c:412
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
+"hivexsh : vous devez charger un fichier hive en utilisant « load hivefile "
+"»\n"
 
 #: sh/hivexsh.c:433
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
+"hivexsh : commande « %s » inconnue, utilisez « help » pour obtenir un résumé"
+" de l'aide\n"
 
 #: sh/hivexsh.c:443
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr ""
+"hivexsh : load : aucun nom de fichier hive donné à la fonction « load »\n"
 
 #: sh/hivexsh.c:459
 #, c-format
@@ -65,11 +77,18 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
+"hivexsh : échec de l'ouverture du fichier hive : %s : %m\n"
+"\n"
+"Si vous pensez que ce fichier est un fichier binaire hive de Windows valide (_pas_\n"
+"un fichier regedit *.reg) alors veuillez lancer à nouveau cette commande, avec\n"
+"l'option hivexsh « -d », et joindre le résultat complet _avec_ le fichier hive\n"
+"qui échoue dans un rapport d'anomalie à l'adresse https://bugzilla.redhat.com/\n"
+"\n"
 
 #: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr ""
+msgstr "hivexsh : la commande « %s » ne doit pas avoir d'arguments\n"
 
 #: sh/hivexsh.c:534
 #, c-format
@@ -77,11 +96,13 @@ msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
+"%s : %s : les caractères « \\ » sont doublés dans le chemin, échappez-vous "
+"correctement le chemin en paramètre ?\n"
 
 #: sh/hivexsh.c:572
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr ""
+msgstr "hivexsh : cd : la sous-clé « %s » est introuvable\n"
 
 #: sh/hivexsh.c:590
 #, c-format
@@ -90,37 +111,44 @@ msgid ""
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
+"Naviguez dans les clés de hive à l'aide de la commande « cd », comme si il\n"
+"contenait un système de fichiers, et utilisez « ls » pour lister les sous-clés de la\n"
+"clé courrante. Toute la documentation est disponible dans la page de manuel de hivexsh(1).\n"
 
 #: sh/hivexsh.c:665
 #, c-format
 msgid "%s: %s: key not found\n"
-msgstr ""
+msgstr "%s : %s : clé introuvable\n"
 
 #: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
-msgstr "%s: %s: ଅବୈଧ ଗଣନ ସଂଖ୍ୟା ପ୍ରାଚଳ (%s ଫେରାଇଥାଏ %d)\n"
+msgstr "%s : %s : paramètre entier invalide (%s a retourné %d)\n"
 
 #: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
 #, c-format
 msgid "%s: %s: integer out of range\n"
-msgstr "%s: %s: ଗଣନସଂଖ୍ୟାଟି ପରିସର ବାହାରେ\n"
+msgstr "%s : %s : entier hors limites\n"
 
 #: sh/hivexsh.c:868 sh/hivexsh.c:886
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
-msgstr ""
+msgstr "hivexsh : setval : fin inattendue de l'entrée\n"
 
 #: sh/hivexsh.c:907 sh/hivexsh.c:926
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
+"hivexsh : string(utf16le) : seules les chaines ASCII 7 bits sont supportées "
+"pour l'entrée\n"
 
 #: sh/hivexsh.c:1037
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr ""
+"hivexsh : setval : effacement du tampon après lecture de la chaîne "
+"hexadécimale\n"
 
 #: sh/hivexsh.c:1044
 #, c-format
@@ -128,23 +156,26 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
+"hivexsh : setval : impossible d'analyser la valeur de la chaîne, veuillez "
+"vous référer à la page de manuel de hivexsh(1) pour obtenir de l'aide : %s\n"
 
 #: sh/hivexsh.c:1073
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
-msgstr ""
+msgstr "hivexsh : del : le nœud racine ne peut pas être supprimé\n"
 
 #: xml/hivexml.c:70
 #, c-format
 msgid "%s: failed to write XML document\n"
-msgstr ""
+msgstr "%s : échec de l'écriture du document XML\n"
 
 #: xml/hivexml.c:101
 #, c-format
 msgid "hivexml: missing name of input file\n"
-msgstr ""
+msgstr "hivexml : nom du fichier en entrée manquant\n"
 
 #: xml/hivexml.c:120
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr ""
+"xmlNewTextWriterFilename : échec de la création du tampon d'écriture XML\n"
