@@ -534,6 +534,9 @@ hivex_close (hive_h *h)
 {
   int r;
 
+  if (h->msglvl >= 1)
+    fprintf (stderr, "hivex_close\n");
+
   free (h->bitmap);
   if (!h->writable)
     munmap (h->addr, h->size);
@@ -542,9 +545,6 @@ hivex_close (hive_h *h)
   r = close (h->fd);
   free (h->filename);
   free (h);
-
-  if (h->msglvl >= 1)
-    fprintf (stderr, "hivex_close\n");
 
   return r;
 }
