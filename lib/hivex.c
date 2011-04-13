@@ -1245,6 +1245,10 @@ hivex_value_value (hive_h *h, hive_value_h value,
       fprintf (stderr, "hivex_value_value: warning: declared data length is longer than the block it is in (data 0x%zx, data len %zu, block len %zu)\n",
                data_offset, len, blen);
     len = blen - 4;
+
+    /* Return the smaller length to the caller too. */
+    if (len_rtn)
+      *len_rtn = len;
   }
 
   char *data = h->addr + data_offset + 4;
