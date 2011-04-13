@@ -62,7 +62,6 @@
 #define HIVEX_MAX_ALLOCATION  1000000
 
 static char *windows_utf16_to_utf8 (/* const */ char *input, size_t len);
-static size_t utf16_string_len_in_bytes (const char *str);
 static size_t utf16_string_len_in_bytes_max (const char *str, size_t len);
 
 struct hive_h {
@@ -1363,22 +1362,9 @@ free_strings (char **argv)
 }
 
 /* Get the length of a UTF-16 format string.  Handle the string as
- * pairs of bytes, looking for the first \0\0 pair.
+ * pairs of bytes, looking for the first \0\0 pair.  Only read up to
+ * 'len' maximum bytes.
  */
-static size_t
-utf16_string_len_in_bytes (const char *str)
-{
-  size_t ret = 0;
-
-  while (str[0] || str[1]) {
-    str += 2;
-    ret += 2;
-  }
-
-  return ret;
-}
-
-/* As for utf16_string_len_in_bytes but only read up to a maximum length. */
 static size_t
 utf16_string_len_in_bytes_max (const char *str, size_t len)
 {
