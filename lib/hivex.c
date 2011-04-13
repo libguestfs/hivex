@@ -1384,7 +1384,7 @@ utf16_string_len_in_bytes_max (const char *str, size_t len)
 {
   size_t ret = 0;
 
-  while (len > 0 && (str[0] || str[1])) {
+  while (len >= 2 && (str[0] || str[1])) {
     str += 2;
     ret += 2;
     len -= 2;
