@@ -1,5 +1,5 @@
 /* hivex - Windows Registry "hive" extraction library.
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2011 Red Hat Inc.
  * Derived from code by Petter Nordahl-Hagen under a compatible license:
  *   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
  * Derived from code by Markus Stephany under a compatible license:
@@ -414,7 +414,8 @@ hivex_open (const char *filename, int flags)
         page->magic[1] != 'b' ||
         page->magic[2] != 'i' ||
         page->magic[3] != 'n') {
-      fprintf (stderr, "hivex: %s: trailing garbage at end of file (at 0x%zx, after %zu pages)\n",
+      fprintf (stderr, "hivex: %s: trailing garbage at end of file "
+               "(at 0x%zx, after %zu pages)\n",
                filename, off, pages);
       errno = ENOTSUP;
       goto error;
@@ -452,7 +453,8 @@ hivex_open (const char *filename, int flags)
       int used;
       seg_len = block_len (h, blkoff, &used);
       if (seg_len <= 4 || (seg_len & 3) != 0) {
-        fprintf (stderr, "hivex: %s: block size %" PRIu32 " at 0x%zx, bad registry\n",
+        fprintf (stderr, "hivex: %s: block size %" PRIu32 " at 0x%zx,"
+                 " bad registry\n",
                  filename, le32toh (block->seg_len), blkoff);
         errno = ENOTSUP;
         goto error;
@@ -585,7 +587,8 @@ hivex_node_name (hive_h *h, hive_node_h node)
   size_t seg_len = block_len (h, node, NULL);
   if (sizeof (struct ntreg_nk_record) + len - 1 > seg_len) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_name: returning EFAULT because node name is too long (%zu, %zu)\n",
+      fprintf (stderr, "hivex_node_name: returning EFAULT because node name"
+               " is too long (%zu, %zu)\n",
               len, seg_len);
     errno = EFAULT;
     return NULL;
@@ -732,7 +735,8 @@ get_children (hive_h *h, hive_node_h node,
   /* Arbitrarily limit the number of subkeys we will ever deal with. */
   if (nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex: get_children: returning ERANGE because nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS (%zu > %d)\n",
+      fprintf (stderr, "hivex: get_children: returning ERANGE because "
+               "nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS (%zu > %d)\n",
                nr_subkeys_in_nk, HIVEX_MAX_SUBKEYS);
     errno = ERANGE;
     goto error;
@@ -750,7 +754,8 @@ get_children (hive_h *h, hive_node_h node,
   subkey_lf += 0x1000;
   if (!IS_VALID_BLOCK (h, subkey_lf)) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_children: returning EFAULT because subkey_lf is not a valid block (0x%zx)\n",
+      fprintf (stderr, "hivex_node_children: returning EFAULT"
+               " because subkey_lf is not a valid block (0x%zx)\n",
                subkey_lf);
     errno = EFAULT;
     goto error;
@@ -774,7 +779,8 @@ get_children (hive_h *h, hive_node_h node,
     size_t nr_subkeys_in_lf = le16toh (lf->nr_keys);
 
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_children: nr_subkeys_in_nk = %zu, nr_subkeys_in_lf = %zu\n",
+      fprintf (stderr, "hivex_node_children: nr_subkeys_in_nk = %zu,"
+               " nr_subkeys_in_lf = %zu\n",
                nr_subkeys_in_nk, nr_subkeys_in_lf);
 
     if (nr_subkeys_in_nk != nr_subkeys_in_lf) {
@@ -785,7 +791,8 @@ get_children (hive_h *h, hive_node_h node,
     size_t len = block_len (h, subkey_lf, NULL);
     if (8 + nr_subkeys_in_lf * 8 > len) {
       if (h->msglvl >= 2)
-        fprintf (stderr, "hivex_node_children: returning EFAULT because too many subkeys (%zu, %zu)\n",
+        fprintf (stderr, "hivex_node_children: returning EFAULT"
+                 " because too many subkeys (%zu, %zu)\n",
                  nr_subkeys_in_lf, len);
       errno = EFAULT;
       goto error;
@@ -798,7 +805,8 @@ get_children (hive_h *h, hive_node_h node,
       if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
         if (!IS_VALID_BLOCK (h, subkey)) {
           if (h->msglvl >= 2)
-            fprintf (stderr, "hivex_node_children: returning EFAULT because subkey is not a valid block (0x%zx)\n",
+            fprintf (stderr, "hivex_node_children: returning EFAULT"
+                     " because subkey is not a valid block (0x%zx)\n",
                      subkey);
           errno = EFAULT;
           goto error;
@@ -822,14 +830,16 @@ get_children (hive_h *h, hive_node_h node,
       offset += 0x1000;
       if (!IS_VALID_BLOCK (h, offset)) {
         if (h->msglvl >= 2)
-          fprintf (stderr, "hivex_node_children: returning EFAULT because ri-offset is not a valid block (0x%zx)\n",
+          fprintf (stderr, "hivex_node_children: returning EFAULT"
+                   " because ri-offset is not a valid block (0x%zx)\n",
                    offset);
         errno = EFAULT;
         goto error;
       }
       if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
         if (h->msglvl >= 2)
-          fprintf (stderr, "get_children: returning ENOTSUP because ri-record offset does not point to lf/lh (0x%zx)\n",
+          fprintf (stderr, "get_children: returning ENOTSUP"
+                   " because ri-record offset does not point to lf/lh (0x%zx)\n",
                    offset);
         errno = ENOTSUP;
         goto error;
@@ -845,7 +855,8 @@ get_children (hive_h *h, hive_node_h node,
     }
 
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_children: nr_subkeys_in_nk = %zu, counted = %zu\n",
+      fprintf (stderr, "hivex_node_children: nr_subkeys_in_nk = %zu,"
+               " counted = %zu\n",
                nr_subkeys_in_nk, count);
 
     if (nr_subkeys_in_nk != count) {
@@ -861,14 +872,16 @@ get_children (hive_h *h, hive_node_h node,
       offset += 0x1000;
       if (!IS_VALID_BLOCK (h, offset)) {
         if (h->msglvl >= 2)
-          fprintf (stderr, "hivex_node_children: returning EFAULT because ri-offset is not a valid block (0x%zx)\n",
+          fprintf (stderr, "hivex_node_children: returning EFAULT"
+                   " because ri-offset is not a valid block (0x%zx)\n",
                    offset);
         errno = EFAULT;
         goto error;
       }
       if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
         if (h->msglvl >= 2)
-          fprintf (stderr, "get_children: returning ENOTSUP because ri-record offset does not point to lf/lh (0x%zx)\n",
+          fprintf (stderr, "get_children: returning ENOTSUP"
+                   " because ri-record offset does not point to lf/lh (0x%zx)\n",
                    offset);
         errno = ENOTSUP;
         goto error;
@@ -884,7 +897,8 @@ get_children (hive_h *h, hive_node_h node,
         if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
           if (!IS_VALID_BLOCK (h, subkey)) {
             if (h->msglvl >= 2)
-              fprintf (stderr, "hivex_node_children: returning EFAULT because indirect subkey is not a valid block (0x%zx)\n",
+              fprintf (stderr, "hivex_node_children: returning EFAULT"
+                       " because indirect subkey is not a valid block (0x%zx)\n",
                        subkey);
             errno = EFAULT;
             goto error;
@@ -898,7 +912,8 @@ get_children (hive_h *h, hive_node_h node,
   }
   /* else not supported, set errno and fall through */
   if (h->msglvl >= 2)
-    fprintf (stderr, "get_children: returning ENOTSUP because subkey block is not lf/lh/ri (0x%zx, %d, %d)\n",
+    fprintf (stderr, "get_children: returning ENOTSUP"
+             " because subkey block is not lf/lh/ri (0x%zx, %d, %d)\n",
              subkey_lf, block->id[0], block->id[1]);
   errno = ENOTSUP;
  error:
@@ -971,7 +986,8 @@ hivex_node_parent (hive_h *h, hive_node_h node)
   ret += 0x1000;
   if (!IS_VALID_BLOCK (h, ret)) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_parent: returning EFAULT because parent is not a valid block (0x%zx)\n",
+      fprintf (stderr, "hivex_node_parent: returning EFAULT"
+               " because parent is not a valid block (0x%zx)\n",
               ret);
     errno = EFAULT;
     return 0;
@@ -1005,7 +1021,8 @@ get_values (hive_h *h, hive_node_h node,
   /* Arbitrarily limit the number of values we will ever deal with. */
   if (nr_values > HIVEX_MAX_VALUES) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex: get_values: returning ERANGE because nr_values > HIVEX_MAX_VALUES (%zu > %d)\n",
+      fprintf (stderr, "hivex: get_values: returning ERANGE"
+               " because nr_values > HIVEX_MAX_VALUES (%zu > %d)\n",
                nr_values, HIVEX_MAX_VALUES);
     errno = ERANGE;
     goto error;
@@ -1020,7 +1037,8 @@ get_values (hive_h *h, hive_node_h node,
   vlist_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, vlist_offset)) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_values: returning EFAULT because value list is not a valid block (0x%zx)\n",
+      fprintf (stderr, "hivex_node_values: returning EFAULT"
+               " because value list is not a valid block (0x%zx)\n",
                vlist_offset);
     errno = EFAULT;
     goto error;
@@ -1035,7 +1053,8 @@ get_values (hive_h *h, hive_node_h node,
   size_t len = block_len (h, vlist_offset, NULL);
   if (4 + nr_values * 4 > len) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_values: returning EFAULT because value list is too long (%zu, %zu)\n",
+      fprintf (stderr, "hivex_node_values: returning EFAULT"
+               " because value list is too long (%zu, %zu)\n",
                nr_values, len);
     errno = EFAULT;
     goto error;
@@ -1047,7 +1066,8 @@ get_values (hive_h *h, hive_node_h node,
     value += 0x1000;
     if (!IS_VALID_BLOCK (h, value)) {
       if (h->msglvl >= 2)
-        fprintf (stderr, "hivex_node_values: returning EFAULT because value is not a valid block (0x%zx)\n",
+        fprintf (stderr, "hivex_node_values: returning EFAULT"
+                 " because value is not a valid block (0x%zx)\n",
                  value);
       errno = EFAULT;
       goto error;
@@ -1133,7 +1153,8 @@ hivex_value_key (hive_h *h, hive_value_h value)
   size_t seg_len = block_len (h, value, NULL);
   if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_key: returning EFAULT because key length is too long (%zu, %zu)\n",
+      fprintf (stderr, "hivex_value_key: returning EFAULT"
+               " because key length is too long (%zu, %zu)\n",
                len, seg_len);
     errno = EFAULT;
     return NULL;
@@ -1206,7 +1227,8 @@ hivex_value_value (hive_h *h, hive_value_h value,
   /* Arbitrarily limit the length that we will read. */
   if (len > HIVEX_MAX_VALUE_LEN) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_value: returning ERANGE because data length > HIVEX_MAX_VALUE_LEN (%zu > %d)\n",
+      fprintf (stderr, "hivex_value_value: returning ERANGE because data "
+               "length > HIVEX_MAX_VALUE_LEN (%zu > %d)\n",
                len, HIVEX_MAX_SUBKEYS);
     errno = ERANGE;
     return NULL;
@@ -1225,7 +1247,8 @@ hivex_value_value (hive_h *h, hive_value_h value,
   data_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, data_offset)) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_value: returning EFAULT because data offset is not a valid block (0x%zx)\n",
+      fprintf (stderr, "hivex_value_value: returning EFAULT because data "
+               "offset is not a valid block (0x%zx)\n",
                data_offset);
     errno = EFAULT;
     free (ret);
@@ -1241,7 +1264,9 @@ hivex_value_value (hive_h *h, hive_value_h value,
   size_t blen = block_len (h, data_offset, NULL);
   if (len > blen - 4 /* subtract 4 for block header */) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_value: warning: declared data length is longer than the block it is in (data 0x%zx, data len %zu, block len %zu)\n",
+      fprintf (stderr, "hivex_value_value: warning: declared data length "
+               "is longer than the block it is in "
+               "(data 0x%zx, data len %zu, block len %zu)\n",
                data_offset, len, blen);
     len = blen - 4;
 
@@ -1493,7 +1518,9 @@ hivex_visit (hive_h *h, const struct hivex_visitor *visitor, size_t len,
   return hivex_visit_node (h, hivex_root (h), visitor, len, opaque, flags);
 }
 
-static int hivex__visit_node (hive_h *h, hive_node_h node, const struct hivex_visitor *vtor, char *unvisited, void *opaque, int flags);
+static int hivex__visit_node (hive_h *h, hive_node_h node,
+                              const struct hivex_visitor *vtor,
+                              char *unvisited, void *opaque, int flags);
 
 int
 hivex_visit_node (hive_h *h, hive_node_h node,
@@ -1541,7 +1568,8 @@ hivex__visit_node (hive_h *h, hive_node_h node,
 
   if (!BITMAP_TST (unvisited, node)) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex__visit_node: contains cycle: visited node 0x%zx already\n",
+      fprintf (stderr, "hivex__visit_node: contains cycle:"
+               " visited node 0x%zx already\n",
                node);
 
     errno = ELOOP;
@@ -1614,14 +1642,16 @@ hivex__visit_node (hive_h *h, hive_node_h node,
           }
           if (vtor->value_string_invalid_utf16) {
             str = hivex_value_value (h, values[i], &t, &len);
-            if (vtor->value_string_invalid_utf16 (h, opaque, node, values[i], t, len, key, str) == -1)
+            if (vtor->value_string_invalid_utf16 (h, opaque, node, values[i],
+                                                  t, len, key, str) == -1)
               goto error;
             free (str); str = NULL;
           }
           break;
         }
         if (vtor->value_string &&
-            vtor->value_string (h, opaque, node, values[i], t, len, key, str) == -1)
+            vtor->value_string (h, opaque, node, values[i],
+                                t, len, key, str) == -1)
           goto error;
         free (str); str = NULL;
         break;
@@ -1630,7 +1660,8 @@ hivex__visit_node (hive_h *h, hive_node_h node,
       case hive_t_dword_be: {
         int32_t i32 = hivex_value_dword (h, values[i]);
         if (vtor->value_dword &&
-            vtor->value_dword (h, opaque, node, values[i], t, len, key, i32) == -1)
+            vtor->value_dword (h, opaque, node, values[i],
+                               t, len, key, i32) == -1)
           goto error;
         break;
       }
@@ -1638,7 +1669,8 @@ hivex__visit_node (hive_h *h, hive_node_h node,
       case hive_t_qword: {
         int64_t i64 = hivex_value_qword (h, values[i]);
         if (vtor->value_qword &&
-            vtor->value_qword (h, opaque, node, values[i], t, len, key, i64) == -1)
+            vtor->value_qword (h, opaque, node, values[i],
+                               t, len, key, i64) == -1)
           goto error;
         break;
       }
@@ -1654,7 +1686,8 @@ hivex__visit_node (hive_h *h, hive_node_h node,
           goto error;
         }
         if (vtor->value_binary &&
-            vtor->value_binary (h, opaque, node, values[i], t, len, key, str) == -1)
+            vtor->value_binary (h, opaque, node, values[i],
+                                t, len, key, str) == -1)
           goto error;
         free (str); str = NULL;
         break;
@@ -1668,14 +1701,16 @@ hivex__visit_node (hive_h *h, hive_node_h node,
           }
           if (vtor->value_string_invalid_utf16) {
             str = hivex_value_value (h, values[i], &t, &len);
-            if (vtor->value_string_invalid_utf16 (h, opaque, node, values[i], t, len, key, str) == -1)
+            if (vtor->value_string_invalid_utf16 (h, opaque, node, values[i],
+                                                  t, len, key, str) == -1)
               goto error;
             free (str); str = NULL;
           }
           break;
         }
         if (vtor->value_multiple_strings &&
-            vtor->value_multiple_strings (h, opaque, node, values[i], t, len, key, strs) == -1)
+            vtor->value_multiple_strings (h, opaque, node, values[i],
+                                          t, len, key, strs) == -1)
           goto error;
         free_strings (strs); strs = NULL;
         break;
@@ -1690,7 +1725,8 @@ hivex__visit_node (hive_h *h, hive_node_h node,
           goto error;
         }
         if (vtor->value_other &&
-            vtor->value_other (h, opaque, node, values[i], t, len, key, str) == -1)
+            vtor->value_other (h, opaque, node, values[i],
+                               t, len, key, str) == -1)
           goto error;
         free (str); str = NULL;
         break;
@@ -1765,9 +1801,11 @@ allocate_page (hive_h *h, size_t allocation_hint)
   ssize_t extend = h->endpages + nr_4k_pages * 4096 - h->size;
 
   if (h->msglvl >= 2) {
-    fprintf (stderr, "allocate_page: current endpages = 0x%zx, current size = 0x%zx\n",
+    fprintf (stderr, "allocate_page: current endpages = 0x%zx,"
+             " current size = 0x%zx\n",
              h->endpages, h->size);
-    fprintf (stderr, "allocate_page: extending file by %zd bytes (<= 0 if no extension)\n",
+    fprintf (stderr, "allocate_page: extending file by %zd bytes"
+             " (<= 0 if no extension)\n",
              extend);
   }
 
@@ -1852,8 +1890,8 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
      * for them, albeit unusual.
      */
     if (h->msglvl >= 2)
-      fprintf (stderr, "allocate_block: refusing too small allocation (%zu), returning ERANGE\n",
-               seg_len);
+      fprintf (stderr, "allocate_block: refusing too small allocation (%zu),"
+               " returning ERANGE\n", seg_len);
     errno = ERANGE;
     return 0;
   }
@@ -1861,8 +1899,8 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
   /* Refuse really large allocations. */
   if (seg_len > HIVEX_MAX_ALLOCATION) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "allocate_block: refusing large allocation (%zu), returning ERANGE\n",
-               seg_len);
+      fprintf (stderr, "allocate_block: refusing large allocation (%zu),"
+               " returning ERANGE\n", seg_len);
     errno = ERANGE;
     return 0;
   }
@@ -1908,8 +1946,8 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
   ssize_t rem = h->endpages - h->endblocks;
   if (rem > 0) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "allocate_block: marking remainder of page free starting at 0x%zx, size %zd\n",
-               h->endblocks, rem);
+      fprintf (stderr, "allocate_block: marking remainder of page free"
+               " starting at 0x%zx, size %zd\n", h->endblocks, rem);
 
     assert (rem >= 4);
 
@@ -2187,7 +2225,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     return 0;
 
   if (h->msglvl >= 2)
-    fprintf (stderr, "hivex_node_add_child: allocated new nk-record for child at 0x%zx\n", node);
+    fprintf (stderr, "hivex_node_add_child: allocated new nk-record"
+             " for child at 0x%zx\n", node);
 
   struct ntreg_nk_record *nk = (struct ntreg_nk_record *) (h->addr + node);
   nk->flags = htole16 (0x0020); /* key is ASCII. */
@@ -2207,7 +2246,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   if (!IS_VALID_BLOCK (h, parent_sk_offset) ||
       !BLOCK_ID_EQ (h, parent_sk_offset, "sk")) {
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_add_child: returning EFAULT because parent sk is not a valid block (%zu)\n",
+      fprintf (stderr, "hivex_node_add_child: returning EFAULT"
+               " because parent sk is not a valid block (%zu)\n",
                parent_sk_offset);
     errno = EFAULT;
     return 0;
@@ -2261,7 +2301,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     parent_nk = (struct ntreg_nk_record *) (h->addr + parent);
 
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_add_child: no keys, allocated new lh-record at 0x%zx\n", lh_offs);
+      fprintf (stderr, "hivex_node_add_child: no keys, allocated new"
+               " lh-record at 0x%zx\n", lh_offs);
 
     parent_nk->subkey_lf = htole32 (lh_offs - 0x1000);
   }
@@ -2293,7 +2334,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     /* Insert it. */
   insert_it:
     if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_node_add_child: insert key in existing lh-record at 0x%zx, posn %zu\n", old_offs, j);
+      fprintf (stderr, "hivex_node_add_child: insert key in existing"
+               " lh-record at 0x%zx, posn %zu\n", old_offs, j);
 
     new_offs = insert_lf_record (h, old_offs, j, name, node);
     if (new_offs == 0) {
@@ -2334,7 +2376,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 
       /* Not found ..  This is an internal error. */
       if (h->msglvl >= 2)
-        fprintf (stderr, "hivex_node_add_child: returning ENOTSUP because could not find ri->lf link\n");
+        fprintf (stderr, "hivex_node_add_child: returning ENOTSUP"
+                 " because could not find ri->lf link\n");
       errno = ENOTSUP;
       free (blocks);
       return 0;
@@ -2527,7 +2570,8 @@ hivex_node_delete_child (hive_h *h, hive_node_h node)
     }
   }
   if (h->msglvl >= 2)
-    fprintf (stderr, "hivex_node_delete_child: could not find parent to child link\n");
+    fprintf (stderr, "hivex_node_delete_child: could not find parent"
+             " to child link\n");
   errno = ENOTSUP;
   return -1;
 
@@ -2537,8 +2581,8 @@ hivex_node_delete_child (hive_h *h, hive_node_h node)
   nk->nr_subkeys = htole32 (nr_subkeys_in_nk - 1);
 
   if (h->msglvl >= 2)
-    fprintf (stderr, "hivex_node_delete_child: updating nr_subkeys in parent 0x%zx to %zu\n",
-             parent, nr_subkeys_in_nk);
+    fprintf (stderr, "hivex_node_delete_child: updating nr_subkeys"
+             " in parent 0x%zx to %zu\n", parent, nr_subkeys_in_nk);
 
   return 0;
 }
@@ -2638,7 +2682,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
 
 int
 hivex_node_set_value (hive_h *h, hive_node_h node,
-		      const hive_set_value *val, int flags)
+                      const hive_set_value *val, int flags)
 {
   hive_value_h *prev_values = hivex_node_values (h, node);
   if (prev_values == NULL)
