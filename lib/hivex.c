@@ -1335,7 +1335,7 @@ hivex_value_string (hive_h *h, hive_value_h value)
    * (Found by Hilko Bengen in a fresh Windows XP SOFTWARE hive).
    */
   size_t slen = utf16_string_len_in_bytes_max (data, len);
-  if (slen > len)
+  if (slen < len)
     len = slen;
 
   char *ret = windows_utf16_to_utf8 (data, len);
