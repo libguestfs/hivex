@@ -1421,7 +1421,8 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
   char *p = data;
   size_t plen;
 
-  while (p < data + len && (plen = utf16_string_len_in_bytes (p)) > 0) {
+  while (p < data + len &&
+         (plen = utf16_string_len_in_bytes_max (p, data + len - p)) > 0) {
     nr_strings++;
     char **ret2 = realloc (ret, (1 + nr_strings) * sizeof (char *));
     if (ret2 == NULL) {
