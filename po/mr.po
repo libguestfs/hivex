@@ -2,19 +2,19 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
-"Report-Msgid-Bugs-To: https://bugzilla.redhat.com/\n"
-"POT-Creation-Date: 2010-12-02 15:28+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-13 15:09+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: sandeeps <sshedmak@redhat.com>\n"
 "Language-Team: Marathi <None>\n"
+"Language: mr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: mr\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: sh/hivexsh.c:149
@@ -50,8 +50,7 @@ msgstr "hivexsh: नोड %zx चे नोड नाव प्राप्त 
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
-"hivexsh: 'load hivefile' चा वापर करून तुम्ही hive फाइल प्रथम लोड करायला "
-"हवे\n"
+"hivexsh: 'load hivefile' चा वापर करून तुम्ही hive फाइल प्रथम लोड करायला हवे\n"
 
 #: sh/hivexsh.c:433
 #, c-format
@@ -78,7 +77,8 @@ msgstr ""
 "\n"
 "ही फाइल वैध Windows बाइनरी hive पाइल (_not_\n"
 "a regedit *.reg file) असल्यास कृपया \n"
-"hivexsh पर्याय '-d' चा वापर करून हे आदेश पुनः चालवा व संपूर्ण आऊटपुट _and_ अपयशी hive फाइल\n"
+"hivexsh पर्याय '-d' चा वापर करून हे आदेश पुनः चालवा व संपूर्ण आऊटपुट _and_ अपयशी hive "
+"फाइल\n"
 " https://bugzilla.redhat.com/ येथील बग अहवालात जोडा\n"
 "\n"
 
@@ -93,8 +93,8 @@ msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
-"%s: %s: \\ मार्गातील अक्षरे दुप्पट केले आहेत - तुम्ही मार्ग संबंधीत घटक "
-"योग्यप्रकारे एस्केप करत आहात?\n"
+"%s: %s: \\ मार्गातील अक्षरे दुप्पट केले आहेत - तुम्ही मार्ग संबंधीत घटक योग्यप्रकारे एस्केप "
+"करत आहात?\n"
 
 #: sh/hivexsh.c:572
 #, c-format
@@ -137,8 +137,7 @@ msgstr "hivexsh: setval: इंपुटची अनेपक्षीत स�
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
-"hivexsh: string(utf16le): फक्त 7 बिट ASCII अक्षरमाळा इंपुटकरीता समर्थीत "
-"आहे\n"
+"hivexsh: string(utf16le): फक्त 7 बिट ASCII अक्षरमाळा इंपुटकरीता समर्थीत आहे\n"
 
 #: sh/hivexsh.c:1037
 #, c-format
@@ -151,8 +150,8 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: वॅल्यू स्ट्रिंग वाचणे अशक्य, कृपया मदतीसाठी man page "
-"hivexsh(1) पहा: %s\n"
+"hivexsh: setval: वॅल्यू स्ट्रिंग वाचणे अशक्य, कृपया मदतीसाठी man page hivexsh(1) पहा: "
+"%s\n"
 
 #: sh/hivexsh.c:1073
 #, c-format

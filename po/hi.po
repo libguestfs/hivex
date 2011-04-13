@@ -2,19 +2,19 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
-"Report-Msgid-Bugs-To: https://bugzilla.redhat.com/\n"
-"POT-Creation-Date: 2010-12-02 15:28+0000\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-13 15:09+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
+"Language: hi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: hi\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
 #: sh/hivexsh.c:149
@@ -50,8 +50,8 @@ msgstr "hivexsh: नोड %zx के नोड नाम को पाने �
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
-"hivexsh: आपको जरूर एक पहले हाइव फाइल को 'load hivefile' के प्रयोग के पहले "
-"लोड करना चाहिए\n"
+"hivexsh: आपको जरूर एक पहले हाइव फाइल को 'load hivefile' के प्रयोग के पहले लोड करना "
+"चाहिए\n"
 
 #: sh/hivexsh.c:433
 #, c-format
@@ -137,8 +137,8 @@ msgstr "hivexsh: setval: इनपुट का अप्रत्याशि�
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
-"hivexsh: string(utf16le): केवल 7 bit ASCII स्ट्रिंग को इनपुट के लिए समर्थन "
-"दिया गया है\n"
+"hivexsh: string(utf16le): केवल 7 bit ASCII स्ट्रिंग को इनपुट के लिए समर्थन दिया गया "
+"है\n"
 
 #: sh/hivexsh.c:1037
 #, c-format
@@ -151,8 +151,8 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: मान स्ट्रिंग को विश्लेषित नहीं कर सका, कृपयाhivexsh(1) का "
-"मदद के लिए संदर्भ लें: %s\n"
+"hivexsh: setval: मान स्ट्रिंग को विश्लेषित नहीं कर सका, कृपयाhivexsh(1) का मदद के "
+"लिए संदर्भ लें: %s\n"
 
 #: sh/hivexsh.c:1073
 #, c-format
