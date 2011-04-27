@@ -2875,7 +2875,7 @@ put_val_type (char *val, size_t len, hive_type t)
 	    pr "O"
 	| ANode n
 	| AValue n ->
-	    pr "L"
+	    pr "l"
 	| AString n ->
 	    pr "s"
         | AStringNullable n ->
