@@ -444,6 +444,7 @@ dnl     [test "x$GHC" != "xno"])
 dnl Produce output files.
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
+                 generator/Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
                  hivex.pc
