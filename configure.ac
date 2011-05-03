@@ -232,47 +232,25 @@ AC_CHECK_PROG([PYTHON],[python],[python],[no])
 
 PYTHON_PREFIX=
 PYTHON_VERSION=
-PYTHON_INCLUDEDIR=
-PYTHON_SITE_PACKAGES=
 
 if test "x$PYTHON" != "xno"; then
     PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
     PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
-    for d in \
-        $PYTHON_PREFIX/include/python$PYTHON_VERSION \
-        /usr/include/python$PYTHON_VERSION \
-        /usr/local/include/python$PYTHON_VERSION
-    do
-        AC_MSG_CHECKING([Python.h in $d])
-        if test -r "$d/Python.h"; then
-            AC_MSG_RESULT([found])
-            PYTHON_INCLUDEDIR=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-    if test "x$PYTHON_INCLUDEDIR" = "x"; then
-        AC_MSG_WARN([Python include directory not found])
-    fi
 
-    for d in \
-        $PYTHON_PREFIX/lib64/python$PYTHON_VERSION/site-packages \
-        $PYTHON_PREFIX/lib/python$PYTHON_VERSION/site-packages \
-        /usr/lib64/python$PYTHON_VERSION/site-packages \
-        /usr/lib/python$PYTHON_VERSION/site-packages \
-        /usr/local/lib/python$PYTHON_VERSION/site-packages
-    do
-        AC_MSG_CHECKING([for $d])
-        if test -d "$d"; then
-            AC_MSG_RESULT([found])
-            PYTHON_SITE_PACKAGES=$d
-            break
-        fi
-        AC_MSG_RESULT([not found])
-    done
-    if test "x$PYTHON_SITE_PACKAGES" = "x"; then
-        AC_MSG_WARN([Python site-packages directory not found])
+    AC_MSG_CHECKING([for Python include path])
+    if test -z "$PYTHON_INCLUDEDIR"; then
+        python_path=`$PYTHON -c "import distutils.sysconfig; \
+                                 print (distutils.sysconfig.get_python_inc ());"`
+        PYTHON_INCLUDEDIR=$python_path
     fi
+    AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
+
+    AC_MSG_CHECKING([for Python site-packages path])
+    if test -z "$PYTHON_SITE_PACKAGES"; then
+        PYTHON_SITE_PACKAGES=`$PYTHON -c "import distutils.sysconfig; \
+                print (distutils.sysconfig.get_python_lib(0,0));"`
+    fi
+    AC_MSG_RESULT([$PYTHON_SITE_PACKAGES])
 
     old_LIBS="$LIBS"
     LIBS="$LIBS -lpython$PYTHON_VERSION"
