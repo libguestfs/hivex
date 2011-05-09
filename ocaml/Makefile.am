@@ -46,7 +46,7 @@ hivex_c.o: hivex_c.c
 	$(CC) $(AM_CPPFLAGS) $(CFLAGS) -fPIC -Wall -c $<
 
 TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs \
+	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs:$(top_builddir)/ocaml \
 	$(VG)
 
 TESTS = \
@@ -59,33 +59,33 @@ TESTS = \
 	t/hivex_300_fold
 noinst_DATA += $(TESTS)
 
-t/hivex_005_load: t/hivex_005_load.cmx mlhivex.cmxa
+t/hivex_005_load: t/hivex_005_load.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_010_open: t/hivex_010_open.cmx mlhivex.cmxa
+t/hivex_010_open: t/hivex_010_open.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_020_root: t/hivex_020_root.cmx mlhivex.cmxa
+t/hivex_020_root: t/hivex_020_root.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_100_errors: t/hivex_100_errors.cmx mlhivex.cmxa
+t/hivex_100_errors: t/hivex_100_errors.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_110_gc_handle: t/hivex_110_gc_handle.cmx mlhivex.cmxa
+t/hivex_110_gc_handle: t/hivex_110_gc_handle.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_200_write: t/hivex_200_write.cmx mlhivex.cmxa
+t/hivex_200_write: t/hivex_200_write.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
-t/hivex_300_fold: t/hivex_300_fold.cmx mlhivex.cmxa
+t/hivex_300_fold: t/hivex_300_fold.cmo mlhivex.cma
 	mkdir -p t
-	$(OCAMLFIND) ocamlopt -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cmxa $< -o $@
+	$(OCAMLFIND) ocamlc -cclib -L$(top_builddir)/lib/.libs -I . -package unix -linkpkg mlhivex.cma $< -o $@
 
 # Need to rebuild the tests from source if the main library has
 # changed at all, otherwise we get inconsistent assumptions.
