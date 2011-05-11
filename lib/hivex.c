@@ -1062,7 +1062,7 @@ get_values (hive_h *h, hive_node_h node,
 
   size_t i;
   for (i = 0; i < nr_values; ++i) {
-    hive_node_h value = vlist->offset[i];
+    hive_node_h value = le32toh (vlist->offset[i]);
     value += 0x1000;
     if (!IS_VALID_BLOCK (h, value)) {
       if (h->msglvl >= 2)
