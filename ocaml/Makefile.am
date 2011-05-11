@@ -31,7 +31,11 @@ AM_CPPFLAGS = \
 
 if HAVE_OCAML
 
-noinst_DATA = mlhivex.cma mlhivex.cmxa META
+noinst_DATA = mlhivex.cma META
+
+if HAVE_OCAMLOPT
+noinst_DATA += mlhivex.cmxa
+endif
 
 OBJS = hivex_c.o hivex.cmo
 XOBJS = $(OBJS:.cmo=.cmx)

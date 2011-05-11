@@ -174,6 +174,7 @@ dnl Check for OCaml (optional, for OCaml bindings).
 AC_PROG_OCAML
 AC_PROG_FINDLIB
 AM_CONDITIONAL([HAVE_OCAML],[test "x$OCAMLC" != "xno" -a "x$OCAMLFIND" != "xno"])
+AM_CONDITIONAL([HAVE_OCAMLOPT], [test "x$OCAMLOPT" != "xno" -a "x$OCAMLFIND" != "xno"])
 
 if test "x$OCAMLC" != "xno"; then
     dnl Check if we have caml/unixsupport.h header (OCaml bindings only).
