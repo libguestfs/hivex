@@ -40,7 +40,7 @@ AC_DEFINE([PACKAGE_VERSION_EXTRA],["hivex_extra"],[Extra version string])
 gl_EARLY
 gl_INIT
 
-AC_PROG_LIBTOOL
+AM_PROG_LIBTOOL
 
 dnl Check for basic C environment.
 AC_PROG_CC_STDC
