@@ -248,7 +248,7 @@ if test "x$PYTHON" != "xno"; then
     AC_MSG_CHECKING([for Python site-packages path])
     if test -z "$PYTHON_SITE_PACKAGES"; then
         PYTHON_SITE_PACKAGES=`$PYTHON -c "import distutils.sysconfig; \
-                print (distutils.sysconfig.get_python_lib(0,0));"`
+                print (distutils.sysconfig.get_python_lib(1,0));"`
     fi
     AC_MSG_RESULT([$PYTHON_SITE_PACKAGES])
 
