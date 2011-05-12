@@ -110,3 +110,7 @@
 /xalloc.m4
 /xsize.m4
 /xstrtol.m4
+/getpagesize.m4
+/printf.m4
+/read.m4
+/wchar_h.m4
