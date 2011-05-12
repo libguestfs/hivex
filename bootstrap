@@ -74,6 +74,7 @@ xstrtoll
 '
 
 $gnulib_tool			\
+  --libtool                     \
   --avoid=dummy			\
   --with-tests			\
   --m4-base=m4			\
