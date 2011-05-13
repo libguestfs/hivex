@@ -42,4 +42,6 @@ TESTS_ENVIRONMENT = \
 
 TESTS = run-python-tests
 
+CLEANFILES = hivex.pyc
+
 endif
