@@ -94,7 +94,12 @@ install-data-hook:
 	$(OCAMLFIND) install \
 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
 	  hivex \
-	  META *.so *.a *.cma *.cmx *.cmxa *.cmi *.mli
+	  META *.so *.a *.cma *.cmi *.mli
+if HAVE_OCAMLOPT
+	$(OCAMLFIND) install \
+	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+	  *.cmx *.cmxa
+endif
 
 CLEANFILES += $(noinst_DATA)
 
