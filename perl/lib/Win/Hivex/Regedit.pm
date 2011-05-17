@@ -1,5 +1,5 @@
 # Win::Hivex::Regedit
-# Copyright (C) 2009-2010 Red Hat Inc.
+# Copyright (C) 2009-2011 Red Hat Inc.
 # Derived from code by Petter Nordahl-Hagen under a compatible license:
 #   Copyright (c) 1997-2007 Petter Nordahl-Hagen.
 # Derived from code by Markus Stephany under a compatible license:
@@ -68,7 +68,7 @@ use strict;
 use warnings;
 
 use Carp qw(croak confess);
-use Encode qw(encode);
+use Encode qw(encode decode);
 
 require Exporter;
 
@@ -433,7 +433,9 @@ sub _parse_error
 
 =head2 reg_export
 
- reg_export ($h, $key, $fh, [prefix => $prefix]);
+ reg_export ($h, $key, $fh,
+             [prefix => $prefix],
+             [unsafe_printable_strings => 1]);
 
 This function exports the registry keys starting at the root
 C<$key> and recursively downwards into the file handle C<$fh>.
@@ -451,11 +453,22 @@ C<HKEY_LOCAL_MACHINE\SOFTWARE>, would be written as:
  "Key 1"=...
  "Key 2"=...
 
-The output is written as pure 7 bit ASCII, with line endings which are
-the default for the local host.  You may need to convert the file's
-encoding using L<iconv(1)> and line endings using L<unix2dos(1)> if
-sending to a Windows user.  Strings are always encoded as hex bytes.
-See L</ENCODING STRINGS> below.
+If C<unsafe_printable_strings> is not given or is false, then the
+output is written as pure 7 bit ASCII, with line endings which are the
+default for the local host.  Strings are always encoded as hex bytes.
+This is safe because it preserves the original content and encoding of
+strings.  See L</ENCODING STRINGS> below.
+
+If C<unsafe_printable_strings> is true, then strings are assumed to be
+UTF-16LE and are converted to UTF-8 for output.  The final zero
+codepoint in the string is removed if there is one.  This is unsafe
+because it does not preserve the fidelity of the strings in the
+Registry and because the content type of strings is not always
+UTF-16LE.  However it is useful if you just want to display strings
+for quick hacking and debugging.
+
+You may need to convert the file's encoding using L<iconv(1)> and line
+endings using L<unix2dos(1)> if sending to a Windows user.
 
 Nodes and keys are sorted alphabetically in the output.
 
@@ -514,6 +527,8 @@ sub reg_export_node
     print $fh $path;
     print $fh "]\n";
 
+    my $unsafe_printable_strings = $params{unsafe_printable_strings};
+
     # Get the values.
     my @values = $h->node_values ($node);
 
@@ -542,6 +557,13 @@ sub reg_export_node
         if ($type eq 4 && length ($data) == 4) { # only handle dword specially
             my $dword = unpack ("V", $data);
             printf $fh "dword:%08x\n", $dword
+        } elsif ($unsafe_printable_strings && ($type eq 1 || $type eq 2)) {
+            # Guess that the encoding is UTF-16LE.  Convert it to UTF-8
+            # for printing.
+            $data = decode ("utf16le", $data);
+            $data =~ s/\x{0}$//; # remove final zero codepoint
+            $data =~ s/"/\\"/g; # XXX more quoting needed?
+            printf $fh "str(%x):\"%s\"\n", $type, $data;
         } else {
             # Encode everything else as hex, see encoding section below.
             printf $fh "hex(%x):", $type;
@@ -643,7 +665,7 @@ read back in.
 
 =head1 COPYRIGHT
 
-Copyright (C) 2010 Red Hat Inc.
+Copyright (C) 2010-2011 Red Hat Inc.
 
 =head1 LICENSE
 

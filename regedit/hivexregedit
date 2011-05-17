@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# Copyright (C) 2010 Red Hat Inc.
+# Copyright (C) 2010-2011 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -207,6 +207,47 @@ L<Win::Hivex::Regedit(3)/ENCODING STRINGS>.
 The default is to use UTF-16LE, which should work with recent versions
 of Windows.
 
+=cut
+
+my $unsafe_printable_strings;
+
+=item B<--unsafe-printable-strings>
+
+When exporting (only), assume strings are UTF-16LE and print them as
+strings instead of hex sequences.  Remove the final zero codepoint
+from strings if present.
+
+This is unsafe and does not preserve the fidelity of strings in the
+original hive for various reasons:
+
+=over 4
+
+=item *
+
+Assumes the original encoding is UTF-16LE.  ASCII strings and strings
+in other encodings will be corrupted by this transformation.
+
+=item *
+
+Assumes that everything which has type 1 or 2 is really a string
+and that everything else is not a string, but the type field in
+real hives is not reliable.
+
+=item *
+
+Loses information about whether a zero codepoint followed the string
+in the hive or not.
+
+=back
+
+This all happens because the hive itself contains no information about
+how strings are encoded (see
+L<Win::Hivex::Regedit(3)/ENCODING STRINGS>).
+
+You should only use this option for quick hacking and debugging of the
+hive contents, and I<never> use it if the output is going to be passed
+into another program or stored in another hive.
+
 =back
 
 =cut
@@ -217,6 +258,7 @@ GetOptions ("help|?" => \$help,
             "export" => \$export,
             "prefix=s" => \$prefix,
             "encoding=s" => \$encoding,
+            "unsafe-printable-strings" => \$unsafe_printable_strings,
     ) or pod2usage (2);
 pod2usage (1) if $help;
 
@@ -274,7 +316,9 @@ if ($merge) {                   # --merge (reg_import)
 
     print "Windows Registry Editor Version 5.00\n\n";
 
-    reg_export ($h, $key, \*STDOUT, prefix => $prefix);
+    reg_export ($h, $key, \*STDOUT,
+                prefix => $prefix,
+                unsafe_printable_strings => $unsafe_printable_strings);
 }
 
 =head1 SEE ALSO
