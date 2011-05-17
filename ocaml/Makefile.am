@@ -98,6 +98,7 @@ install-data-hook:
 if HAVE_OCAMLOPT
 	$(OCAMLFIND) install \
 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
+	  hivex \
 	  *.cmx *.cmxa
 endif
 
