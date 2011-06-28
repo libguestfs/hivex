@@ -41,16 +41,6 @@ dist-hook:
 	$(top_srcdir)/build-aux/gitlog-to-changelog > ChangeLog
 	cp ChangeLog $(distdir)/ChangeLog
 
-# Update the list of translatable files in po/POTFILES.in.
-all-local:
-	cd $(srcdir); \
-	find $(DIST_SUBDIRS) \
-	    -name '*.c' -o -name '*.pl' -o -name '*.pm' | \
-	grep -v '^gnulib/' | \
-	grep -v 'perl/blib/' | \
-	LC_ALL=C sort | \
-	sed 's,^\./,,' > po/POTFILES.in
-
 # Pkgconfig.
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = hivex.pc
