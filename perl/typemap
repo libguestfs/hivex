@@ -2,7 +2,7 @@ TYPEMAP
 char *		T_PV
 const char *	T_PV
 hive_h *	O_OBJECT_hive_h
-int64_t	  	T_IV
+int64_t		T_IV
 
 INPUT
 O_OBJECT_hive_h
