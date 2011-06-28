@@ -83,10 +83,10 @@ let bitmatch header_fields =
 
     (* All three GUIDs here confirmed in Windows 7 registries.  In
      * Windows <= 2003 these GUID fields seem to contain junk.
-     * 
+     *
      * If you write zeroes to the GUID fields, load and unload in Win7
      * REGEDIT, then Windows 7 writes some random GUIDs.
-     * 
+     *
      * Also (on Win7) unknownguid1 == unknownguid2.  unknownguid3 is
      * different.
      *)
@@ -414,10 +414,10 @@ let bitmatch nk_fields =
      * names are usually ASCII, that would be max length of names * 2).
      * This is a historical maximum, so it can be greater than the
      * current maximum name field.
-     * 
+     *
      * The remaining fields are often non-zero, but the purpose is
      * unknown.
-     * 
+     *
      * In the hives we examined the other fields had values as
      * follows:
      *   userflags: 0, 2, 0xa, 0xe

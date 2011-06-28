@@ -29,13 +29,13 @@ Win::Hivex::Regedit - Helper for reading and writing regedit format files
 
  use Win::Hivex;
  use Win::Hivex::Regedit qw(reg_import reg_export);
- 
+
  $h = Win::Hivex->open ('SOFTWARE', write => 1);
- 
+
  open FILE, "updates.reg";
  reg_import (\*FILE, $h);
  $h->commit (undef);
- 
+
  reg_export ($h, "\\Microsoft\\Windows NT\\CurrentVersion", \*OUTFILE,
     prefix => "HKEY_LOCAL_MACHINE\\SOFTWARE");
 
