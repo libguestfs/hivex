@@ -114,3 +114,5 @@
 /printf.m4
 /read.m4
 /wchar_h.m4
+/fpieee.m4
+/getcwd.m4
