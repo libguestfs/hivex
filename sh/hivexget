@@ -17,7 +17,7 @@
 
 set -e
 
-if [ $# -lt 2 -o $# -gt 3 ]; then
+if test $# -lt 2 || test $# -gt 3; then
     echo "hivexget hivefile path [key]"
     exit 1
 fi

@@ -173,8 +173,10 @@ AC_SUBST([LIBXML2_LIBS])
 dnl Check for OCaml (optional, for OCaml bindings).
 AC_PROG_OCAML
 AC_PROG_FINDLIB
-AM_CONDITIONAL([HAVE_OCAML],[test "x$OCAMLC" != "xno" -a "x$OCAMLFIND" != "xno"])
-AM_CONDITIONAL([HAVE_OCAMLOPT], [test "x$OCAMLOPT" != "xno" -a "x$OCAMLFIND" != "xno"])
+AM_CONDITIONAL([HAVE_OCAML],
+    [test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"])
+AM_CONDITIONAL([HAVE_OCAMLOPT],
+    [test "x$OCAMLOPT" != "xno" && test "x$OCAMLFIND" != "xno"])
 
 if test "x$OCAMLC" != "xno"; then
     dnl Check if we have caml/unixsupport.h header (OCaml bindings only).
@@ -226,7 +228,7 @@ if test "x$missing_perl_modules" = "xyes"; then
 fi
 
 AM_CONDITIONAL([HAVE_PERL],
-    [test "x$PERL" != "xno" -a "x$missing_perl_modules" != "xyes"])
+    [test "x$PERL" != "xno" && test "x$missing_perl_modules" != "xyes"])
 
 dnl Check for Python (optional, for Python bindings).
 AC_CHECK_PROG([PYTHON],[python],[python],[no])
@@ -265,14 +267,14 @@ AC_SUBST(PYTHON_INCLUDEDIR)
 AC_SUBST(PYTHON_SITE_PACKAGES)
 
 AM_CONDITIONAL([HAVE_PYTHON],
-    [test "x$PYTHON_INCLUDEDIR" != "x" -a "x$PYTHON_SITE_PACKAGES" != "x"])
+    [test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_SITE_PACKAGES" != "x"])
 
 dnl dnl Check for Ruby and rake (optional, for Ruby bindings).
 dnl AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
 dnl AC_CHECK_PROG([RAKE],[rake],[rake],[no])
 
 dnl AM_CONDITIONAL([HAVE_RUBY],
-dnl     [test "x$RAKE" != "xno" -a -n "$HAVE_LIBRUBY"])
+dnl     [test "x$RAKE" != "xno" && test -n "$HAVE_LIBRUBY"])
 
 dnl dnl Check for Java.
 dnl AC_ARG_WITH(java_home,
@@ -282,7 +284,7 @@ dnl     [],
 dnl     [with_java_home=check])
 
 dnl if test "x$with_java_home" != "xno"; then
-dnl     if test "x$with_java_home" != "xyes" -a "x$with_java_home" != "xcheck"
+dnl     if test "x$with_java_home" != "xyes" && test "x$with_java_home" != "xcheck"
 dnl     then
 dnl         # Reject unsafe characters in $JAVA_HOME
 dnl         jh_lf='
@@ -304,7 +306,7 @@ dnl         for d in \
 dnl             /usr/lib/jvm/java \
 dnl             /usr/lib/jvm/java-6-openjdk
 dnl         do
-dnl             if test -d $d -a -f $d/bin/java; then
+dnl             if test -d $d && test -f $d/bin/java; then
 dnl                 JAVA_HOME=$d
 dnl                 break
 dnl             fi
