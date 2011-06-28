@@ -2748,8 +2748,7 @@ hivex_node_set_value (hive_h *h, hive_node_h node,
 
  leave_partial:
   for (int i = 0; i < alloc_ct; i += 2) {
-    if (values[i / 2].value != NULL)
-      free (values[i / 2].value);
+    free (values[i / 2].value);
     if (i + 1 < alloc_ct && values[i / 2].key != NULL)
       free (values[i / 2].key);
   }
