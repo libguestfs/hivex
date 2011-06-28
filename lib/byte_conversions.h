@@ -18,9 +18,7 @@
 #ifdef HAVE_ENDIAN_H
 #include <endian.h>
 #endif
-#ifdef HAVE_BYTESWAP_H
 #include <byteswap.h>
-#endif
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #ifndef be32toh

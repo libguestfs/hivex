@@ -55,6 +55,7 @@ gnulib_tool=$GNULIB_SRCDIR/gnulib-tool
 <$gnulib_tool || exit
 
 modules='
+byteswap
 c-ctype
 fcntl
 full-read
