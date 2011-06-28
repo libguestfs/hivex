@@ -37,4 +37,4 @@ d=`dirname $0`
 $d/hivexsh -w <<EOF
 load $1
 commit $2
-EOF
+EOF\ No newline at end of file

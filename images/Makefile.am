@@ -33,4 +33,3 @@ large: mklarge
 	./mklarge $(srcdir)/minimal large
 
 CLEANFILES = $(noinst_DATA)
-

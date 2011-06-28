@@ -44,4 +44,4 @@ setval 1
 @
 string:Root
 commit /tmp/modified
-EOF
+EOF\ No newline at end of file

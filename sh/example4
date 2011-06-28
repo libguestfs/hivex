@@ -31,4 +31,4 @@ load $1
 cd \Microsoft
 del
 commit $2
-EOF
+EOF\ No newline at end of file

@@ -50,4 +50,4 @@ dword:0x12345678
 C
 string:dcbadcbadcbaabcd
 commit /tmp/modified
-EOF
+EOF\ No newline at end of file
