@@ -1,6 +1,6 @@
 #!/usr/bin/env ocaml
 (* hivex
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2011 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -2188,10 +2188,7 @@ and generate_perl_xs () =
 
 #include <string.h>
 #include <hivex.h>
-
-#ifndef PRId64
-#define PRId64 \"lld\"
-#endif
+#include <inttypes.h>
 
 static SV *
 my_newSVll(long long val) {
@@ -2204,10 +2201,6 @@ my_newSVll(long long val) {
   return newSVpv(buf, len);
 #endif
 }
-
-#ifndef PRIu64
-#define PRIu64 \"llu\"
-#endif
 
 #if 0
 static SV *

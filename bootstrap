@@ -62,6 +62,7 @@ gitlog-to-changelog
 gnu-make
 gnumakefile
 ignore-value
+inttypes
 maintainer-makefile
 manywarnings
 progname
