@@ -38,10 +38,6 @@
 #include "full-read.h"
 #include "full-write.h"
 
-#ifndef O_CLOEXEC
-#define O_CLOEXEC 0
-#endif
-
 #define STREQ(a,b) (strcmp((a),(b)) == 0)
 #define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
 //#define STRNEQ(a,b) (strcmp((a),(b)) != 0)
