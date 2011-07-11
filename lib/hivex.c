@@ -317,6 +317,13 @@ hivex_open (const char *filename, int flags)
 
     if (full_read (h->fd, h->addr, h->size) < h->size)
       goto error;
+
+    /* We don't need the file descriptor along this path, since we
+     * have read all the data.
+     */
+    if (close (h->fd) == -1)
+      goto error;
+    h->fd = -1;
   }
 
   /* Check header. */
@@ -539,7 +546,10 @@ hivex_close (hive_h *h)
     munmap (h->addr, h->size);
   else
     free (h->addr);
-  r = close (h->fd);
+  if (h->fd >= 0)
+    r = close (h->fd);
+  else
+    r = 0;
   free (h->filename);
   free (h);
 
