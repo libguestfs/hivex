@@ -76,6 +76,7 @@ perl/lib/Win/Hivex.pm
 perl/Makefile-pl
 perl/Makefile-pl.old
 perl/Makefile.PL
+perl/MYMETA.yml
 perl/pm_to_blib
 pod2htm?.tmp
 po/*.gmo
