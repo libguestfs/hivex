@@ -64,8 +64,7 @@ TESTS = \
 noinst_DATA += $(TESTS)
 
 # https://www.redhat.com/archives/libguestfs/2011-May/thread.html#00015
-t/%: $(srcdir)/t/%.cmo mlhivex.cma
-	mkdir -p t
+t/%: t/%.cmo mlhivex.cma
 	$(LIBTOOL) --mode=execute -dlopen $(top_builddir)/lib/libhivex.la \
 	  $(OCAMLFIND) ocamlc -dllpath $(abs_builddir) -package unix \
 	  -linkpkg mlhivex.cma $< -o $@
@@ -73,6 +72,7 @@ t/%: $(srcdir)/t/%.cmo mlhivex.cma
 .mli.cmi:
 	$(OCAMLFIND) ocamlc -package unix -c $< -o $@
 .ml.cmo:
+	mkdir -p `dirname $@`
 	$(OCAMLFIND) ocamlc -package unix -c $< -o $@
 .ml.cmx:
 	$(OCAMLFIND) ocamlopt -package unix -c $< -o $@
@@ -89,7 +89,7 @@ include .depend
 SUFFIXES = .cmo .cmi .cmx .ml .mli .mll .mly
 
 # Do the installation by hand, because we want to run ocamlfind.
-install_files = META *.so *.a *.cma *.cmi *.mli
+install_files = META *.so *.a *.cma *.cmi $(srcdir)/*.mli
 
 if HAVE_OCAMLOPT
 install_files += *.cmx *.cmxa
