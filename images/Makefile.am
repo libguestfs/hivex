@@ -29,7 +29,9 @@ mklarge_LDADD = ../lib/libhivex.la
 
 noinst_DATA = large
 
-large: mklarge
-	./mklarge $(srcdir)/minimal large
+large: minimal mklarge
+	cmp -s $(srcdir)/minimal $(builddir)/minimal || \
+	    cp $(srcdir)/minimal $(builddir)/minimal
+	./mklarge $(builddir)/minimal $(builddir)/large
 
 CLEANFILES = $(noinst_DATA)

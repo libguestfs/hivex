@@ -19,7 +19,7 @@
 set -e
 shopt -s nullglob
 
-for f in t/*.py; do
+for f in $(srcdir)t/*.py; do
   basename "$f"
-  python "$f"
+  @PYTHON@ "$f"
 done

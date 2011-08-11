@@ -33,11 +33,11 @@ libhivex_la_SOURCES = \
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la
 libhivex_la_LDFLAGS = \
 	-version-info 0:0:0 \
-	$(VERSION_SCRIPT_FLAGS)hivex.syms \
+	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
-libhivex_la_CPPFLAGS = -I$(top_srcdir)/gnulib/lib
+libhivex_la_CPPFLAGS = -I$(top_srcdir)/gnulib/lib -I$(srcdir)
 
 include_HEADERS = hivex.h
 
@@ -56,10 +56,10 @@ noinst_DATA = \
 
 $(top_builddir)/html/hivex.3.html: hivex.pod
 	mkdir -p $(top_builddir)/html
-	cd $(top_builddir) && pod2html \
-	  --css 'pod.css' \
-	  --htmldir html \
-	  --outfile html/hivex.3.html \
-	  lib/hivex.pod
+	pod2html \
+	  --css $(top_srcdir)/css/pod.css \
+	  --htmldir $(top_builddir)/html \
+	  --outfile $(top_builddir)/html/hivex.3.html \
+	  $<
 
 CLEANFILES = $(man_MANS)

@@ -98,6 +98,7 @@ po/remove-potcdate.sin
 python/*.pyc
 python/hivex-py.c
 python/hivex.py
+python/run-python-tests
 regedit/hivexregedit.1
 sh/*.1
 sh/hivexsh

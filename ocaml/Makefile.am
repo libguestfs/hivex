@@ -64,7 +64,8 @@ TESTS = \
 noinst_DATA += $(TESTS)
 
 # https://www.redhat.com/archives/libguestfs/2011-May/thread.html#00015
-t/%: t/%.cmo mlhivex.cma
+t/%: $(srcdir)/t/%.cmo mlhivex.cma
+	mkdir -p t
 	$(LIBTOOL) --mode=execute -dlopen $(top_builddir)/lib/libhivex.la \
 	  $(OCAMLFIND) ocamlc -dllpath $(abs_builddir) -package unix \
 	  -linkpkg mlhivex.cma $< -o $@

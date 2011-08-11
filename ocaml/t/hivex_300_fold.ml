@@ -21,7 +21,6 @@
 open Unix
 open Printf
 let (//) = Filename.concat
-let srcdir = try Sys.getenv "srcdir" with Not_found -> "."
 
 (* This is a generic function to fold over hives.
  *   fn : 'a -> node -> 'a is called for each node
@@ -36,7 +35,7 @@ let hive_fold h fn fv a root =
   fold a root
 
 let () =
-  let h = Hivex.open_file (srcdir // "../images/large") [] in
+  let h = Hivex.open_file ("../images/large") [] in
 
   (* Count the number of nodes and values in the hive. *)
   let count_node (nodes, values) _ = (nodes+1, values) in
