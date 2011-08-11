@@ -1771,7 +1771,7 @@ static void raise_closed (const char *) Noreturn;
            pr "  rv = copy_type_value (r, len, t);\n";
            pr "  free (r);\n"
        | RInt32 -> pr "  rv = caml_copy_int32 (r);\n"
-       | RInt64 -> pr "  rv = caml_copy_int32 (r);\n"
+       | RInt64 -> pr "  rv = caml_copy_int64 (r);\n"
       );
 
       pr "  CAMLreturn (rv);\n";
