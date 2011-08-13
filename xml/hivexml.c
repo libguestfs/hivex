@@ -25,6 +25,7 @@
 #include <inttypes.h>
 #include <unistd.h>
 #include <errno.h>
+#include <time.h>
 
 #include <libxml/xmlwriter.h>
 
@@ -38,6 +39,8 @@
 #define _(str) str
 //#define N_(str) str
 #endif
+
+static char *filetime_to_8601 (int64_t windows_ticks);
 
 /* Callback functions. */
 static int node_start (hive_h *, void *, hive_node_h, const char *name);
@@ -124,6 +127,17 @@ main (int argc, char *argv[])
   XML_CHECK (xmlTextWriterStartDocument, (writer, NULL, "utf-8", NULL));
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "hive"));
 
+  int64_t hive_mtime = hivex_last_modified (h);
+  if (hive_mtime >= 0) {
+    char *timebuf = filetime_to_8601 (hive_mtime);
+    if (timebuf) {
+      XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "mtime"));
+      XML_CHECK (xmlTextWriterWriteString, (writer, BAD_CAST timebuf));
+      XML_CHECK (xmlTextWriterEndElement, (writer));
+      free (timebuf);
+    }
+  }
+
   if (hivex_visit (h, &visitor, sizeof visitor, writer, visit_flags) == -1) {
     perror (argv[optind]);
     exit (EXIT_FAILURE);
@@ -141,12 +155,66 @@ main (int argc, char *argv[])
   exit (EXIT_SUCCESS);
 }
 
+/* Convert Windows filetime to ISO 8601 format.
+ * http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842
+ *
+ * Source for time_t->char* conversion: Fiwalk version 0.6.14's
+ * fiwalk.cpp.
+ *
+ * The caller should free the returned buffer.
+ */
+
+#define WINDOWS_TICK 10000000LL
+#define SEC_TO_UNIX_EPOCH 11644473600LL
+#define TIMESTAMP_BUF_LEN 32
+
+static char *
+filetime_to_8601 (int64_t windows_ticks)
+{
+  char *ret;
+  time_t t;
+  struct tm *tm;
+
+  t = windows_ticks / WINDOWS_TICK - SEC_TO_UNIX_EPOCH;
+  tm = gmtime (&t);
+  if (tm == NULL)
+    return NULL;
+
+  ret = malloc (TIMESTAMP_BUF_LEN);
+  if (ret == NULL) {
+    perror ("malloc");
+    exit (EXIT_FAILURE);
+  }
+
+  if (strftime (ret, TIMESTAMP_BUF_LEN, "%FT%TZ", tm) == 0) {
+    perror ("strftime");
+    exit (EXIT_FAILURE);
+  }
+
+  return ret;
+}
+
 static int
 node_start (hive_h *h, void *writer_v, hive_node_h node, const char *name)
 {
+  int64_t last_modified;
+  char *timebuf;
+
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "node"));
   XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "name", BAD_CAST name));
+
+  last_modified = hivex_node_timestamp (h, node);
+  if (last_modified >= 0) {
+    timebuf = filetime_to_8601 (last_modified);
+    if (timebuf) {
+      XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "mtime"));
+      XML_CHECK (xmlTextWriterWriteString, (writer, BAD_CAST timebuf));
+      XML_CHECK (xmlTextWriterEndElement, (writer));
+      free (timebuf);
+    }
+  }
+
   return 0;
 }
 

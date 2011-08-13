@@ -158,6 +158,15 @@ but instead are lost.  See L<hivex(3)/WRITING TO HIVE FILES>.";
     "\
 Return root node of the hive.  All valid hives must contain a root node.";
 
+  "last_modified", (RInt64, [AHive]),
+    "return the modification time from the header of the hive",
+    "\
+Return the modification time from the header of the hive.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>";
+
   "node_name", (RString, [AHive; ANode "node"]),
     "return the name of the node",
     "\
@@ -169,6 +178,15 @@ tool or program that created the hive in the first place).  You can
 only know the \"real\" name of the root node by knowing which registry
 file this hive originally comes from, which is knowledge that is
 outside the scope of this library.";
+
+  "node_timestamp", (RInt64, [AHive; ANode "node"]),
+    "return the modification time of the node",
+    "\
+Return the modification time of the node.
+
+The returned value is a Windows filetime.
+To convert this to a Unix C<time_t> see:
+L<http://stackoverflow.com/questions/6161776/convert-windows-filetime-to-second-in-unix-linux/6161842#6161842>";
 
   "node_children", (RNodeList, [AHive; ANode "node"]),
     "return children of node",

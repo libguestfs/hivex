@@ -93,6 +93,7 @@ struct hive_h {
   /* Fields from the header, extracted from little-endianness hell. */
   size_t rootoffs;              /* Root key offset (always an nk-block). */
   size_t endpages;              /* Offset of end of pages. */
+  int64_t last_modified;        /* mtime of base block. */
 
   /* For writing. */
   size_t endblocks;             /* Offset to next block allocation (0
@@ -104,7 +105,7 @@ struct ntreg_header {
   char magic[4];                /* "regf" */
   uint32_t sequence1;
   uint32_t sequence2;
-  char last_modified[8];
+  int64_t last_modified;
   uint32_t major_ver;           /* 1 */
   uint32_t minor_ver;           /* 3 */
   uint32_t unknown5;            /* 0 */
@@ -173,7 +174,7 @@ struct ntreg_nk_record {
   int32_t seg_len;              /* length (always -ve because used) */
   char id[2];                   /* "nk" */
   uint16_t flags;
-  char timestamp[8];
+  int64_t timestamp;
   uint32_t unknown1;
   uint32_t parent;              /* offset of owner/parent */
   uint32_t nr_subkeys;          /* number of subkeys */
@@ -359,6 +360,9 @@ hivex_open (const char *filename, int flags)
     goto error;
   }
 
+  /* Last modified time. */
+  h->last_modified = le64toh ((int64_t) h->hdr->last_modified);
+
   if (h->msglvl >= 2) {
     char *name = windows_utf16_to_utf8 (h->hdr->name, 64);
 
@@ -367,6 +371,8 @@ hivex_open (const char *filename, int flags)
              "  file version             %" PRIu32 ".%" PRIu32 "\n"
              "  sequence nos             %" PRIu32 " %" PRIu32 "\n"
              "    (sequences nos should match if hive was synched at shutdown)\n"
+             "  last modified            %" PRIu64 "\n"
+             "    (Windows filetime, x 100 ns since 1601-01-01)\n"
              "  original file name       %s\n"
              "    (only 32 chars are stored, name is probably truncated)\n"
              "  root offset              0x%x + 0x1000\n"
@@ -374,6 +380,7 @@ hivex_open (const char *filename, int flags)
              "  checksum                 0x%x (calculated 0x%x)\n",
              major_ver, le32toh (h->hdr->minor_ver),
              le32toh (h->hdr->sequence1), le32toh (h->hdr->sequence2),
+             h->last_modified,
              name ? name : "(conversion failed)",
              le32toh (h->hdr->offset),
              le32toh (h->hdr->blocks), h->size,
@@ -606,6 +613,42 @@ hivex_node_name (hive_h *h, hive_node_h node)
   memcpy (ret, nk->name, len);
   ret[len] = '\0';
   return ret;
+}
+
+static int64_t
+timestamp_check (hive_h *h, hive_node_h node, int64_t timestamp)
+{
+  if (timestamp < 0) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex: timestamp_check: "
+               "negative time reported at %z: %" PRIi64 "\n", node, timestamp);
+    errno = EINVAL;
+    return -1;
+  }
+
+  return timestamp;
+}
+
+int64_t
+hivex_last_modified (hive_h *h)
+{
+  return timestamp_check (h, 0, h->last_modified);
+}
+
+int64_t
+hivex_node_timestamp (hive_h *h, hive_node_h node)
+{
+  int64_t ret;
+
+  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+    errno = EINVAL;
+    return -1;
+  }
+
+  struct ntreg_nk_record *nk = (struct ntreg_nk_record *) (h->addr + node);
+
+  ret = le64toh (nk->timestamp);
+  return timestamp_check (h, node, ret);
 }
 
 #if 0
@@ -2264,7 +2307,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   nk->sk = htole32 (parent_sk_offset - 0x1000);
 
   /* Inherit parent timestamp. */
-  memcpy (nk->timestamp, parent_nk->timestamp, sizeof (parent_nk->timestamp));
+  nk->timestamp = parent_nk->timestamp;
 
   /* What I found out the hard way (not documented anywhere): the
    * subkeys in lh-records must be kept sorted.  If you just add a
