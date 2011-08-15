@@ -57,7 +57,7 @@ noinst_DATA = \
 $(top_builddir)/html/hivex.3.html: hivex.pod
 	mkdir -p $(top_builddir)/html
 	pod2html \
-	  --css $(top_srcdir)/css/pod.css \
+	  --css pod.css \
 	  --htmldir $(top_builddir)/html \
 	  --outfile $(top_builddir)/html/hivex.3.html \
 	  $<
