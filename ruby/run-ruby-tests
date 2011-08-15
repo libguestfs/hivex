@@ -18,6 +18,8 @@
 
 set -e
 
+export LD_LIBRARY_PATH=../lib/.libs
+
 # Run them one at a time, otherwise rake runs them in parallel (which
 # is bound to fail because they all use a single test image file).
 
