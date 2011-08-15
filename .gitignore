@@ -38,6 +38,7 @@ lib/*.3
 lib/hivex.h
 lib/hivex.pod
 lib/hivex.syms
+lib/test-just-header
 lib/tools/*.opt
 .libs
 libtool

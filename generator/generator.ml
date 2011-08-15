@@ -704,6 +704,7 @@ let rec generate_c_header () =
 #ifndef HIVEX_H_
 #define HIVEX_H_
 
+#include <stdlib.h>
 #include <stdint.h>
 
 #ifdef __cplusplus

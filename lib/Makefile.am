@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2010 Red Hat Inc.
+# Copyright (C) 2009-2011 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,3 +63,16 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  $<
 
 CLEANFILES = $(man_MANS)
+
+# Tests.
+
+check_PROGRAMS = test-just-header
+
+TESTS = test-just-header
+
+test_just_header_SOURCES = test-just-header.c
+test_just_header_CFLAGS = \
+	-I$(top_srcdir)/lib -I$(top_builddir)/lib \
+	$(WARN_CFLAGS) $(WERROR_CFLAGS)
+test_just_header_LDADD = \
+	$(top_builddir)/lib/libhivex.la
