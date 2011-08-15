@@ -621,7 +621,8 @@ timestamp_check (hive_h *h, hive_node_h node, int64_t timestamp)
   if (timestamp < 0) {
     if (h->msglvl >= 2)
       fprintf (stderr, "hivex: timestamp_check: "
-               "negative time reported at %z: %" PRIi64 "\n", node, timestamp);
+               "negative time reported at %zu: %" PRIi64 "\n",
+               node, timestamp);
     errno = EINVAL;
     return -1;
   }
