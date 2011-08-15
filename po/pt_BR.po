@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-12 10:02+0100\n"
+"POT-Creation-Date: 2011-08-15 10:33+0100\n"
 "PO-Revision-Date: 2011-03-23 17:07+0000\n"
 "Last-Translator: Taylon <taylon@taylon.eti.br>\n"
 "Language-Team: Portuguese (Brazilian) <trans-pt_br@lists.fedoraproject.org>\n"
@@ -163,17 +163,17 @@ msgstr ""
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: o nó raiz não pode ser deletado\n"
 
-#: xml/hivexml.c:70
+#: xml/hivexml.c:73
 #, c-format
 msgid "%s: failed to write XML document\n"
 msgstr "%s: falha ao escrever o documento XML\n"
 
-#: xml/hivexml.c:101
+#: xml/hivexml.c:104
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: faltando o nome do arquivo de entrada\n"
 
-#: xml/hivexml.c:120
+#: xml/hivexml.c:123
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: falha ao criar o escritor de XML\n"
