@@ -1,0 +1,4 @@
+= Ruby bindings for hivex
+
+The module Hivex provides Ruby bindings for
+{the hivex API}[http://libguestfs.org/hivex.3.html].

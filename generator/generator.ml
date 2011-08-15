@@ -334,21 +334,6 @@ new key is added.  Key matching is case insensitive.
 C<node> is the node to modify.";
 ]
 
-(* Used to memoize the result of pod2text. *)
-let pod2text_memo_filename = "generator/.pod2text.data"
-let pod2text_memo : ((int * string * string), string list) Hashtbl.t =
-  try
-    let chan = open_in pod2text_memo_filename in
-    let v = input_value chan in
-    close_in chan;
-    v
-  with
-    _ -> Hashtbl.create 13
-let pod2text_memo_updated () =
-  let chan = open_out pod2text_memo_filename in
-  output_value chan pod2text_memo;
-  close_out chan
-
 (* Useful functions.
  * Note we don't want to use any external OCaml libraries which
  * makes this a bit harder than it should be.
@@ -394,6 +379,64 @@ let trimr ?(test = isspace) str =
 
 let trim ?(test = isspace) str =
   trimr ~test (triml ~test str)
+
+(* Used to memoize the result of pod2text. *)
+let pod2text_memo_filename = "generator/.pod2text.data.version.2"
+let pod2text_memo : ((int option * bool * bool * string * string), string list) Hashtbl.t =
+  try
+    let chan = open_in pod2text_memo_filename in
+    let v = input_value chan in
+    close_in chan;
+    v
+  with
+    _ -> Hashtbl.create 13
+let pod2text_memo_updated () =
+  let chan = open_out pod2text_memo_filename in
+  output_value chan pod2text_memo;
+  close_out chan
+
+(* Useful if you need the longdesc POD text as plain text.  Returns a
+ * list of lines.
+ *
+ * Because this is very slow (the slowest part of autogeneration),
+ * we memoize the results.
+ *)
+let pod2text ?width ?(trim = true) ?(discard = true) name longdesc =
+  let key = width, trim, discard, name, longdesc in
+  try Hashtbl.find pod2text_memo key
+  with Not_found ->
+    let filename, chan = Filename.open_temp_file "gen" ".tmp" in
+    fprintf chan "=head1 %s\n\n%s\n" name longdesc;
+    close_out chan;
+    let cmd =
+      match width with
+      | Some width ->
+          sprintf "pod2text -w %d %s" width (Filename.quote filename)
+      | None ->
+          sprintf "pod2text %s" (Filename.quote filename) in
+    let chan = open_process_in cmd in
+    let lines = ref [] in
+    let rec loop i =
+      let line = input_line chan in
+      if i = 1 && discard then  (* discard the first line of output *)
+        loop (i+1)
+      else (
+        let line = if trim then triml line else line in
+        lines := line :: !lines;
+        loop (i+1)
+      ) in
+    let lines = try loop 1 with End_of_file -> List.rev !lines in
+    unlink filename;
+    (match close_process_in chan with
+     | WEXITED 0 -> ()
+     | WEXITED i ->
+         failwithf "pod2text: process exited with non-zero status (%d)" i
+     | WSIGNALED i | WSTOPPED i ->
+         failwithf "pod2text: process signalled or stopped by signal %d" i
+    );
+    Hashtbl.add pod2text_memo key lines;
+    pod2text_memo_updated ();
+    lines
 
 let rec find s sub =
   let len = String.length s in
@@ -894,7 +937,7 @@ If you just want to export or modify the Registry of a Windows
 virtual machine, you should look at L<virt-win-reg(1)>.
 
 Hivex is also comes with language bindings for
-OCaml, Perl and Python.
+OCaml, Perl, Python and Ruby.
 
 =head1 TYPES
 
@@ -3116,6 +3159,354 @@ class Hivex:
       )
   ) functions
 
+and generate_ruby_c () =
+  generate_header CStyle LGPLv2plus;
+
+  pr "\
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+
+#include <ruby.h>
+
+#include \"hivex.h\"
+
+#include \"extconf.h\"
+
+/* For Ruby < 1.9 */
+#ifndef RARRAY_LEN
+#define RARRAY_LEN(r) (RARRAY((r))->len)
+#endif
+
+static VALUE m_hivex;			/* hivex module */
+static VALUE c_hivex;			/* hive_h handle */
+static VALUE e_Error;			/* used for all errors */
+
+static void
+ruby_hivex_free (void *hvp)
+{
+  hive_h *h = hvp;
+
+  if (h)
+    hivex_close (h);
+}
+
+static void
+get_value (VALUE valv, hive_set_value *val)
+{
+  VALUE key = rb_hash_lookup (valv, ID2SYM (rb_intern (\"key\")));
+  VALUE type = rb_hash_lookup (valv, ID2SYM (rb_intern (\"type\")));
+  VALUE value = rb_hash_lookup (valv, ID2SYM (rb_intern (\"value\")));
+
+  val->key = StringValueCStr (key);
+  val->t = NUM2ULL (type);
+  val->len = RSTRING (value)->len;
+  val->value = RSTRING (value)->ptr;
+}
+
+static hive_set_value *
+get_values (VALUE valuesv, size_t *nr_values)
+{
+  size_t i;
+  hive_set_value *ret;
+
+  *nr_values = RARRAY_LEN (valuesv);
+  ret = malloc (sizeof (*ret) * *nr_values);
+  if (ret == NULL)
+    abort ();
+
+  for (i = 0; i < *nr_values; ++i) {
+    VALUE v = rb_ary_entry (valuesv, i);
+    get_value (v, &ret[i]);
+  }
+
+  return ret;
+}
+
+";
+
+  List.iter (
+    fun (name, (ret, args), shortdesc, longdesc) ->
+      let () =
+        (* Generate rdoc. *)
+        let doc = replace_str longdesc "C<hivex_" "C<h." in
+        let doc = pod2text ~width:60 name doc in
+        let doc = String.concat "\n * " doc in
+        let doc = trim doc in
+
+        let call, args =
+          match args with
+          | AHive :: args -> "h." ^ name, args
+          | args -> "Hivex::" ^ name, args in
+        let args = filter_map (
+          function
+          | AUnusedFlags -> None
+          | args -> Some (name_of_argt args)
+        ) args in
+        let args = String.concat ", " args in
+
+        let ret =
+          match ret with
+          | RErr | RErrDispose -> "nil"
+          | RHive -> "Hivex::Hivex"
+          | RNode | RNodeNotFound -> "integer"
+          | RNodeList -> "list"
+          | RValue -> "integer"
+          | RValueList -> "list"
+          | RString -> "string"
+          | RStringList -> "list"
+          | RLenType -> "hash"
+          | RLenTypeVal -> "hash"
+          | RInt32 -> "integer"
+          | RInt64 -> "integer" in
+
+        pr "\
+/*
+ * call-seq:
+ *   %s(%s) -> %s
+ *
+ * %s
+ *
+ * %s
+ *
+ * (For the C API documentation for this function, see
+ * +hivex_%s+[http://libguestfs.org/hivex.3.html#hivex_%s]).
+ */
+" call args ret shortdesc doc name name in
+
+      (* Generate the function. *)
+      pr "static VALUE\n";
+      pr "ruby_hivex_%s (" name;
+
+      let () =
+        (* If the first argument is not AHive, then this is a module-level
+         * function, and Ruby passes an implicit module argument which we
+         * must ignore.  Otherwise the first argument is the hive handle.
+         *)
+        let args =
+          match args with
+          | AHive :: args -> pr "VALUE hv"; args
+          | args -> pr "VALUE modulev"; args in
+        List.iter (
+          function
+          | AUnusedFlags -> ()
+          | arg ->
+            pr ", VALUE %sv" (name_of_argt arg)
+        ) args;
+        pr ")\n" in
+
+      pr "{\n";
+
+      List.iter (
+        function
+        | AHive ->
+          pr "  hive_h *h;\n";
+          pr "  Data_Get_Struct (hv, hive_h, h);\n";
+          pr "  if (!h)\n";
+          pr "    rb_raise (rb_eArgError, \"%%s: used handle after closing it\",\n";
+          pr "              \"%s\");\n" name;
+        | ANode n ->
+          pr "  hive_node_h %s = NUM2ULL (%sv);\n" n n
+        | AValue n ->
+          pr "  hive_value_h %s = NUM2ULL (%sv);\n" n n
+        | AString n ->
+          pr "  const char *%s = StringValueCStr (%sv);\n" n n;
+        | AStringNullable n ->
+          pr "  const char *%s =\n" n;
+          pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
+        | AOpenFlags ->
+          pr "  int flags = 0;\n";
+          List.iter (
+            fun (n, flag, _) ->
+              pr "  if (RTEST (rb_hash_lookup (flagsv, ID2SYM (rb_intern (\"%s\")))))\n"
+                (String.lowercase flag);
+              pr "    flags += %d;\n" n
+          ) open_flags
+        | AUnusedFlags -> ()
+        | ASetValues ->
+          pr "  size_t nr_values;\n";
+          pr "  hive_set_value *values;\n";
+          pr "  values = get_values (valuesv, &nr_values);\n"
+        | ASetValue ->
+          pr "  hive_set_value val;\n";
+          pr "  get_value (valv, &val);\n"
+      ) args;
+      pr "\n";
+
+      let error_code =
+	match ret with
+        | RErr -> pr "  int r;\n"; "-1"
+	| RErrDispose -> pr "  int r;\n"; "-1"
+	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RNode -> pr "  hive_node_h r;\n"; "0"
+        | RNodeNotFound ->
+            pr "  errno = 0;\n";
+            pr "  hive_node_h r;\n";
+            "0 && errno != 0"
+        | RNodeList -> pr "  hive_node_h *r;\n"; "NULL"
+        | RValue -> pr "  hive_value_h r;\n"; "0"
+        | RValueList -> pr "  hive_value_h *r;\n"; "NULL"
+        | RString -> pr "  char *r;\n"; "NULL"
+        | RStringList -> pr "  char **r;\n"; "NULL"
+        | RLenType ->
+            pr "  int r;\n";
+            pr "  size_t len;\n";
+            pr "  hive_type t;\n";
+            "-1"
+        | RLenTypeVal ->
+            pr "  char *r;\n";
+            pr "  size_t len;\n";
+            pr "  hive_type t;\n";
+            "NULL"
+        | RInt32 ->
+            pr "  errno = 0;\n";
+            pr "  int32_t r;\n";
+            "-1 && errno != 0"
+        | RInt64 ->
+            pr "  errno = 0;\n";
+            pr "  int64_t r;\n";
+            "-1 && errno != 0" in
+      pr "\n";
+
+      let c_params =
+        List.map (function
+                  | ASetValues -> ["nr_values"; "values"]
+                  | ASetValue -> ["&val"]
+                  | AUnusedFlags -> ["0"]
+                  | arg -> [name_of_argt arg]) args in
+      let c_params =
+        match ret with
+        | RLenType | RLenTypeVal -> c_params @ [["&t"; "&len"]]
+        | _ -> c_params in
+      let c_params = List.concat c_params in
+
+      pr "  r = hivex_%s (%s" name (List.hd c_params);
+      List.iter (pr ", %s") (List.tl c_params);
+      pr ");\n";
+      pr "\n";
+
+      (* Dispose of the hive handle (even if hivex_close returns error). *)
+      (match ret with
+       | RErrDispose ->
+           pr "  /* So we don't double-free in the finalizer. */\n";
+           pr "  DATA_PTR (hv) = NULL;\n";
+           pr "\n";
+       | _ -> ()
+      );
+
+      List.iter (
+        function
+        | AHive
+        | ANode _
+        | AValue _
+        | AString _
+        | AStringNullable _
+        | AOpenFlags
+        | AUnusedFlags -> ()
+        | ASetValues ->
+          pr "  free (values);\n"
+        | ASetValue -> ()
+      ) args;
+
+      (* Check for errors from C library. *)
+      pr "  if (r == %s)\n" error_code;
+      pr "    rb_raise (e_Error, \"%%s\", strerror (errno));\n";
+      pr "\n";
+
+      (match ret with
+      | RErr | RErrDispose ->
+        pr "  return Qnil;\n"
+      | RHive ->
+        pr "  return Data_Wrap_Struct (c_hivex, NULL, ruby_hivex_free, r);\n"
+      | RNode
+      | RValue
+      | RInt64 ->
+        pr "  return ULL2NUM (r);\n"
+      | RInt32 ->
+        pr "  return INT2NUM (r);\n"
+      | RNodeNotFound ->
+        pr "  if (r)\n";
+        pr "    return ULL2NUM (r);\n";
+        pr "  else\n";
+        pr "    return Qnil;\n"
+      | RNodeList
+      | RValueList ->
+        pr "  size_t i, len = 0;\n";
+        pr "  for (i = 0; r[i] != 0; ++i) len++;\n";
+        pr "  VALUE rv = rb_ary_new2 (len);\n";
+        pr "  for (i = 0; r[i] != 0; ++i)\n";
+        pr "    rb_ary_push (rv, ULL2NUM (r[i]));\n";
+        pr "  free (r);\n";
+        pr "  return rv;\n"
+      | RString ->
+        pr "  VALUE rv = rb_str_new2 (r);\n";
+        pr "  free (r);\n";
+        pr "  return rv;\n"
+      | RStringList ->
+        pr "  size_t i, len = 0;\n";
+        pr "  for (i = 0; r[i] != NULL; ++i) len++;\n";
+        pr "  VALUE rv = rb_ary_new2 (len);\n";
+        pr "  for (i = 0; r[i] != NULL; ++i) {\n";
+        pr "    rb_ary_push (rv, rb_str_new2 (r[i]));\n";
+        pr "    free (r[i]);\n";
+        pr "  }\n";
+        pr "  free (r);\n";
+        pr "  return rv;\n"
+      | RLenType ->
+        pr "  VALUE rv = rb_hash_new ();\n";
+        pr "  rb_hash_aset (rv, ID2SYM (rb_intern (\"len\")), INT2NUM (len));\n";
+        pr "  rb_hash_aset (rv, ID2SYM (rb_intern (\"type\")), INT2NUM (t));\n";
+        pr "  return rv;\n"
+      | RLenTypeVal ->
+        pr "  VALUE rv = rb_hash_new ();\n";
+        pr "  rb_hash_aset (rv, ID2SYM (rb_intern (\"len\")), INT2NUM (len));\n";
+        pr "  rb_hash_aset (rv, ID2SYM (rb_intern (\"type\")), INT2NUM (t));\n";
+        pr "  rb_hash_aset (rv, ID2SYM (rb_intern (\"value\")), rb_str_new (r, len));\n";
+        pr "  free (r);\n";
+        pr "  return rv;\n"
+      );
+
+      pr "}\n";
+      pr "\n"
+  ) functions;
+
+  pr "\
+/* Initialize the module. */
+void Init__hivex ()
+{
+  m_hivex = rb_define_module (\"Hivex\");
+  c_hivex = rb_define_class_under (m_hivex, \"Hivex\", rb_cObject);
+  e_Error = rb_define_class_under (m_hivex, \"Error\", rb_eStandardError);
+
+  /* XXX How to pass arguments? */
+#if 0
+#ifdef HAVE_RB_DEFINE_ALLOC_FUNC
+  rb_define_alloc_func (c_hivex, ruby_hivex_open);
+#endif
+#endif
+
+";
+
+  (* Methods. *)
+  List.iter (
+    fun (name, (_, args), _, _) ->
+      let args = List.filter (
+        function
+        | AUnusedFlags -> false
+        | _ -> true
+      ) args in
+      let nr_args = List.length args in
+      match args with
+      | AHive :: _ ->
+        pr "  rb_define_method (c_hivex, \"%s\",\n" name;
+        pr "                    ruby_hivex_%s, %d);\n" name (nr_args-1)
+      | args -> (* class function *)
+        pr "  rb_define_module_function (m_hivex, \"%s\",\n" name;
+        pr "                             ruby_hivex_%s, %d);\n" name nr_args
+  ) functions;
+
+  pr "}\n"
+
 let output_to filename k =
   let filename_new = filename ^ ".new" in
   chan := open_out filename_new;
@@ -3182,6 +3573,8 @@ Run it from the top source directory using the command
 
   output_to "python/hivex.py" generate_python_py;
   output_to "python/hivex-py.c" generate_python_c;
+
+  output_to "ruby/ext/hivex/_hivex.c" generate_ruby_c;
 
   (* Always generate this file last, and unconditionally.  It's used
    * by the Makefile to know when we must re-run the generator.

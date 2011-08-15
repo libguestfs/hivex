@@ -34,6 +34,10 @@ if HAVE_PYTHON
 SUBDIRS += python
 endif
 
+if HAVE_RUBY
+SUBDIRS += ruby
+endif
+
 EXTRA_DIST = hivex.pc hivex.pc.in README LICENSE
 
 # Generate the ChangeLog automatically from the gitlog.

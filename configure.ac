@@ -269,12 +269,12 @@ AC_SUBST(PYTHON_SITE_PACKAGES)
 AM_CONDITIONAL([HAVE_PYTHON],
     [test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_SITE_PACKAGES" != "x"])
 
-dnl dnl Check for Ruby and rake (optional, for Ruby bindings).
-dnl AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
-dnl AC_CHECK_PROG([RAKE],[rake],[rake],[no])
+dnl Check for Ruby and rake (optional, for Ruby bindings).
+AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])
+AC_CHECK_PROG([RAKE],[rake],[rake],[no])
 
-dnl AM_CONDITIONAL([HAVE_RUBY],
-dnl     [test "x$RAKE" != "xno" && test -n "$HAVE_LIBRUBY"])
+AM_CONDITIONAL([HAVE_RUBY],
+    [test "x$RAKE" != "xno" && test -n "$HAVE_LIBRUBY"])
 
 dnl dnl Check for Java.
 dnl AC_ARG_WITH(java_home,
@@ -437,6 +437,7 @@ AC_CONFIG_FILES([Makefile
                  python/Makefile
                  po/Makefile.in
                  regedit/Makefile
+                 ruby/Makefile ruby/Rakefile
                  sh/Makefile
                  xml/Makefile])
 AC_CONFIG_FILES([python/run-python-tests], [chmod +x python/run-python-tests])
@@ -456,8 +457,8 @@ echo -n "Perl bindings ....................... "
 if test "x$HAVE_PERL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 echo -n "Python bindings ..................... "
 if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-dnl echo -n "Ruby bindings ....................... "
-dnl if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
+echo -n "Ruby bindings ....................... "
+if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 dnl echo -n "Java bindings ....................... "
 dnl if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 dnl echo -n "Haskell bindings .................... "

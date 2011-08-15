@@ -21,7 +21,7 @@ config.sub
 configure
 depcomp
 .deps
-generator/.pod2text.data
+generator/.pod2text.data.version.2
 generator/stamp-generator
 hivex.pc
 hivex-*.tar.gz
@@ -101,6 +101,13 @@ python/hivex-py.c
 python/hivex.py
 python/run-python-tests
 regedit/hivexregedit.1
+ruby/doc/site/api
+ruby/ext/hivex/extconf.h
+ruby/ext/hivex/_hivex.bundle
+ruby/ext/hivex/_hivex.c
+ruby/ext/hivex/_hivex.so
+ruby/ext/hivex/mkmf.log
+ruby/Rakefile
 sh/*.1
 sh/hivexsh
 stamp-h1
