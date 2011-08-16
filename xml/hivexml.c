@@ -204,6 +204,10 @@ node_start (hive_h *h, void *writer_v, hive_node_h node, const char *name)
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "node"));
   XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "name", BAD_CAST name));
 
+  if (node == hivex_root (h)) {
+    XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "root", BAD_CAST "1"));
+  }
+
   last_modified = hivex_node_timestamp (h, node);
   if (last_modified >= 0) {
     timebuf = filetime_to_8601 (last_modified);
