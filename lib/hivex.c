@@ -294,9 +294,16 @@ hivex_open (const char *filename, int flags)
   if (h->filename == NULL)
     goto error;
 
+#ifdef O_CLOEXEC
   h->fd = open (filename, O_RDONLY | O_CLOEXEC);
+#else
+  h->fd = open (filename, O_RDONLY);
+#endif
   if (h->fd == -1)
     goto error;
+#ifndef O_CLOEXEC
+  fcntl (h->fd, F_SETFD, FD_CLOEXEC);
+#endif
 
   struct stat statbuf;
   if (fstat (h->fd, &statbuf) == -1)
