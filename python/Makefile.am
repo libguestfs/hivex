@@ -36,6 +36,7 @@ libhivexmod_la_SOURCES = hivex-py.c
 libhivexmod_la_CFLAGS = -Wall -I$(PYTHON_INCLUDEDIR) \
 		        -I$(top_srcdir)/lib -I$(top_builddir)/lib
 libhivexmod_la_LIBADD = $(top_builddir)/lib/libhivex.la
+libhivexmod_la_LDFLAGS = -avoid-version -shared
 
 TESTS_ENVIRONMENT = \
 	PYTHONPATH=$(builddir):$(builddir)/.libs
