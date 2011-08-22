@@ -237,8 +237,8 @@ PYTHON_PREFIX=
 PYTHON_VERSION=
 
 if test "x$PYTHON" != "xno"; then
-    PYTHON_PREFIX=`$PYTHON -c "import sys; print sys.prefix"`
-    PYTHON_VERSION=`$PYTHON -c "import sys; print sys.version[[0:3]]"`
+    PYTHON_PREFIX=`$PYTHON -c "import sys; print(sys.prefix)"`
+    PYTHON_VERSION=`$PYTHON -c "import sys; print(sys.version[[0:3]])"`
 
     AC_MSG_CHECKING([for Python include path])
     if test -z "$PYTHON_INCLUDEDIR"; then
