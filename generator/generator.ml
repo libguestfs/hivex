@@ -1946,7 +1946,7 @@ copy_type_len (size_t len, hive_type t)
   v = Val_hive_type (t);
   Store_field (rv, 0, v);
   v = Val_int (len);
-  Store_field (rv, 1, len);
+  Store_field (rv, 1, v);
   CAMLreturn (rv);
 }
 
