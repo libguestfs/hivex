@@ -1189,6 +1189,32 @@ hivex_node_get_value (hive_h *h, hive_node_h node, const char *key)
   return ret;
 }
 
+size_t
+hivex_value_key_len (hive_h *h, hive_value_h value)
+{
+  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+    errno = EINVAL;
+    return 0;
+  }
+
+  struct ntreg_vk_record *vk = (struct ntreg_vk_record *) (h->addr + value);
+
+  /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
+   * we have to make sure the length doesn't exceed the block length.
+   */
+  size_t ret = le16toh (vk->name_len);
+  size_t seg_len = block_len (h, value, NULL);
+  if (sizeof (struct ntreg_vk_record) + ret - 1 > seg_len) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_value_key_len: returning EFAULT"
+               " because key length is too long (%zu, %zu)\n",
+               ret, seg_len);
+    errno = EFAULT;
+    return 0;
+  }
+  return ret;
+}
+
 char *
 hivex_value_key (hive_h *h, hive_value_h value)
 {
@@ -1202,20 +1228,10 @@ hivex_value_key (hive_h *h, hive_value_h value)
   /* AFAIK the key is always plain ASCII, so no conversion to UTF-8 is
    * necessary.  However we do need to nul-terminate the string.
    */
-
-  /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
-   * we have to make sure the length doesn't exceed the block length.
-   */
-  size_t len = le16toh (vk->name_len);
-  size_t seg_len = block_len (h, value, NULL);
-  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
-    if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_key: returning EFAULT"
-               " because key length is too long (%zu, %zu)\n",
-               len, seg_len);
-    errno = EFAULT;
+  errno = 0;
+  size_t len = hivex_value_key_len (h, value);
+  if (len == 0 && errno != 0)
     return NULL;
-  }
 
   char *ret = malloc (len + 1);
   if (ret == NULL)

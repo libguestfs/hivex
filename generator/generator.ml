@@ -229,6 +229,17 @@ string C<\"\"> here.  The default key is often written C<\"@\">, but
 inside hives that has no meaning and won't give you the
 default key.";
 
+  "value_key_len", (RSize, [AHive; AValue "val"]),
+    "return the length of a value's key",
+    "\
+Return the length of the key (name) of a (key, value) pair.  The
+length can legitimately be 0, so errno is the necesary mechanism
+to check for errors.
+
+In the context of Windows Registries, a zero-length name means
+that this value is the default key for this node in the tree.
+This is usually written as C<\"@\">.";
+
   "value_key", (RString, [AHive; AValue "val"]),
     "return the key of a (key, value) pair",
     "\
