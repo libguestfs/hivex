@@ -45,6 +45,7 @@ and ret =
   | RErr                                (* 0 = ok, -1 = error *)
   | RErrDispose                         (* Disposes handle, see hivex_close. *)
   | RHive                               (* Returns a hive_h or NULL. *)
+  | RSize                               (* Returns size_t or 0. *)
   | RNode                               (* Returns hive_node_h or 0. *)
   | RNodeNotFound                       (* See hivex_node_get_child. *)
   | RNodeList                           (* Returns hive_node_h* or NULL. *)
@@ -858,6 +859,7 @@ and generate_c_prototype ?(extern = false) name style =
    | RErr -> pr "int "
    | RErrDispose -> pr "int "
    | RHive -> pr "hive_h *"
+   | RSize -> pr "size_t "
    | RNode -> pr "hive_node_h "
    | RNodeNotFound -> pr "hive_node_h "
    | RNodeList -> pr "hive_node_h *"
@@ -1046,6 +1048,10 @@ The hive handle must not be used again after calling this function.\n\n"
            pr "\
 Returns a new hive handle.
 On error this returns NULL and sets errno.\n\n"
+       | RSize ->
+           pr "\
+Returns a size.
+On error this returns 0 and sets errno.\n\n"
        | RNode ->
            pr "\
 Returns a node handle.
@@ -1586,6 +1592,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
    | RErrDispose -> pr "unit"
    | RHive -> pr "t"
+   | RSize -> pr "int64"
    | RNode -> pr "node"
    | RNodeNotFound -> pr "node"
    | RNodeList -> pr "node array"
@@ -1735,6 +1742,7 @@ static void raise_closed (const char *) Noreturn;
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
             pr "  errno = 0;\n";
@@ -1808,6 +1816,7 @@ static void raise_closed (const char *) Noreturn;
        | RErr -> pr "  rv = Val_unit;\n"
        | RErrDispose -> pr "  rv = Val_unit;\n"
        | RHive -> pr "  rv = Val_hiveh (r);\n"
+       | RSize -> pr "  rv = caml_copy_int64 (r);\n"
        | RNode -> pr "  rv = Val_int (r);\n"
        | RNodeNotFound ->
            pr "  if (r == 0)\n";
@@ -2143,6 +2152,9 @@ sub open {
 	 | RLenTypeVal
 	 | RInt32
 	 | RInt64 -> ()
+	 | RSize ->
+             pr "\
+This returns a size.\n\n"
 	 | RNode ->
 	     pr "\
 This returns a node handle.\n\n"
@@ -2202,6 +2214,7 @@ and generate_perl_prototype name style =
    | RErr
    | RErrDispose -> ()
    | RHive -> pr "$h = "
+   | RSize -> pr "$size = "
    | RNode
    | RNodeNotFound -> pr "$node = "
    | RNodeList -> pr "@nodes = "
@@ -2424,6 +2437,7 @@ DESTROY (h)
 	 | RErr -> pr "void\n"
 	 | RErrDispose -> failwith "perl bindings cannot handle a call which disposes of the handle"
 	 | RHive -> failwith "perl bindings cannot handle a call which returns a handle"
+	 | RSize
 	 | RNode
 	 | RNodeNotFound
 	 | RValue
@@ -2500,6 +2514,7 @@ DESTROY (h)
 	 | RErrDispose -> assert false
 	 | RHive -> assert false
 
+	 | RSize
 	 | RNode
 	 | RValue ->
              pr "PREINIT:\n";
@@ -2864,6 +2879,7 @@ put_val_type (char *val, size_t len, hive_type t)
         | RErr -> pr "  int r;\n"; "-1"
 	| RErrDispose -> pr "  int r;\n"; "-1"
 	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
             pr "  errno = 0;\n";
@@ -3023,6 +3039,7 @@ put_val_type (char *val, size_t len, hive_type t)
            pr "  py_r = Py_None;\n"
        | RHive ->
            pr "  py_r = put_handle (r);\n"
+       | RSize
        | RNode ->
            pr "  py_r = PyLong_FromLongLong (r);\n"
        | RNodeNotFound ->
@@ -3249,7 +3266,7 @@ get_values (VALUE valuesv, size_t *nr_values)
           match ret with
           | RErr | RErrDispose -> "nil"
           | RHive -> "Hivex::Hivex"
-          | RNode | RNodeNotFound -> "integer"
+          | RSize | RNode | RNodeNotFound -> "integer"
           | RNodeList -> "list"
           | RValue -> "integer"
           | RValueList -> "list"
@@ -3338,6 +3355,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         | RErr -> pr "  int r;\n"; "-1"
 	| RErrDispose -> pr "  int r;\n"; "-1"
 	| RHive -> pr "  hive_h *r;\n"; "NULL"
+        | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
             pr "  errno = 0;\n";
@@ -3418,6 +3436,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         pr "  return Qnil;\n"
       | RHive ->
         pr "  return Data_Wrap_Struct (c_hivex, NULL, ruby_hivex_free, r);\n"
+      | RSize
       | RNode
       | RValue
       | RInt64 ->
