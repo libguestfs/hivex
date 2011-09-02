@@ -262,6 +262,18 @@ information, and the value itself.  Also, C<hivex_value_*> functions
 below which can be used to return the value in a more useful form when
 you know the type in advance.";
 
+  "node_struct_length", (RSize, [AHive; ANode "node"]),
+    "return the length of a node",
+    "\
+Return the length of the node data structure.  Returns 0
+and sets errno on error.";
+
+  "value_struct_length", (RSize, [AHive; AValue "val"]),
+    "return the length of a value data structure",
+    "\
+Return the length of the value data structure.  Returns 0
+and sets errno on error.";
+
   "value_value", (RLenTypeVal, [AHive; AValue "val"]),
     "return data length, data type and data of a value",
     "\

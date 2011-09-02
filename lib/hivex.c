@@ -585,6 +585,30 @@ hivex_root (hive_h *h)
   return ret;
 }
 
+size_t
+hivex_node_struct_length (hive_h *h, hive_node_h node)
+{
+  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+    errno = EINVAL;
+    return 0;
+  }
+
+  struct ntreg_nk_record *nk = (struct ntreg_nk_record *) (h->addr + node);
+  size_t name_len = le16toh (nk->name_len);
+  /* -1 to avoid double-counting the first name character */
+  size_t ret = name_len + sizeof (struct ntreg_nk_record) - 1;
+  int used;
+  size_t seg_len = block_len (h, node, &used);
+  if (ret > seg_len) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_node_struct_length: returning EFAULT because"
+               " node name is too long (%zu, %zu)\n", name_len, seg_len);
+    errno = EFAULT;
+    return 0;
+  }
+  return ret;
+}
+
 char *
 hivex_node_name (hive_h *h, hive_node_h node)
 {
@@ -1187,6 +1211,20 @@ hivex_node_get_value (hive_h *h, hive_node_h node, const char *key)
   free (values);
   free (name);
   return ret;
+}
+
+size_t
+hivex_value_struct_length (hive_h *h, hive_value_h value)
+{
+  size_t key_len;
+
+  errno = 0;
+  key_len = hivex_value_key_len (h, value);
+  if (key_len == 0 && errno != 0)
+    return 0;
+
+  /* -1 to avoid double-counting the first name character */
+  return key_len + sizeof (struct ntreg_vk_record) - 1;
 }
 
 size_t
