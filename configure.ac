@@ -133,6 +133,9 @@ AC_CHECK_SIZEOF([long])
 dnl Headers.
 AC_CHECK_HEADERS([endian.h byteswap.h])
 
+dnl Functions.
+AC_CHECK_FUNCS([bindtextdomain])
+
 dnl Check for pod2man and pod2text.
 AC_CHECK_PROG([POD2MAN],[pod2man],[pod2man],[no])
 test "x$POD2MAN" = "xno" &&

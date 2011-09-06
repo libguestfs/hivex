@@ -79,8 +79,10 @@ int
 main (int argc, char *argv[])
 {
   setlocale (LC_ALL, "");
+#ifdef HAVE_BINDTEXTDOMAIN
   bindtextdomain (PACKAGE, LOCALEBASEDIR);
   textdomain (PACKAGE);
+#endif
 
   int c;
   int open_flags = 0;
