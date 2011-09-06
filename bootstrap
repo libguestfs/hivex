@@ -36,7 +36,7 @@ autopoint --force
 # Autoreconf runs aclocal before libtoolize, which causes spurious
 # warnings if the initial aclocal is confused by the libtoolized
 # (or worse out-of-date) macro directory.
-libtoolize --copy --install
+libtoolize --copy --install || glibtoolize --copy --install
 
 # Create gettext configuration.
 echo "$0: Creating po/Makevars from po/Makevars.template ..."
