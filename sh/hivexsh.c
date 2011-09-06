@@ -29,6 +29,10 @@
 #include <errno.h>
 #include <locale.h>
 
+#ifdef HAVE_LIBINTL_H
+#include <libintl.h>
+#endif
+
 #ifdef HAVE_LIBREADLINE
 #include <readline/readline.h>
 #include <readline/history.h>

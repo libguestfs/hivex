@@ -131,7 +131,7 @@ dnl Check sizeof long.
 AC_CHECK_SIZEOF([long])
 
 dnl Headers.
-AC_CHECK_HEADERS([endian.h byteswap.h])
+AC_CHECK_HEADERS([byteswap.h endian.h libintl.h])
 
 dnl Functions.
 AC_CHECK_FUNCS([bindtextdomain])
