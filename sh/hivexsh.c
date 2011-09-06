@@ -27,6 +27,7 @@
 #include <unistd.h>
 #include <assert.h>
 #include <errno.h>
+#include <locale.h>
 
 #ifdef HAVE_LIBREADLINE
 #include <readline/readline.h>

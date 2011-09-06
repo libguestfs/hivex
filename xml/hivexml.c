@@ -26,6 +26,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <time.h>
+#include <locale.h>
 
 #include <libxml/xmlwriter.h>
 
