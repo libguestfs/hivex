@@ -59,6 +59,11 @@ struct hive_h {
   /* For writing. */
   size_t endblocks;             /* Offset to next block allocation (0
                                    if not allocated anything yet). */
+
+#ifndef HAVE_MMAP
+  /* Internal data for mmap replacement */
+  void *p_winmap;
+#endif
 };
 
 #define STREQ(a,b) (strcmp((a),(b)) == 0)

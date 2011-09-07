@@ -133,6 +133,9 @@ AC_CHECK_SIZEOF([long])
 dnl Headers.
 AC_CHECK_HEADERS([byteswap.h endian.h libintl.h])
 
+dnl Check for mmap
+AC_REPLACE_FUNCS([mmap])
+
 dnl Functions.
 AC_CHECK_FUNCS([bindtextdomain])
 

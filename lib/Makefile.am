@@ -29,9 +29,10 @@ libhivex_la_SOURCES = \
   hivex-internal.h \
   byte_conversions.h \
   gettext.h \
+  mmap.h \
   hivex.syms
 
-libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la
+libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-version-info 0:0:0 \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \

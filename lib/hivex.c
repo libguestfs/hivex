@@ -30,9 +30,15 @@
 #include <unistd.h>
 #include <errno.h>
 #include <iconv.h>
-#include <sys/mman.h>
 #include <sys/stat.h>
 #include <assert.h>
+
+#ifdef HAVE_MMAP
+#include <sys/mman.h>
+#else
+/* On systems without mmap (and munmap), use a replacement function. */
+#include "mmap.h"
+#endif
 
 #include "c-ctype.h"
 #include "full-read.h"
