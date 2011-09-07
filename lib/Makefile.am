@@ -26,6 +26,7 @@ lib_LTLIBRARIES = libhivex.la
 libhivex_la_SOURCES = \
   hivex.c \
   hivex.h \
+  hivex-internal.h \
   byte_conversions.h \
   gettext.h \
   hivex.syms
