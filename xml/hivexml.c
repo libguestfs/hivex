@@ -287,7 +287,7 @@ value_string (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
 
   start_value (writer, key, type, NULL);
   XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
-  XML_CHECK (xmlTextWriterWriteString, (writer, str));
+  XML_CHECK (xmlTextWriterWriteString, (writer, BAD_CAST str));
   XML_CHECK (xmlTextWriterEndAttribute, (writer));
   end_value (writer);
   return 0;
@@ -367,7 +367,7 @@ value_qword (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   start_value (writer, key, "int64", NULL);
-  XML_CHECK (xmlTextWriterWriteFormatAttribute, (writer, "value", "%" PRIi64, v));
+  XML_CHECK (xmlTextWriterWriteFormatAttribute, (writer, BAD_CAST "value", "%" PRIi64, v));
   end_value (writer);
   return 0;
 }
