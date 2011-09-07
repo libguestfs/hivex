@@ -137,7 +137,7 @@ dnl Check for mmap
 AC_REPLACE_FUNCS([mmap])
 
 dnl Functions.
-AC_CHECK_FUNCS([bindtextdomain])
+AC_CHECK_FUNCS([bindtextdomain open_memstream])
 
 dnl Check for pod2man and pod2text.
 AC_CHECK_PROG([POD2MAN],[pod2man],[pod2man],[no])
@@ -175,6 +175,9 @@ dnl libxml2.
 PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
 AC_SUBST([LIBXML2_CFLAGS])
 AC_SUBST([LIBXML2_LIBS])
+
+dnl hivexsh depends on open_memstream, which is absent on OS X.
+AM_CONDITIONAL([HAVE_HIVEXSH],[test "x$HAVE_OPEN_MEMSTREAM" = "xyes"])
 
 dnl Check for OCaml (optional, for OCaml bindings).
 AC_PROG_OCAML
