@@ -169,6 +169,10 @@ main (int argc, char *argv[])
  * fiwalk.cpp.
  *
  * The caller should free the returned buffer.
+ *
+ * This function returns NULL on a 0 input.  In the context of
+ * hives, which only have mtimes, 0 will always be a complete
+ * absence of data.
  */
 
 #define WINDOWS_TICK 10000000LL
@@ -181,6 +185,9 @@ filetime_to_8601 (int64_t windows_ticks)
   char *ret;
   time_t t;
   struct tm *tm;
+
+  if (windows_ticks == 0LL)
+    return NULL;
 
   t = windows_ticks / WINDOWS_TICK - SEC_TO_UNIX_EPOCH;
   tm = gmtime (&t);
