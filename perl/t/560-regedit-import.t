@@ -66,7 +66,7 @@ $data = '
 [\A]
 @="Hello"
 
--[\B]
+[-\B]
 ';
 $expected = '[\]
 
@@ -87,7 +87,7 @@ $data = '
 [\A]
 @=-
 
--[\C]
+[-\C]
 
 [\A\B]
 ';
@@ -131,7 +131,7 @@ $data = '
 "Key\"Containing\"Quotes"=-
 "ValueContainingEscapes"=-
 
--[\A]
+[-\A]
 ';
 $expected = '[\]
 

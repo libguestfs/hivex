@@ -164,16 +164,16 @@ sub reg_import
             # Ignore comments.
             next if /^\s*;/;
 
-            # Expect to see [...] or -[...]
+            # Expect to see [...] or [-...]
             # to merge or delete a node respectively.
-            if (/^\[(.*)\]\s*$/) {
+            if (/^\[-(.*)\]\s*$/) {
+                _delete_node ($hmap, \%params, $1);
+                $state = "outer";
+            } elsif (/^\[(.*)\]\s*$/) {
                 $state = "inner";
                 $newnode = $1;
                 @newvalues = ();
                 @delvalues = ();
-            } elsif (/^-\[(.*)\]\s*$/) {
-                _delete_node ($hmap, \%params, $1);
-                $state = "outer";
             } else {
                 croak (_unexpected ($_, $lineno));
             }
