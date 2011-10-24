@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-26 11:21+0100\n"
+"POT-Creation-Date: 2011-10-24 17:25+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Hindi <indlinux-hindi@lists.sourceforge.net>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
 
-#: sh/hivexsh.c:149
+#: sh/hivexsh.c:156
 #, c-format
 msgid ""
 "\n"
@@ -36,34 +36,34 @@ msgstr ""
 "      'quit' to quit the shell\n"
 "\n"
 
-#: sh/hivexsh.c:263
+#: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
 msgstr "hivexsh: नोड %zu के जनक को पाने में त्रुटि\n"
 
-#: sh/hivexsh.c:273
+#: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
 msgstr "hivexsh: नोड %zx के नोड नाम को पाने में त्रुटि\n"
 
-#: sh/hivexsh.c:412
+#: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
 "hivexsh: आपको जरूर एक पहले हाइव फाइल को 'load hivefile' के प्रयोग के पहले लोड करना "
 "चाहिए\n"
 
-#: sh/hivexsh.c:433
+#: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr "hivexsh: अज्ञात कमांड '%s', 'help' को मदद सारांश के लिए उपयोग करें\n"
 
-#: sh/hivexsh.c:443
+#: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr "hivexsh: load: किसी हाइव फाइल नाम लोड करने के लिए है\n"
 
-#: sh/hivexsh.c:459
+#: sh/hivexsh.c:466
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -82,12 +82,12 @@ msgstr ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' कमांड को दिए तर्क में नहीं देना चाहिए\n"
 
-#: sh/hivexsh.c:534
+#: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
@@ -96,12 +96,12 @@ msgstr ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 
-#: sh/hivexsh.c:572
+#: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
 msgstr "hivexsh: cd: subkey '%s' not found\n"
 
-#: sh/hivexsh.c:590
+#: sh/hivexsh.c:597
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
@@ -112,27 +112,27 @@ msgstr ""
 "यह एक फाइलसिस्टम समाहित करता है, और 'ls' का उपयोग मौजूदा कुंजी के\n"
 "उपकुंजी की सूती के लिए करें.  hivexsh(1) मैनुअल पेज में पूर्ण दस्तावेजीकरण है.\n"
 
-#: sh/hivexsh.c:665
+#: sh/hivexsh.c:672
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: कुंजी नहीं मिला\n"
 
-#: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
+#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: अवैध पूर्णांक पैरामीटर (%s ने %d लौटाया)\n"
 
-#: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
+#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: परिसर के बाहर पूर्णांक\n"
 
-#: sh/hivexsh.c:868 sh/hivexsh.c:886
+#: sh/hivexsh.c:875 sh/hivexsh.c:893
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: इनपुट का अप्रत्याशित अंत\n"
 
-#: sh/hivexsh.c:907 sh/hivexsh.c:926
+#: sh/hivexsh.c:914 sh/hivexsh.c:933
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
@@ -140,12 +140,12 @@ msgstr ""
 "hivexsh: string(utf16le): केवल 7 bit ASCII स्ट्रिंग को इनपुट के लिए समर्थन दिया गया "
 "है\n"
 
-#: sh/hivexsh.c:1037
+#: sh/hivexsh.c:1044
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: हेक्स स्ट्रिंग के बाद पीछा करता कचड़ा\n"
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -154,22 +154,22 @@ msgstr ""
 "hivexsh: setval: मान स्ट्रिंग को विश्लेषित नहीं कर सका, कृपयाhivexsh(1) का मदद के "
 "लिए संदर्भ लें: %s\n"
 
-#: sh/hivexsh.c:1073
+#: sh/hivexsh.c:1080
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: रूट नोड को मिटाया नहीं जा सकता है\n"
 
-#: xml/hivexml.c:73
+#: xml/hivexml.c:78
 #, c-format
 msgid "%s: failed to write XML document\n"
 msgstr "%s: XML दस्तावेजीकरण लिखने में विफल\n"
 
-#: xml/hivexml.c:104
+#: xml/hivexml.c:111
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: इनपुट फाइल का अनुपस्थित नाम\n"
 
-#: xml/hivexml.c:123
+#: xml/hivexml.c:130
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: XML राइटर बनाने में विफल\n"

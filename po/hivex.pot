@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: hivex 1.3.1\n"
+"Project-Id-Version: hivex 1.3.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-08-26 11:21+0100\n"
+"POT-Creation-Date: 2011-10-24 17:25+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: sh/hivexsh.c:149
+#: sh/hivexsh.c:156
 #, c-format
 msgid ""
 "\n"
@@ -29,32 +29,32 @@ msgid ""
 "\n"
 msgstr ""
 
-#: sh/hivexsh.c:263
+#: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
 msgstr ""
 
-#: sh/hivexsh.c:273
+#: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
 msgstr ""
 
-#: sh/hivexsh.c:412
+#: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
 
-#: sh/hivexsh.c:433
+#: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
 
-#: sh/hivexsh.c:443
+#: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr ""
 
-#: sh/hivexsh.c:459
+#: sh/hivexsh.c:466
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -66,24 +66,24 @@ msgid ""
 "\n"
 msgstr ""
 
-#: sh/hivexsh.c:492 sh/hivexsh.c:601 sh/hivexsh.c:1067
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr ""
 
-#: sh/hivexsh.c:534
+#: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
 
-#: sh/hivexsh.c:572
+#: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
 msgstr ""
 
-#: sh/hivexsh.c:590
+#: sh/hivexsh.c:597
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
@@ -91,60 +91,60 @@ msgid ""
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
 
-#: sh/hivexsh.c:665
+#: sh/hivexsh.c:672
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr ""
 
-#: sh/hivexsh.c:841 sh/hivexsh.c:945 sh/hivexsh.c:971 sh/hivexsh.c:1000
+#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr ""
 
-#: sh/hivexsh.c:846 sh/hivexsh.c:951 sh/hivexsh.c:977 sh/hivexsh.c:1006
+#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr ""
 
-#: sh/hivexsh.c:868 sh/hivexsh.c:886
+#: sh/hivexsh.c:875 sh/hivexsh.c:893
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr ""
 
-#: sh/hivexsh.c:907 sh/hivexsh.c:926
+#: sh/hivexsh.c:914 sh/hivexsh.c:933
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
 
-#: sh/hivexsh.c:1037
+#: sh/hivexsh.c:1044
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr ""
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
 
-#: sh/hivexsh.c:1073
+#: sh/hivexsh.c:1080
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr ""
 
-#: xml/hivexml.c:73
+#: xml/hivexml.c:78
 #, c-format
 msgid "%s: failed to write XML document\n"
 msgstr ""
 
-#: xml/hivexml.c:104
+#: xml/hivexml.c:111
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr ""
 
-#: xml/hivexml.c:123
+#: xml/hivexml.c:130
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr ""
