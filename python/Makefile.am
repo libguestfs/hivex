@@ -26,7 +26,7 @@ EXTRA_DIST = \
 
 if HAVE_PYTHON
 
-pythondir = $(PYTHON_SITE_PACKAGES)
+pythondir = $(PYTHON_INSTALLDIR)
 
 python_DATA = hivex.py
 

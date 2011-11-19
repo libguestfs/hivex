@@ -241,14 +241,23 @@ AM_CONDITIONAL([HAVE_PERL],
     [test "x$PERL" != "xno" && test "x$missing_perl_modules" != "xyes"])
 
 dnl Check for Python (optional, for Python bindings).
-AC_CHECK_PROG([PYTHON],[python],[python],[no])
-
 PYTHON_PREFIX=
 PYTHON_VERSION=
+PYTHON_INCLUDEDIR=
+PYTHON_INSTALLDIR=
+
+AC_CHECK_PROG([PYTHON],[python],[python],[no])
 
 if test "x$PYTHON" != "xno"; then
-    PYTHON_PREFIX=`$PYTHON -c "import sys; print(sys.prefix)"`
-    PYTHON_VERSION=`$PYTHON -c "import sys; print(sys.version[[0:3]])"`
+    AC_MSG_CHECKING([Python prefix])
+    PYTHON_PREFIX=`$PYTHON -c "import sys; print (sys.prefix)"`
+    AC_MSG_RESULT([$PYTHON_PREFIX])
+
+    AC_MSG_CHECKING([Python version])
+    PYTHON_VERSION_MAJOR=`$PYTHON -c "import sys; print (sys.version_info@<:@0@:>@)"`
+    PYTHON_VERSION_MINOR=`$PYTHON -c "import sys; print (sys.version_info@<:@1@:>@)"`
+    PYTHON_VERSION="$PYTHON_VERSION_MAJOR.$PYTHON_VERSION_MINOR"
+    AC_MSG_RESULT([$PYTHON_VERSION])
 
     AC_MSG_CHECKING([for Python include path])
     if test -z "$PYTHON_INCLUDEDIR"; then
@@ -258,26 +267,46 @@ if test "x$PYTHON" != "xno"; then
     fi
     AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
 
-    AC_MSG_CHECKING([for Python site-packages path])
-    if test -z "$PYTHON_SITE_PACKAGES"; then
-        PYTHON_SITE_PACKAGES=`$PYTHON -c "import distutils.sysconfig; \
-                print (distutils.sysconfig.get_python_lib(1,0));"`
-    fi
-    AC_MSG_RESULT([$PYTHON_SITE_PACKAGES])
+    AC_ARG_WITH([python-installdir],
+                [AS_HELP_STRING([--with-python-installdir],
+		                [directory to install python modules @<:@default=check@:>@])],
+		[PYTHON_INSTALLDIR="$withval"
+		AC_MSG_NOTICE([Python install dir $PYTHON_INSTALLDIR])],
+		[PYTHON_INSTALLDIR=check])
 
+    if test "x$PYTHON_INSTALLDIR" = "xcheck"; then
+        PYTHON_INSTALLDIR=
+        AC_MSG_CHECKING([for Python site-packages path])
+        if test -z "$PYTHON_INSTALLDIR"; then
+            PYTHON_INSTALLDIR=`$PYTHON -c "import distutils.sysconfig; \
+                                           print (distutils.sysconfig.get_python_lib(1,0));"`
+        fi
+        AC_MSG_RESULT([$PYTHON_INSTALLDIR])
+    fi
+
+    dnl Look for libpython and some optional symbols in it.
     old_LIBS="$LIBS"
-    LIBS="$LIBS -lpython$PYTHON_VERSION"
-    AC_CHECK_FUNCS([PyCapsule_New])
+    if test "x$PYTHON_VERSION_MAJOR" = "x3"; then
+        dnl libpython3 is called "libpython3.Xmu.so"
+        LIBPYTHON="python${PYTHON_VERSION}mu"
+    else
+        LIBPYTHON="python$PYTHON_VERSION"
+    fi
+    AC_CHECK_LIB([$LIBPYTHON], [PyList_Size], [],
+                 [AC_MSG_FAILURE([$LIBPYTHON is not installed])])
+
+    AC_CHECK_FUNCS([PyCapsule_New \
+                    PyString_AsString])
     LIBS="$old_LIBS"
 fi
 
 AC_SUBST(PYTHON_PREFIX)
 AC_SUBST(PYTHON_VERSION)
 AC_SUBST(PYTHON_INCLUDEDIR)
-AC_SUBST(PYTHON_SITE_PACKAGES)
+AC_SUBST(PYTHON_INSTALLDIR)
 
 AM_CONDITIONAL([HAVE_PYTHON],
-    [test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_SITE_PACKAGES" != "x"])
+    [test "x$PYTHON" != "xno" && test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
 
 dnl Check for Ruby and rake (optional, for Ruby bindings).
 AC_CHECK_LIB([ruby],[ruby_init],[HAVE_LIBRUBY=1],[HAVE_LIBRUBY=0])

@@ -15,6 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+import sys
 import os
 import hivex
 
@@ -46,12 +47,20 @@ h.node_set_value (b, value1)
 value1 = { "key": "Key1", "t": 3, "value": "JKL" }
 h.node_set_value (b, value1)
 
+# In Python2, the data is returned as a string.  In Python3, it is
+# returned as bytes.  Provide a function to convert either to a string.
+def to_string (data):
+    if sys.version_info[0] == 2:
+        return data
+    else:
+        return str (data, "utf-8")
+
 val = h.node_get_value (b, "Key1")
 t_data = h.value_value (val)
 assert t_data[0] == 3
-assert t_data[1] == "JKL"
+assert to_string (t_data[1]) == "JKL"
 
 val = h.node_get_value (b, "Key3")
 t_data = h.value_value (val)
 assert t_data[0] == 3
-assert t_data[1] == "GHI"
+assert to_string (t_data[1]) == "GHI"

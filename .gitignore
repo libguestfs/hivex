@@ -97,6 +97,7 @@ po/insert-header.sin
 po/quot.sed
 po/remove-potcdate.sin
 python/*.pyc
+python/__pycache__/
 python/hivex-py.c
 python/hivex.py
 python/run-python-tests
