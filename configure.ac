@@ -89,6 +89,9 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wpacked"                 # Allow attribute((packed)) on structs
   nw="$nw -Wlong-long"              # Allow long long since it's required
                                     # by xstrtoll.
+  nw="$nw -Wsuggest-attribute=pure" # Don't suggest pure functions.
+#  nw="$nw -Wsuggest-attribute=const" # Don't suggest const functions.
+#  nw="$nw -Wunsuffixed-float-constants" # Don't care about these.
 
   gl_MANYWARN_ALL_GCC([ws])
   gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
