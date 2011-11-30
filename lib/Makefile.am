@@ -39,7 +39,10 @@ libhivex_la_LDFLAGS = \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
-libhivex_la_CPPFLAGS = -I$(top_srcdir)/gnulib/lib -I$(srcdir)
+libhivex_la_CPPFLAGS = \
+  -I$(top_srcdir)/gnulib/lib \
+  -I$(top_builddir)/gnulib/lib \
+  -I$(srcdir)
 
 include_HEADERS = hivex.h
 
