@@ -40,14 +40,15 @@ if HAVE_RUBY
 TESTS = run-ruby-tests
 
 TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/src/.libs
+	LD_LIBRARY_PATH=$(top_builddir)/src/.libs \
+	RUBY=$(RUBY) RAKE=$(RAKE)
 
 all:
-	rake build
-	rake rdoc
+	$(RAKE) build
+	$(RAKE) rdoc
 
-RUBY_SITELIB := $(shell ruby -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
-RUBY_SITEARCH := $(shell ruby -rrbconfig -e "puts Config::CONFIG['sitearchdir']")
+RUBY_SITELIB := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['sitelibdir']")
+RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts Config::CONFIG['sitearchdir']")
 
 install:
 	$(MKDIR_P) $(DESTDIR)$(RUBY_SITELIB)

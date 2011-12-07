@@ -3265,6 +3265,14 @@ and generate_ruby_c () =
 #define RARRAY_LEN(r) (RARRAY((r))->len)
 #endif
 
+#ifndef RSTRING_LEN
+#define RSTRING_LEN(r) (RSTRING((r))->len)
+#endif
+
+#ifndef RSTRING_PTR
+#define RSTRING_PTR(r) (RSTRING((r))->ptr)
+#endif
+
 static VALUE m_hivex;			/* hivex module */
 static VALUE c_hivex;			/* hive_h handle */
 static VALUE e_Error;			/* used for all errors */
@@ -3287,8 +3295,8 @@ get_value (VALUE valv, hive_set_value *val)
 
   val->key = StringValueCStr (key);
   val->t = NUM2ULL (type);
-  val->len = RSTRING (value)->len;
-  val->value = RSTRING (value)->ptr;
+  val->len = RSTRING_LEN (value);
+  val->value = RSTRING_PTR (value);
 }
 
 static hive_set_value *
