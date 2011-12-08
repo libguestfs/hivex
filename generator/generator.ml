@@ -273,6 +273,20 @@ Return the length of the node data structure.";
     "\
 Return the length of the value data structure.";
 
+  "value_data_cell_offset", (RLenValue, [AHive; AValue "val"]),
+    "return the offset and length of a value data cell",
+    "\
+Return the offset and length of the value's data cell.
+
+The data cell is a registry structure that contains the length
+(a 4 byte, little endian integer) followed by the data.
+
+If the length of the value is less than or equal to 4 bytes
+then the offset and length returned by this function is zero
+as the data is inlined in the value.
+
+Returns 0 and sets errno on error.";
+
   "value_value", (RLenTypeVal, [AHive; AValue "val"]),
     "return data length, data type and data of a value",
     "\

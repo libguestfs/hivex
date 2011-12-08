@@ -1257,6 +1257,66 @@ hivex_value_type (hive_h *h, hive_value_h value, hive_type *t, size_t *len)
   return 0;
 }
 
+hive_value_h
+hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
+{
+  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+    errno = EINVAL;
+    return 0;
+  }
+
+  if (h->msglvl >= 2)
+    fprintf (stderr, "hivex_value_data_cell_offset: value=0x%zx\n", value);
+  struct ntreg_vk_record *vk = (struct ntreg_vk_record *) (h->addr + value);
+
+  size_t data_len;
+  int is_inline;
+
+  data_len = le32toh (vk->data_len);
+  is_inline = !!(data_len & 0x80000000);
+  data_len &= 0x7fffffff;
+
+  if (h->msglvl >= 2)
+    fprintf (stderr, "hivex_value_data_cell_offset: is_inline=%d\n", is_inline);
+
+  if (h->msglvl >= 2)
+    fprintf (stderr, "hivex_value_data_cell_offset: data_len=%zx\n", data_len);
+
+  if (is_inline && data_len > 4) {
+    errno = ENOTSUP;
+    return 0;
+  }
+
+  if (is_inline) {
+    /* There is no other location for the value data. */
+    if (len)
+      *len = 0;
+    return 0;
+  } else {
+    if (len)
+      *len = data_len + 4;  /* Include 4 header length bytes */
+  }
+
+  if (h->msglvl >= 2)
+    fprintf (stderr, "hivex_value_data_cell_offset: Proceeding with indirect data.\n");
+
+  size_t data_offset = le32toh (vk->data_offset);
+  data_offset += 0x1000;  /* Add 0x1000 because everything's off by 4KiB */
+  if (!IS_VALID_BLOCK (h, data_offset)) {
+    if (h->msglvl >= 2)
+      fprintf (stderr, "hivex_value_data_cell_offset: returning EFAULT because data "
+               "offset is not a valid block (0x%zx)\n",
+               data_offset);
+    errno = EFAULT;
+    return 0;
+  }
+
+  if (h->msglvl >= 2)
+    fprintf (stderr, "hivex_value_data_cell_offset: data_offset=%zx\n", data_offset);
+
+  return data_offset;
+}
+
 char *
 hivex_value_value (hive_h *h, hive_value_h value,
                    hive_type *t_rtn, size_t *len_rtn)
