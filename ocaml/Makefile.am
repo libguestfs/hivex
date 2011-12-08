@@ -59,6 +59,7 @@ TESTS = \
 	t/hivex_020_root \
 	t/hivex_100_errors \
 	t/hivex_110_gc_handle \
+	t/hivex_120_rlenvalue \
 	t/hivex_200_write \
 	t/hivex_300_fold
 noinst_DATA += $(TESTS)

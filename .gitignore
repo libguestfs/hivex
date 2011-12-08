@@ -67,6 +67,7 @@ ocaml/t/hivex_010_open
 ocaml/t/hivex_020_root
 ocaml/t/hivex_100_errors
 ocaml/t/hivex_110_gc_handle
+ocaml/t/hivex_120_rlenvalue
 ocaml/t/hivex_200_write
 ocaml/t/hivex_300_fold
 perl/blib
