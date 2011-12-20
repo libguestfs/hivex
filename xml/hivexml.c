@@ -215,7 +215,6 @@ node_start (hive_h *h, void *writer_v, hive_node_h node, const char *name)
 {
   int64_t last_modified;
   char *timebuf;
-  int ret = 0;
 
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "node"));
