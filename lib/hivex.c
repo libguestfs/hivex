@@ -167,9 +167,9 @@ struct ntreg_lf_record {
 
 struct ntreg_ri_record {
   int32_t seg_len;
-  char id[2];                   /* "ri" */
-  uint16_t nr_offsets;          /* number of pointers to lh records */
-  uint32_t offset[1];           /* list of pointers to lh records */
+  char id[2];                   /* "ri"|"li" */
+  uint16_t nr_offsets;          /* number of pointers to lf/lh/li records */
+  uint32_t offset[1];           /* list of pointers to lf/lh/li records */
 } __attribute__((__packed__));
 
 /* This has no ID header. */
@@ -874,10 +874,12 @@ get_children (hive_h *h, hive_node_h node,
         errno = EFAULT;
         goto error;
       }
-      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
+      if (!BLOCK_ID_EQ (h, offset, "lf") &&
+          !BLOCK_ID_EQ (h, offset, "lh") &&
+          !BLOCK_ID_EQ (h, offset, "li")) {
         if (h->msglvl >= 2)
-          fprintf (stderr, "get_children: returning ENOTSUP"
-                   " because ri-record offset does not point to lf/lh (0x%zx)\n",
+          fprintf (stderr, "get_children: returning ENOTSUP because"
+                   " ri-record offset does not point to lf/lh/li (0x%zx)\n",
                    offset);
         errno = ENOTSUP;
         goto error;
@@ -916,34 +918,49 @@ get_children (hive_h *h, hive_node_h node,
         errno = EFAULT;
         goto error;
       }
-      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
-        if (h->msglvl >= 2)
-          fprintf (stderr, "get_children: returning ENOTSUP"
-                   " because ri-record offset does not point to lf/lh (0x%zx)\n",
-                   offset);
-        errno = ENOTSUP;
-        goto error;
-      }
+      if (BLOCK_ID_EQ (h, offset, "li")) {
+        /* "ri" and "li" are basically the same */
+        struct ntreg_ri_record *li =
+          (struct ntreg_ri_record *) (h->addr + offset);
 
-      struct ntreg_lf_record *lf =
-        (struct ntreg_lf_record *) (h->addr + offset);
-
-      size_t j;
-      for (j = 0; j < le16toh (lf->nr_keys); ++j) {
-        hive_node_h subkey = le32toh (lf->keys[j].offset);
-        subkey += 0x1000;
-        if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
-          if (!IS_VALID_BLOCK (h, subkey)) {
-            if (h->msglvl >= 2)
-              fprintf (stderr, "hivex_node_children: returning EFAULT"
-                       " because indirect subkey is not a valid block (0x%zx)\n",
-                       subkey);
-            errno = EFAULT;
-            goto error;
+        size_t j;
+        for (j = 0; j < le16toh (li->nr_offsets); ++j) {
+          hive_node_h subkey = le32toh (li->offset[j]);
+          subkey += 0x1000;
+          if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
+            if (!IS_VALID_BLOCK (h, subkey)) {
+              if (h->msglvl >= 2)
+                fprintf (stderr, "hivex_node_children: returning EFAULT because"
+                         " li indirect subkey is not a valid block (0x%zx)\n",
+                         subkey);
+              errno = EFAULT;
+              goto error;
+            }
           }
+          if (add_to_offset_list (&children, subkey) == -1)
+            goto error;
         }
-        if (add_to_offset_list (&children, subkey) == -1)
-          goto error;
+      } else { /* "lf" or "lh" block */
+        struct ntreg_lf_record *lf =
+          (struct ntreg_lf_record *) (h->addr + offset);
+
+        size_t j;
+        for (j = 0; j < le16toh (lf->nr_keys); ++j) {
+          hive_node_h subkey = le32toh (lf->keys[j].offset);
+          subkey += 0x1000;
+          if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
+            if (!IS_VALID_BLOCK (h, subkey)) {
+              if (h->msglvl >= 2)
+                fprintf (stderr, "hivex_node_children: returning EFAULT because"
+                         " lf/lh indirect subkey is not a valid block (0x%zx)\n",
+                         subkey);
+              errno = EFAULT;
+              goto error;
+            }
+          }
+          if (add_to_offset_list (&children, subkey) == -1)
+            goto error;
+        }
       }
     }
     goto ok;
@@ -951,7 +968,7 @@ get_children (hive_h *h, hive_node_h node,
   /* else not supported, set errno and fall through */
   if (h->msglvl >= 2)
     fprintf (stderr, "get_children: returning ENOTSUP"
-             " because subkey block is not lf/lh/ri (0x%zx, %d, %d)\n",
+             " because subkey block is not lf/lh/li/ri (0x%zx, %d, %d)\n",
              subkey_lf, block->id[0], block->id[1]);
   errno = ENOTSUP;
  error:
