@@ -29,18 +29,18 @@ require 'hivex'
 class TestRLenValue < Test::Unit::TestCase
   def test_RLenValue
     h = Hivex::open("../images/rlenvalue_test_hive", {})
-    assert_not_nil (h)
+    assert_not_nil(h)
 
-    root = h.root ()
-    assert_not_nil (root)
+    root = h.root()
+    assert_not_nil(root)
 
-    moderate_value_node = h.node_get_child (root, "ModerateValueParent")
-    assert_not_nil (moderate_value_node)
+    moderate_value_node = h.node_get_child(root, "ModerateValueParent")
+    assert_not_nil(moderate_value_node)
 
-    moderate_value_value = h.node_get_value (moderate_value_node, "33Bytes")
+    moderate_value_value = h.node_get_value(moderate_value_node, "33Bytes")
 
-    r = h.value_data_cell_offset (moderate_value_value)
-    assert_equal (r[:len], 37)
-    assert_equal (r[:off], 8712)
+    r = h.value_data_cell_offset(moderate_value_value)
+    assert_equal(r[:len], 37)
+    assert_equal(r[:off], 8712)
   end
 end
