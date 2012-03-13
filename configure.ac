@@ -98,9 +98,12 @@ if test "$gl_gcc_warnings" = yes; then
   for w in $ws; do
     gl_WARN_ADD([$w])
   done
-  gl_WARN_ADD([-Wno-unused-parameter]) # stubs.c
-  gl_WARN_ADD([-Wno-jump-misses-init]) # stubs.c
-  gl_WARN_ADD([-Wno-unused-variable]) # FIXME: only temporary, for guestfs_protocol.c, etc
+
+  # Unused parameters are not a bug in C.
+  gl_WARN_ADD([-Wno-unused-parameter])
+
+  # Missing field initializers is not a bug in C.
+  gl_WARN_ADD([-Wno-missing-field-initializers])
 
   # In spite of excluding -Wlogical-op above, it is enabled, as of
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
