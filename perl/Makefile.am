@@ -15,6 +15,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
+# Old RHEL 5 autoconf doesn't have builddir or abs_srcdir.
+builddir ?= $(top_builddir)/perl
+abs_srcdir ?= $(shell unset CDPATH; cd $(srcdir) && pwd)
+
 EXTRA_DIST = \
 	Makefile.PL.in \
 	run-perl-tests \
