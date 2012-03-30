@@ -1885,7 +1885,8 @@ static void raise_closed (const char *) Noreturn;
            pr "  free (r);\n"
        | RStringList ->
            pr "  rv = caml_copy_string_array ((const char **) r);\n";
-           pr "  for (int i = 0; r[i] != NULL; ++i) free (r[i]);\n";
+	   pr "  int i;\n";
+           pr "  for (i = 0; r[i] != NULL; ++i) free (r[i]);\n";
            pr "  free (r);\n"
        | RLenType -> pr "  rv = copy_type_len (len, t);\n"
        | RLenValue -> pr "  rv = copy_len_value (len, r);\n"
