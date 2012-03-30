@@ -211,9 +211,9 @@ if test "x$OCAMLC" != "xno"; then
     echo "char $f (); char foo() { return $f (); }" > conftest.c
     rm -f conftest_ml.ml
     touch conftest_ml.ml
-    if $OCAMLC -c conftest.c 2>/dev/null && \
-       $OCAMLC -c conftest_ml.ml 2>/dev/null && \
-       $OCAMLC conftest.o conftest_ml.cmo -o conftest 2>/dev/null ; then
+    if $OCAMLC -c conftest.c >&AS_MESSAGE_LOG_FD 2>&1 && \
+       $OCAMLC -c conftest_ml.ml >&AS_MESSAGE_LOG_FD 2>&1 && \
+       $OCAMLC -custom conftest.o conftest_ml.cmo -o conftest >&AS_MESSAGE_LOG_FD 2>&1 ; then
         AC_DEFINE([HAVE_CAML_RAISE_WITH_ARGS],[1],
                   [Defined if function caml_raise_with_args exists.])
         AC_MSG_RESULT([found])
