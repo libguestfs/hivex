@@ -210,11 +210,40 @@ filetime_to_8601 (int64_t windows_ticks)
   return ret;
 }
 
+#define BYTE_RUN_BUF_LEN 32
+
+static int
+node_byte_runs (hive_h *h, void *writer_v, hive_node_h node)
+{
+  xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  char buf[1+BYTE_RUN_BUF_LEN];
+  errno = 0;
+  size_t node_struct_length = hivex_node_struct_length (h, node);
+  if (errno) {
+    if (errno == EINVAL) {
+      fprintf (stderr, "node_byte_runs: Invoked on what does not seem to be a node (%zu).\n", node);
+    }
+    return -1;
+  }
+  /* A node has one byte run. */
+  XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_runs"));
+  XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_run"));
+  memset (buf, 0, 1+BYTE_RUN_BUF_LEN);
+  snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", node);
+  XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "file_offset", BAD_CAST buf));
+  snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", node_struct_length);
+  XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "len", BAD_CAST buf));
+  XML_CHECK (xmlTextWriterEndElement, (writer));
+  XML_CHECK (xmlTextWriterEndElement, (writer));
+  return 0;
+}
+
 static int
 node_start (hive_h *h, void *writer_v, hive_node_h node, const char *name)
 {
   int64_t last_modified;
   char *timebuf;
+  int ret = 0;
 
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "node"));
@@ -235,7 +264,8 @@ node_start (hive_h *h, void *writer_v, hive_node_h node, const char *name)
     }
   }
 
-  return 0;
+  ret = node_byte_runs (h, writer_v, node);
+  return ret;
 }
 
 static int
@@ -267,11 +297,53 @@ end_value (xmlTextWriterPtr writer)
 }
 
 static int
+value_byte_runs (hive_h *h, void *writer_v, hive_value_h value) {
+  xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  char buf[1+BYTE_RUN_BUF_LEN];
+  size_t value_data_cell_length;
+  errno = 0;
+  size_t value_data_structure_length = hivex_value_struct_length (h, value);
+  if (errno != 0) {
+    if (errno == EINVAL) {
+      fprintf (stderr, "value_byte_runs: Invoked on what does not seem to be a value (%zu).\n", value);
+    }
+    return -1;
+  }
+  hive_value_h value_data_cell_offset = hivex_value_data_cell_offset (h, value, &value_data_cell_length);
+  if (errno != 0)
+    return -1;
+
+  XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_runs"));
+  memset (buf, 0, 1+BYTE_RUN_BUF_LEN);
+
+  /* Write first byte run for data structure */
+  XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_run"));
+  snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", value);
+  XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "file_offset", BAD_CAST buf));
+  snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", value_data_structure_length);
+  XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "len", BAD_CAST buf));
+  XML_CHECK (xmlTextWriterEndElement, (writer));
+
+  /* Write second byte run for longer values */
+  if (value_data_cell_length > 4) {
+    XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_run"));
+    snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", value_data_cell_offset);
+    XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "file_offset", BAD_CAST buf));
+    snprintf (buf, 1+BYTE_RUN_BUF_LEN, "%zu", value_data_cell_length);
+    XML_CHECK (xmlTextWriterWriteAttribute, (writer, BAD_CAST "len", BAD_CAST buf));
+    XML_CHECK (xmlTextWriterEndElement, (writer));
+  }
+  XML_CHECK (xmlTextWriterEndElement, (writer));
+  return 0;
+}
+
+static int
 value_string (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
               hive_type t, size_t len, const char *key, const char *str)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   const char *type;
+  int ret = 0;
 
   switch (t) {
   case hive_t_string: type = "string"; break;
@@ -297,8 +369,9 @@ value_string (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
   XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
   XML_CHECK (xmlTextWriterWriteString, (writer, BAD_CAST str));
   XML_CHECK (xmlTextWriterEndAttribute, (writer));
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -307,6 +380,7 @@ value_multiple_strings (hive_h *h, void *writer_v, hive_node_h node,
                         const char *key, char **argv)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  int ret = 0;
   start_value (writer, key, "string-list", NULL);
 
   size_t i;
@@ -316,8 +390,9 @@ value_multiple_strings (hive_h *h, void *writer_v, hive_node_h node,
     XML_CHECK (xmlTextWriterEndElement, (writer));
   }
 
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -328,6 +403,7 @@ value_string_invalid_utf16 (hive_h *h, void *writer_v, hive_node_h node,
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   const char *type;
+  int ret = 0;
 
   switch (t) {
   case hive_t_string: type = "bad-string"; break;
@@ -353,9 +429,10 @@ value_string_invalid_utf16 (hive_h *h, void *writer_v, hive_node_h node,
   XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
   XML_CHECK (xmlTextWriterWriteBase64, (writer, str, 0, len));
   XML_CHECK (xmlTextWriterEndAttribute, (writer));
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
 
-  return 0;
+  return ret;
 }
 
 static int
@@ -363,10 +440,12 @@ value_dword (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
              hive_type t, size_t len, const char *key, int32_t v)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  int ret = 0;
   start_value (writer, key, "int32", NULL);
   XML_CHECK (xmlTextWriterWriteFormatAttribute, (writer, BAD_CAST "value", "%" PRIi32, v));
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -374,10 +453,12 @@ value_qword (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
              hive_type t, size_t len, const char *key, int64_t v)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  int ret = 0;
   start_value (writer, key, "int64", NULL);
   XML_CHECK (xmlTextWriterWriteFormatAttribute, (writer, BAD_CAST "value", "%" PRIi64, v));
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -385,12 +466,14 @@ value_binary (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
               hive_type t, size_t len, const char *key, const char *v)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  int ret = 0;
   start_value (writer, key, "binary", "base64");
   XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
   XML_CHECK (xmlTextWriterWriteBase64, (writer, v, 0, len));
   XML_CHECK (xmlTextWriterEndAttribute, (writer));
+  ret = value_byte_runs (h, writer_v, value);
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -398,14 +481,16 @@ value_none (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
             hive_type t, size_t len, const char *key, const char *v)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
+  int ret = 0;
   start_value (writer, key, "none", "base64");
   if (len > 0) {
     XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
     XML_CHECK (xmlTextWriterWriteBase64, (writer, v, 0, len));
     XML_CHECK (xmlTextWriterEndAttribute, (writer));
+    ret = value_byte_runs (h, writer_v, value);
   }
   end_value (writer);
-  return 0;
+  return ret;
 }
 
 static int
@@ -414,6 +499,7 @@ value_other (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   const char *type;
+  int ret = 0;
 
   switch (t) {
   case hive_t_none:
@@ -440,8 +526,9 @@ value_other (hive_h *h, void *writer_v, hive_node_h node, hive_value_h value,
     XML_CHECK (xmlTextWriterStartAttribute, (writer, BAD_CAST "value"));
     XML_CHECK (xmlTextWriterWriteBase64, (writer, v, 0, len));
     XML_CHECK (xmlTextWriterEndAttribute, (writer));
+    ret = value_byte_runs (h, writer_v, value);
   }
   end_value (writer);
 
-  return 0;
+  return ret;
 }
