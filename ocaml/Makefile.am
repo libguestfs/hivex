@@ -1,5 +1,5 @@
 # hivex OCaml bindings
-# Copyright (C) 2009-2010 Red Hat Inc.
+# Copyright (C) 2009-2010, 2012 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -97,7 +97,6 @@ install_files += *.cmx *.cmxa
 endif
 
 install-data-hook:
-	mkdir -p $(DESTDIR)$(OCAMLLIB)
 	mkdir -p $(DESTDIR)$(OCAMLLIB)/stublibs
 	$(OCAMLFIND) install \
 	  -ldconf ignore -destdir $(DESTDIR)$(OCAMLLIB) \
