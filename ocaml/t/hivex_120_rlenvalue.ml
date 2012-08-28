@@ -1,5 +1,5 @@
 (* hivex OCaml bindings
- * Copyright (C) 2009-2010 Red Hat Inc.
+ * Copyright (C) 2009-2010, 2012 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,9 +26,10 @@
 open Unix
 open Printf
 let (//) = Filename.concat
+let srcdir = try Sys.getenv "srcdir" with Not_found -> "."
 
 let () =
-  let h = Hivex.open_file "../images/rlenvalue_test_hive" [] in
+  let h = Hivex.open_file (srcdir // "../images/rlenvalue_test_hive") [] in
   let root = Hivex.root h in
   let moderate_value_node = Hivex.node_get_child h root "ModerateValueParent" in
   let moderate_value_value = Hivex.node_get_value h moderate_value_node "33Bytes" in
