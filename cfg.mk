@@ -14,8 +14,11 @@ gnulib_dir = .gnulib
 exclude_file_name_regexp--sc_trailing_blank = \
   ^sh/hivexsh\.pod$$
 
-exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = \
-  ^images/minimal$$
+_img_regexp = ^images/(minimal|rlenvalue_test_hive)$$
+exclude_file_name_regexp--sc_prohibit_empty_lines_at_EOF = $(_img_regexp)
+exclude_file_name_regexp--sc_trailing_blank = $(_img_regexp)
 
 exclude_file_name_regexp--sc_useless_cpp_parens = \
   ^lib/gettext\.h$$
+
+config_h_header ?= ["<](hivex|config)\.h[>"]

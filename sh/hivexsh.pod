@@ -30,13 +30,13 @@ Or you can start C<hivexsh> without any arguments, and immediately use
 the C<load> command to load a hive:
 
  $ hivexsh
- 
+
  Welcome to hivexsh, the hivex interactive shell for examining
  Windows Registry binary hive files.
- 
+
  Type: 'help' for help with commands
        'quit' to quit the shell
- 
+
  > load software
  software\>
 
@@ -198,22 +198,22 @@ The second line of each pair is the value, which has a special format
 C<type:value> with possible types summarized in the table below:
 
  none                 No data is stored, and the type is set to 0.
- 
+
  string:abc           "abc" is stored as a UTF16-LE-encoded
                       string (type 1).  Note that only 7 bit
                       ASCII strings are supported as input.
- 
+
  expandstring:...     Same as string but with type 2.
- 
+
  dword:0x01234567     A DWORD (type 4) with the hex value
                       0x01234567.  You can also use decimal
                       or octal numbers here.
- 
+
  qword:0x0123456789abcdef
                       A QWORD (type 11) with the hex value
                       0x0123456789abcdef.  You can also use
                       decimal or octal numbers here.
- 
+
  hex:<type>:<hexbytes>
  hex:1:41,00,42,00,43,00,44,00,00,00
                       This is the generic way to enter any
@@ -231,15 +231,15 @@ C<type:value> with possible types summarized in the table below:
  $ guestfish --ro -i Windows7
  ><fs> download win:c:\windows\system32\config\software software
  ><fs> quit
- 
+
  $ hivexsh software
- 
+
  Welcome to hivexsh, the hivex interactive shell for examining
  Windows Registry binary hive files.
- 
+
  Type: 'help' for help with commands
        'quit' to quit the shell
- 
+
  software\> ls
  ATI Technologies
  Classes
