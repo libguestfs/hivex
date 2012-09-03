@@ -187,14 +187,26 @@ AC_CHECK_FUNC([open_memstream])
 AM_CONDITIONAL([HAVE_HIVEXSH],[test "x$ac_cv_func_open_memstream" = "xyes"])
 
 dnl Check for OCaml (optional, for OCaml bindings).
-AC_PROG_OCAML
-AC_PROG_FINDLIB
+OCAMLC=no
+OCAMLFIND=no
+AC_ARG_ENABLE([ocaml],
+        AS_HELP_STRING([--disable-ocaml], [Disable OCaml language bindings]),
+        [],
+        [enable_ocaml=yes])
+AS_IF([test "x$enable_ocaml" != "xno"],
+        [dnl OCAMLC and OCAMLFIND have to be unset first, otherwise
+         dnl AC_CHECK_TOOL (inside AC_PROG_OCAML) will not look.
+         OCAMLC=
+         OCAMLFIND=
+         AC_PROG_OCAML
+         AC_PROG_FINDLIB
+        ])
 AM_CONDITIONAL([HAVE_OCAML],
-    [test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"])
+               [test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"])
 AM_CONDITIONAL([HAVE_OCAMLOPT],
-    [test "x$OCAMLOPT" != "xno" && test "x$OCAMLFIND" != "xno"])
+               [test "x$OCAMLOPT" != "xno" && test "x$OCAMLFIND" != "xno"])
 
-if test "x$OCAMLC" != "xno"; then
+if test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"; then
     dnl Check if we have caml/unixsupport.h header (OCaml bindings only).
     old_CFLAGS="$CFLAGS"
     CFLAGS="$CFLAGS -I$OCAMLLIB"
