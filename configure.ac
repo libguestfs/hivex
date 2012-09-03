@@ -235,28 +235,32 @@ if test "x$OCAMLC" != "xno" && test "x$OCAMLFIND" != "xno"; then
     rm -f conftest conftest.* conftest_ml.*
 fi
 
-dnl Check for Perl (optional, for Perl bindings).
-dnl XXX This isn't quite right, we should check for Perl devel library.
+dnl Check for Perl (optional, for Perl bindings and Perl tools).
 AC_CHECK_PROG([PERL],[perl],[perl],[no])
 
-dnl Check for Perl modules that must be present to compile and
-dnl test the Perl bindings.
-missing_perl_modules=no
-for pm in Test::More ExtUtils::MakeMaker IO::Stringy; do
-    AC_MSG_CHECKING([for $pm])
-    if ! perl -M$pm -e1 >/dev/null 2>&1; then
-        AC_MSG_RESULT([no])
-        missing_perl_modules=yes
-    else
-        AC_MSG_RESULT([yes])
-    fi
-done
-if test "x$missing_perl_modules" = "xyes"; then
-    AC_MSG_WARN([some Perl modules required to compile or test the Perl bindings are missing])
-fi
-
+AC_ARG_ENABLE([perl],
+        AS_HELP_STRING([--disable-perl], [Disable Perl language bindings]),
+        [],
+        [enable_perl=yes])
+AS_IF([test "x$enable_perl" != "xno"],[
+        dnl Check for Perl modules that must be present to compile and
+        dnl test the Perl bindings.
+        missing_perl_modules=no
+        for pm in Test::More ExtUtils::MakeMaker IO::Stringy; do
+            AC_MSG_CHECKING([for $pm])
+            if ! $PERL -M$pm -e1 >/dev/null 2>&1; then
+                AC_MSG_RESULT([no])
+                missing_perl_modules=yes
+            else
+                AC_MSG_RESULT([yes])
+            fi
+        done
+        if test "x$missing_perl_modules" = "xyes"; then
+            AC_MSG_WARN([some Perl modules required to compile or test the Perl bindings are missing])
+        fi
+        ])
 AM_CONDITIONAL([HAVE_PERL],
-    [test "x$PERL" != "xno" && test "x$missing_perl_modules" != "xyes"])
+    [test "x$enable_perl" != "xno" && test "x$PERL" != "xno" && test "x$missing_perl_modules" != "xyes"])
 
 dnl Check for Python (optional, for Python bindings).
 PYTHON_PREFIX=
