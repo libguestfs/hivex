@@ -65,7 +65,7 @@ with the C<--merge> option), you would do something like this:
 To go in the opposite direction, after using C<--export> and before
 sending the file to a Windows user, do something like this:
 
- unix2dos linux.reg | iconv -f utf-8 -t utf-16le > win.reg
+ unix2dos < linux.reg | iconv -f utf-8 -t utf-16le > win.reg
 
 For more information about encoding, see L<Win::Hivex::Regedit(3)>.
 
