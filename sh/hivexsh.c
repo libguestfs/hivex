@@ -724,14 +724,18 @@ cmd_lsval (char *key)
     case hive_t_full_resource_description:
     case hive_t_resource_requirements_list:
     default: {
-      char *data = hivex_value_value (h, value, &t, &len);
+      size_t r;
+      char *data;
+
+      data = hivex_value_value (h, value, &t, &len);
       if (!data)
         goto error;
 
-      if (fwrite (data, 1, len, stdout) != len)
+      r = fwrite (data, 1, len, stdout);
+      free (data);
+      if (r != len)
         goto error;
 
-      free (data);
       break;
     }
     } /* switch */
