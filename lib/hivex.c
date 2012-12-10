@@ -2829,79 +2829,84 @@ int
 hivex_node_set_value (hive_h *h, hive_node_h node,
                       const hive_set_value *val, int flags)
 {
-  hive_value_h *prev_values = hivex_node_values (h, node);
+  int retval = -1;
+  hive_value_h *prev_values;
+  hive_set_value *new_values;
+  size_t nr_values;
+  size_t i;
+  ssize_t idx_of_val;
+
+  prev_values = hivex_node_values (h, node);
   if (prev_values == NULL)
     return -1;
 
-  int retval = -1;
+  /* Count number of existing values in this node. */
+  nr_values = 0;
+  for (i = 0; prev_values[i] != 0; i++)
+    nr_values++;
 
-  size_t nr_values = 0;
-  hive_value_h *itr;
-  for (itr = prev_values; *itr != 0; ++itr)
-    ++nr_values;
+  /* Allocate a new hive_set_value list, with space for all existing
+   * values, plus 1 (for the new key if we're not replacing an
+   * existing key).
+   */
+  new_values = calloc (nr_values + 1, sizeof (hive_set_value));
+  if (new_values == NULL)
+    goto out1;
 
-  hive_set_value *values = malloc ((nr_values + 1) * (sizeof (hive_set_value)));
-  if (values == NULL)
-    goto leave_prev_values;
-
-  int alloc_ct = 0;
-  int idx_of_val = -1;
-  hive_value_h *prev_val;
-  for (prev_val = prev_values; *prev_val != 0; ++prev_val) {
+  /* Copy the old values to the new values.  If we find the key along
+   * the way, note its index in 'idx_of_val'.
+   */
+  idx_of_val = -1;
+  for (i = 0; prev_values[i] != 0; i++) {
     size_t len;
     hive_type t;
+    char *valkey, *valval;
 
-    hive_set_value *value = &values[prev_val - prev_values];
+    valval = hivex_value_value (h, prev_values[i], &t, &len);
+    if (valval == NULL) goto out2;
 
-    char *valval = hivex_value_value (h, *prev_val, &t, &len);
-    if (valval == NULL) goto leave_partial;
+    new_values[i].value = valval;
+    new_values[i].t = t;
+    new_values[i].len = len;
 
-    ++alloc_ct;
-    value->value = valval;
-    value->t = t;
-    value->len = len;
+    valkey = hivex_value_key (h, prev_values[i]);
+    if (valkey == NULL) goto out2;
 
-    char *valkey = hivex_value_key (h, *prev_val);
-    if (valkey == NULL) goto leave_partial;
-
-    ++alloc_ct;
-    value->key = valkey;
+    new_values[i].key = valkey;
 
     if (STRCASEEQ (valkey, val->key))
-      idx_of_val = prev_val - prev_values;
+      idx_of_val = i;
   }
 
   if (idx_of_val > -1) {
-    free (values[idx_of_val].key);
-    free (values[idx_of_val].value);
-  } else {
+    free (new_values[idx_of_val].key);
+    free (new_values[idx_of_val].value);
+  } else { /* insert it at the end */
     idx_of_val = nr_values;
-    ++nr_values;
+    nr_values++;
   }
 
-  hive_set_value *value = &values[idx_of_val];
-  *value = (hive_set_value){
-    .key = strdup (val->key),
-    .value = malloc (val->len),
-    .len = val->len,
-    .t = val->t
-  };
+  new_values[idx_of_val].key = strdup (val->key);
+  new_values[idx_of_val].value = malloc (val->len);
+  new_values[idx_of_val].len = val->len;
+  new_values[idx_of_val].t = val->t;
 
-  if (value->key == NULL || value->value == NULL) goto leave_partial;
-  memcpy (value->value, val->value, val->len);
+  if (new_values[idx_of_val].key == NULL ||
+      new_values[idx_of_val].value == NULL)
+    goto out2;
+  memcpy (new_values[idx_of_val].value, val->value, val->len);
 
-  retval = hivex_node_set_values (h, node, nr_values, values, 0);
+  retval = hivex_node_set_values (h, node, nr_values, new_values, 0);
 
- leave_partial: ;
-  int i;
-  for (i = 0; i < alloc_ct; i += 2) {
-    free (values[i / 2].value);
-    if (i + 1 < alloc_ct && values[i / 2].key != NULL)
-      free (values[i / 2].key);
+ out2:
+  for (i = 0; i < nr_values; ++i) {
+    free (new_values[i].key);
+    free (new_values[i].value);
   }
-  free (values);
+  free (new_values);
 
- leave_prev_values:
+ out1:
   free (prev_values);
+
   return retval;
 }
