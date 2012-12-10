@@ -823,6 +823,9 @@ cmd_lsval (char *key)
             putchar (',');
           printf ("%02x", data[j]);
         }
+
+        free (data);
+
         break;
       }
       } /* switch */
