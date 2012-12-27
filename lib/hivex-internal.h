@@ -30,7 +30,7 @@ struct hive_h {
 
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
-    char *addr;
+    void *addr;
     struct ntreg_header *hdr;
   };
 
