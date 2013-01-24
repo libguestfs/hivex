@@ -3268,7 +3268,7 @@ Read the hivex(3) man page to find out how to use the API.
 
 import libhivexmod
 
-class Hivex:
+class Hivex(object):
     \"\"\"Instances of this class are hivex API handles.\"\"\"
 
     def __init__ (self, filename";
