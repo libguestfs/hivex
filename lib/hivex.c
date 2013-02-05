@@ -1031,6 +1031,31 @@ hivex_node_get_child (hive_h *h, hive_node_h node, const char *nname)
   return ret;
 }
 
+/* Convenience function to iteratively obtain node from \-separated path
+ * Error-checking is simply passed-through
+ */
+hive_node_h
+hivex_node_get_child_deep (hive_h *h, hive_node_h node, const char *nname)
+{
+  int done = 0;
+  char *pathBuffer = strdup (nname);
+  char *stub;
+  char *letter;
+
+  for (letter = stub = pathBuffer; *stub && node && !done; ++letter)
+  {
+    if ((*letter == '\\') || (done = *letter == '\0'))
+    {
+      *letter = '\0';
+      node = hivex_node_get_child (h, node, stub);
+      stub = letter + 1;
+    }
+  }
+
+  free (pathBuffer);
+  return node;
+}
+
 hive_node_h
 hivex_node_parent (hive_h *h, hive_node_h node)
 {
