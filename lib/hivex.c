@@ -1042,7 +1042,7 @@ hivex_node_get_child_deep (hive_h *h, hive_node_h node, const char *nname)
   char *stub;
   char *letter;
 
-  for (letter = stub = pathBuffer; *stub && node && !done; ++letter)
+  for (letter = stub = pathBuffer; !done && node && *stub; ++letter)
   {
     if ((*letter == '\\') || (done = *letter == '\0'))
     {
