@@ -24,7 +24,7 @@ m4_define([hivex_extra],   [])
 
 AC_INIT([hivex],hivex_major.hivex_minor.hivex_release[]hivex_extra)
 AC_CONFIG_AUX_DIR([build-aux])
-AM_INIT_AUTOMAKE([foreign])
+AM_INIT_AUTOMAKE([foreign serial-tests])
 
 m4_ifndef([AM_SILENT_RULES], [m4_define([AM_SILENT_RULES],[])])
 AM_SILENT_RULES([yes]) # make --enable-silent-rules the default.
