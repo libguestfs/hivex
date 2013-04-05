@@ -36,6 +36,7 @@ libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-version-info 0:0:0 \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
+	$(LTLIBICONV) \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
