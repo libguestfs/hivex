@@ -548,6 +548,7 @@ AC_CONFIG_FILES([Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_CONFIG_FILES([python/run-python-tests], [chmod +x python/run-python-tests])
+AC_CONFIG_FILES([perl/run-perl-tests], [chmod +x perl/run-perl-tests])
 AC_OUTPUT
 
 dnl Produce summary.
