@@ -274,7 +274,7 @@ AM_CONDITIONAL([HAVE_PERL],
 dnl Check for Python (optional, for Python bindings).
 PYTHON_PREFIX=
 PYTHON_VERSION=
-PYTHON_INCLUDEDIR=
+PYTHON_CFLAGS=
 PYTHON_INSTALLDIR=
 
 AC_ARG_ENABLE([python],
@@ -297,12 +297,18 @@ AS_IF([test "x$enable_python" != "xno"],
 	    AC_MSG_RESULT([$PYTHON_VERSION])
 
             AC_MSG_CHECKING([for Python include path])
-            if test -z "$PYTHON_INCLUDEDIR"; then
+            if test -z "$PYTHON_CFLAGS"; then
                 python_path=`$PYTHON -c "import distutils.sysconfig; \
                                          print (distutils.sysconfig.get_python_inc ());"`
-                PYTHON_INCLUDEDIR=$python_path
+                python_platpath=`$PYTHON -c "import distutils.sysconfig; \
+                                             print (distutils.sysconfig.get_python_inc (plat_specific=1));"`
+                if test "$python_path" = "$python_platpath"; then
+                    PYTHON_CFLAGS=-I$python_path
+                else
+                    PYTHON_CFLAGS="-I$python_path -I$python_platpath"
+                fi
             fi
-            AC_MSG_RESULT([$PYTHON_INCLUDEDIR])
+            AC_MSG_RESULT([$PYTHON_CFLAGS])
 
             AC_ARG_WITH([python-installdir],
                         [AS_HELP_STRING([--with-python-installdir],
@@ -340,11 +346,11 @@ AS_IF([test "x$enable_python" != "xno"],
 
         AC_SUBST(PYTHON_PREFIX)
         AC_SUBST(PYTHON_VERSION)
-        AC_SUBST(PYTHON_INCLUDEDIR)
+        AC_SUBST(PYTHON_CFLAGS)
         AC_SUBST(PYTHON_INSTALLDIR)
         ])
 AM_CONDITIONAL([HAVE_PYTHON],
-    [test "x$PYTHON" != "xno" && test "x$PYTHON_INCLUDEDIR" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
+    [test "x$PYTHON" != "xno" && test "x$PYTHON_CFLAGS" != "x" && test "x$PYTHON_INSTALLDIR" != "x"])
 
 dnl Check for Ruby and rake (optional, for Ruby bindings).
 AC_ARG_ENABLE([ruby],
