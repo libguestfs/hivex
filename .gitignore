@@ -81,6 +81,7 @@ perl/Makefile.PL
 perl/MYMETA.json
 perl/MYMETA.yml
 perl/pm_to_blib
+perl/run-perl-tests
 pod2htm?.tmp
 po/*.gmo
 po/Makevars.template
