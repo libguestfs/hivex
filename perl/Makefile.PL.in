@@ -19,7 +19,7 @@ use Config;
 use ExtUtils::MakeMaker;
 
 WriteMakefile (
-    FIRST_MAKEFILE => '@abs_builddir@/Makefile-pl',
+    FIRST_MAKEFILE => 'Makefile-pl',
 
     NAME => 'Win::Hivex',
     VERSION => '@PACKAGE_VERSION@',
