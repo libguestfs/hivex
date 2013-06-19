@@ -1624,7 +1624,7 @@ hivex_value_dword (hive_h *h, hive_value_h value)
   if (data == NULL)
     return -1;
 
-  if ((t != hive_t_dword && t != hive_t_dword_be) || len != 4) {
+  if ((t != hive_t_dword && t != hive_t_dword_be) || len < 4) {
     free (data);
     errno = EINVAL;
     return -1;
@@ -1650,7 +1650,7 @@ hivex_value_qword (hive_h *h, hive_value_h value)
   if (data == NULL)
     return -1;
 
-  if (t != hive_t_qword || len != 8) {
+  if (t != hive_t_qword || len < 8) {
     free (data);
     errno = EINVAL;
     return -1;
