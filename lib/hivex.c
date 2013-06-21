@@ -208,6 +208,19 @@ struct ntreg_sk_record {
   char sec_desc[1];             /* security info follows */
 } __attribute__((__packed__));
 
+struct ntreg_db_record {
+  int32_t seg_len;              /* length (always -ve because used) */
+  char id[2];                   /* "db" */
+  uint16_t nr_blocks;
+  uint32_t blocklist_offset;
+  uint32_t unknown1;
+} __attribute__((__packed__));
+
+struct ntreg_db_block {
+  int32_t seg_len;
+  char data[1];
+} __attribute__((__packed__));
+
 static uint32_t
 header_checksum (const hive_h *h)
 {
@@ -1418,22 +1431,70 @@ hivex_value_value (hive_h *h, hive_value_h value,
    * instead.
    */
   size_t blen = block_len (h, data_offset, NULL);
-  if (len > blen - 4 /* subtract 4 for block header */) {
-    if (h->msglvl >= 2)
-      fprintf (stderr, "hivex_value_value: warning: declared data length "
-               "is longer than the block it is in "
-               "(data 0x%zx, data len %zu, block len %zu)\n",
-               data_offset, len, blen);
-    len = blen - 4;
-
-    /* Return the smaller length to the caller too. */
-    if (len_rtn)
-      *len_rtn = len;
+  if (len <= blen - 4 /* subtract 4 for block header */) {
+    char *data = (char *) h->addr + data_offset + 4;
+    memcpy (ret, data, len);
+    return ret;
+  } else {
+    if (!IS_VALID_BLOCK (h, data_offset) || !BLOCK_ID_EQ (h, data_offset, "db")) {
+      if (h->msglvl >= 2)
+        fprintf (stderr, "hivex_value_value: warning: declared data length "
+                 "is longer than the block and block is not a db block "
+                 "(data 0x%zx, data len %zu)\n",
+                 data_offset, len);
+      errno = EINVAL;
+      free (ret);
+      return NULL;
+    }
+    struct ntreg_db_record *db =
+      (struct ntreg_db_record *) ((char *) h->addr + data_offset);
+    size_t blocklist_offset = le32toh (db->blocklist_offset);
+    blocklist_offset += 0x1000;
+    size_t nr_blocks = le16toh (db->nr_blocks);
+    if (!IS_VALID_BLOCK (h, blocklist_offset)) {
+      if (h->msglvl >= 2)
+        fprintf (stderr, "hivex_value_value: warning: blocklist is not a "
+                 "valid block (db block 0x%zx, blocklist 0x%zx)\n",
+                 data_offset, blocklist_offset);
+      errno = EINVAL;
+      free (ret);
+      return NULL;
+    }
+    struct ntreg_value_list *bl =
+      (struct ntreg_value_list *) ((char *) h->addr + blocklist_offset);
+    size_t i, off;
+    for (i = off = 0; i < nr_blocks; ++i) {
+      size_t subblock_offset = le32toh (bl->offset[i]);
+      subblock_offset += 0x1000;
+      if (!IS_VALID_BLOCK (h, subblock_offset)) {
+        if (h->msglvl >= 2)
+          fprintf (stderr, "hivex_value_value: warning: subblock is not "
+                   "valid (db block 0x%zx, block list 0x%zx, data subblock 0x%zx)\n",
+                   data_offset, blocklist_offset, subblock_offset);
+        errno = EINVAL;
+        free (ret);
+        return NULL;
+      }
+      int32_t seg_len = block_len(h, subblock_offset, NULL);
+      struct ntreg_db_block *subblock =
+        (struct ntreg_db_block *) ((char *) h->addr + subblock_offset);
+      int32_t sz = seg_len - 8; /* don't copy the last 4 bytes */
+      if (off + sz > len) {
+        sz = len - off;
+      }
+      memcpy (ret + off, subblock->data, sz);
+      off += sz;
+    }
+    if (off != *len_rtn) {
+      if (h->msglvl >= 2)
+        fprintf (stderr, "hivex_value_value: warning: declared data length "
+                 "and amount of data found in sub-blocks differ "
+                 "(db block 0x%zx, data len %zu, found data %zu)\n",
+                 data_offset, *len_rtn, off);
+      *len_rtn = off;
+    }
+    return ret;
   }
-
-  char *data = (char *) h->addr + data_offset + 4;
-  memcpy (ret, data, len);
-  return ret;
 }
 
 static char *
