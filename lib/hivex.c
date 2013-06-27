@@ -265,9 +265,9 @@ hivex_open (const char *filename, int flags)
     goto error;
 
 #ifdef O_CLOEXEC
-  h->fd = open (filename, O_RDONLY | O_CLOEXEC);
+  h->fd = open (filename, O_RDONLY | O_CLOEXEC | O_BINARY);
 #else
-  h->fd = open (filename, O_RDONLY);
+  h->fd = open (filename, O_RDONLY | O_BINARY);
 #endif
   if (h->fd == -1)
     goto error;
@@ -2261,7 +2261,7 @@ hivex_commit (hive_h *h, const char *filename, int flags)
   }
 
   filename = filename ? : h->filename;
-  int fd = open (filename, O_WRONLY|O_CREAT|O_TRUNC|O_NOCTTY, 0666);
+  int fd = open (filename, O_WRONLY|O_CREAT|O_TRUNC|O_NOCTTY|O_BINARY, 0666);
   if (fd == -1)
     return -1;
 
