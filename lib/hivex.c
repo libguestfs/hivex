@@ -2250,6 +2250,8 @@ delete_values (hive_h *h, hive_node_h node)
 int
 hivex_commit (hive_h *h, const char *filename, int flags)
 {
+  int fd;
+
   if (flags != 0) {
     errno = EINVAL;
     return -1;
@@ -2261,9 +2263,17 @@ hivex_commit (hive_h *h, const char *filename, int flags)
   }
 
   filename = filename ? : h->filename;
-  int fd = open (filename, O_WRONLY|O_CREAT|O_TRUNC|O_NOCTTY|O_BINARY, 0666);
+#ifdef O_CLOEXEC
+  fd = open (filename, O_WRONLY|O_CREAT|O_TRUNC|O_NOCTTY|O_CLOEXEC|O_BINARY,
+             0666);
+#else
+  fd = open (filename, O_WRONLY|O_CREAT|O_TRUNC|O_NOCTTY|O_BINARY, 0666);
+#endif
   if (fd == -1)
     return -1;
+#ifndef O_CLOEXEC
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
+#endif
 
   /* Update the header fields. */
   uint32_t sequence = le32toh (h->hdr->sequence1);
