@@ -702,66 +702,6 @@ hivex_node_classname (hive_h *h, hive_node_h node)
 }
 #endif
 
-/* Structure for returning 0-terminated lists of offsets (nodes,
- * values, etc).
- */
-struct offset_list {
-  size_t *offsets;
-  size_t len;
-  size_t alloc;
-};
-
-static void
-init_offset_list (struct offset_list *list)
-{
-  list->len = 0;
-  list->alloc = 0;
-  list->offsets = NULL;
-}
-
-#define INIT_OFFSET_LIST(name) \
-  struct offset_list name; \
-  init_offset_list (&name)
-
-/* Preallocates the offset_list, but doesn't make the contents longer. */
-static int
-grow_offset_list (struct offset_list *list, size_t alloc)
-{
-  assert (alloc >= list->len);
-  size_t *p = realloc (list->offsets, alloc * sizeof (size_t));
-  if (p == NULL)
-    return -1;
-  list->offsets = p;
-  list->alloc = alloc;
-  return 0;
-}
-
-static int
-add_to_offset_list (struct offset_list *list, size_t offset)
-{
-  if (list->len >= list->alloc) {
-    if (grow_offset_list (list, list->alloc ? list->alloc * 2 : 4) == -1)
-      return -1;
-  }
-  list->offsets[list->len] = offset;
-  list->len++;
-  return 0;
-}
-
-static void
-free_offset_list (struct offset_list *list)
-{
-  free (list->offsets);
-}
-
-static size_t *
-return_offset_list (struct offset_list *list)
-{
-  if (add_to_offset_list (list, 0) == -1)
-    return NULL;
-  return list->offsets;         /* caller frees */
-}
-
 /* Iterate over children, returning child nodes and intermediate blocks. */
 #define GET_CHILDREN_NO_CHECK_NK 1
 
@@ -780,8 +720,9 @@ get_children (hive_h *h, hive_node_h node,
 
   size_t nr_subkeys_in_nk = le32toh (nk->nr_subkeys);
 
-  INIT_OFFSET_LIST (children);
-  INIT_OFFSET_LIST (blocks);
+  offset_list children, blocks;
+  _hivex_init_offset_list (h, &children);
+  _hivex_init_offset_list (h, &blocks);
 
   /* Deal with the common "no subkeys" case quickly. */
   if (nr_subkeys_in_nk == 0)
@@ -798,7 +739,7 @@ get_children (hive_h *h, hive_node_h node,
   }
 
   /* Preallocate space for the children. */
-  if (grow_offset_list (&children, nr_subkeys_in_nk) == -1)
+  if (_hivex_grow_offset_list (&children, nr_subkeys_in_nk) == -1)
     goto error;
 
   /* The subkey_lf field can point either to an lf-record, which is
@@ -816,7 +757,7 @@ get_children (hive_h *h, hive_node_h node,
     goto error;
   }
 
-  if (add_to_offset_list (&blocks, subkey_lf) == -1)
+  if (_hivex_add_to_offset_list (&blocks, subkey_lf) == -1)
     goto error;
 
   struct ntreg_hbin_block *block =
@@ -867,7 +808,7 @@ get_children (hive_h *h, hive_node_h node,
           goto error;
         }
       }
-      if (add_to_offset_list (&children, subkey) == -1)
+      if (_hivex_add_to_offset_list (&children, subkey) == -1)
         goto error;
     }
     goto ok;
@@ -902,7 +843,7 @@ get_children (hive_h *h, hive_node_h node,
         goto error;
       }
 
-      if (add_to_offset_list (&blocks, offset) == -1)
+      if (_hivex_add_to_offset_list (&blocks, offset) == -1)
         goto error;
 
       struct ntreg_lf_record *lf =
@@ -954,7 +895,7 @@ get_children (hive_h *h, hive_node_h node,
               goto error;
             }
           }
-          if (add_to_offset_list (&children, subkey) == -1)
+          if (_hivex_add_to_offset_list (&children, subkey) == -1)
             goto error;
         }
       } else { /* "lf" or "lh" block */
@@ -975,7 +916,7 @@ get_children (hive_h *h, hive_node_h node,
               goto error;
             }
           }
-          if (add_to_offset_list (&children, subkey) == -1)
+          if (_hivex_add_to_offset_list (&children, subkey) == -1)
             goto error;
         }
       }
@@ -989,13 +930,13 @@ get_children (hive_h *h, hive_node_h node,
              subkey_lf, block->id[0], block->id[1]);
   errno = ENOTSUP;
  error:
-  free_offset_list (&children);
-  free_offset_list (&blocks);
+  _hivex_free_offset_list (&children);
+  _hivex_free_offset_list (&blocks);
   return -1;
 
  ok:
-  *children_ret = return_offset_list (&children);
-  *blocks_ret = return_offset_list (&blocks);
+  *children_ret = _hivex_return_offset_list (&children);
+  *blocks_ret = _hivex_return_offset_list (&blocks);
   if (!*children_ret || !*blocks_ret)
     goto error;
   return 0;
@@ -1085,8 +1026,9 @@ get_values (hive_h *h, hive_node_h node,
   if (h->msglvl >= 2)
     fprintf (stderr, "hivex_node_values: nr_values = %zu\n", nr_values);
 
-  INIT_OFFSET_LIST (values);
-  INIT_OFFSET_LIST (blocks);
+  offset_list values, blocks;
+  _hivex_init_offset_list (h, &values);
+  _hivex_init_offset_list (h, &blocks);
 
   /* Deal with the common "no values" case quickly. */
   if (nr_values == 0)
@@ -1103,7 +1045,7 @@ get_values (hive_h *h, hive_node_h node,
   }
 
   /* Preallocate space for the values. */
-  if (grow_offset_list (&values, nr_values) == -1)
+  if (_hivex_grow_offset_list (&values, nr_values) == -1)
     goto error;
 
   /* Get the value list and check it looks reasonable. */
@@ -1118,7 +1060,7 @@ get_values (hive_h *h, hive_node_h node,
     goto error;
   }
 
-  if (add_to_offset_list (&blocks, vlist_offset) == -1)
+  if (_hivex_add_to_offset_list (&blocks, vlist_offset) == -1)
     goto error;
 
   struct ntreg_value_list *vlist =
@@ -1146,20 +1088,20 @@ get_values (hive_h *h, hive_node_h node,
       errno = EFAULT;
       goto error;
     }
-    if (add_to_offset_list (&values, value) == -1)
+    if (_hivex_add_to_offset_list (&values, value) == -1)
       goto error;
   }
 
  ok:
-  *values_ret = return_offset_list (&values);
-  *blocks_ret = return_offset_list (&blocks);
+  *values_ret = _hivex_return_offset_list (&values);
+  *blocks_ret = _hivex_return_offset_list (&blocks);
   if (!*values_ret || !*blocks_ret)
     goto error;
   return 0;
 
  error:
-  free_offset_list (&values);
-  free_offset_list (&blocks);
+  _hivex_free_offset_list (&values);
+  _hivex_free_offset_list (&blocks);
   return -1;
 }
 

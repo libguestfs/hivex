@@ -66,6 +66,23 @@ struct hive_h {
 #endif
 };
 
+/* offset-list.c */
+typedef struct offset_list offset_list;
+struct offset_list {
+  hive_h *h;
+  size_t *offsets;
+  size_t len;
+  size_t alloc;
+  size_t limit;
+};
+extern void _hivex_init_offset_list (hive_h *h, offset_list *list);
+extern int _hivex_grow_offset_list (offset_list *list, size_t alloc);
+extern int _hivex_add_to_offset_list (offset_list *list, size_t offset);
+extern size_t _hivex_get_offset_list_length (offset_list *list);
+extern void _hivex_set_offset_list_limit (offset_list *list, size_t limit);
+extern void _hivex_free_offset_list (offset_list *list);
+extern size_t * _hivex_return_offset_list (offset_list *list);
+
 #define STREQ(a,b) (strcmp((a),(b)) == 0)
 #define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
 #define STRNEQ(a,b) (strcmp((a),(b)) != 0)

@@ -24,13 +24,13 @@ EXTRA_DIST = \
 lib_LTLIBRARIES = libhivex.la
 
 libhivex_la_SOURCES = \
-  hivex.c \
-  hivex.h \
-  hivex-internal.h \
-  byte_conversions.h \
-  gettext.h \
-  mmap.h \
-  hivex.syms
+	byte_conversions.h \
+	gettext.h \
+	hivex.c \
+	hivex.h \
+	hivex-internal.h \
+	mmap.h \
+	offset-list.c
 
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
