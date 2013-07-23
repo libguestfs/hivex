@@ -108,7 +108,7 @@ struct ntreg_hbin_block {
 } __attribute__((__packed__));
 
 #define BLOCK_ID_EQ(h,offs,eqid) \
-  (STREQLEN (((struct ntreg_hbin_block *)((h)->addr + (offs)))->id, (eqid), 2))
+  (STREQLEN (((struct ntreg_hbin_block *)((char *) (h)->addr + (offs)))->id, (eqid), 2))
 
 static size_t
 block_len (hive_h *h, size_t blkoff, int *used)
