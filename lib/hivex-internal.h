@@ -19,13 +19,14 @@
 #ifndef HIVEX_INTERNAL_H_
 #define HIVEX_INTERNAL_H_
 
+#include <stdarg.h>
 #include <stddef.h>
 
 struct hive_h {
   char *filename;
   int fd;
   size_t size;
-  int msglvl;
+  int msglvl;                   /* 1 = verbose, 2 or 3 = debug */
   int writable;
 
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
@@ -92,5 +93,13 @@ extern size_t * _hivex_return_offset_list (offset_list *list);
 #define STRNEQLEN(a,b,n) (strncmp((a),(b),(n)) != 0)
 #define STRCASENEQLEN(a,b,n) (strncasecmp((a),(b),(n)) != 0)
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+
+#define DEBUG(lvl,fs,...)                                       \
+  do {                                                          \
+    if (h->msglvl >= (lvl)) {                                   \
+      fprintf (stderr, "%s: %s: " fs "\n",                      \
+               "hivex", __func__, ## __VA_ARGS__);              \
+    }                                                           \
+  } while (0)
 
 #endif /* HIVEX_INTERNAL_H_ */

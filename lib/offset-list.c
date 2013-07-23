@@ -70,10 +70,9 @@ _hivex_add_to_offset_list (offset_list *list, size_t offset)
   assert (offset != 0);         /* internal error if this happens */
 
   if (list->len >= list->limit) {
-    if (list->h->msglvl >= 2)
-      fprintf (stderr, "hivex: returning ERANGE because list of offsets "
-               "has exceeded limit (limit = %zu)\n",
-               list->limit);
+    hive_h *h = list->h;        /* for DEBUG macro */
+    DEBUG (2, "returning ERANGE because list of offsets "
+           "has exceeded limit (limit = %zu)\n", list->limit);
     errno = ERANGE;
     return -1;
   }
