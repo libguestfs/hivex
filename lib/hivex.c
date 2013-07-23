@@ -307,19 +307,17 @@ hivex_open (const char *filename, int flags)
       h->hdr->magic[1] != 'e' ||
       h->hdr->magic[2] != 'g' ||
       h->hdr->magic[3] != 'f') {
-    fprintf (stderr, "hivex: %s: not a Windows NT Registry hive file\n",
-             filename);
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP,
+               "%s: not a Windows NT Registry hive file", filename);
     goto error;
   }
 
   /* Check major version. */
   uint32_t major_ver = le32toh (h->hdr->major_ver);
   if (major_ver != 1) {
-    fprintf (stderr,
-             "hivex: %s: hive file major version %" PRIu32 " (expected 1)\n",
-             filename, major_ver);
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP,
+               "%s: hive file major version %" PRIu32 " (expected 1)",
+               filename, major_ver);
     goto error;
   }
 
@@ -330,8 +328,7 @@ hivex_open (const char *filename, int flags)
   /* Header checksum. */
   uint32_t sum = header_checksum (h);
   if (sum != le32toh (h->hdr->csum)) {
-    fprintf (stderr, "hivex: %s: bad checksum in hive header\n", filename);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "%s: bad checksum in hive header", filename);
     goto error;
   }
 
@@ -398,10 +395,10 @@ hivex_open (const char *filename, int flags)
         page->magic[1] != 'b' ||
         page->magic[2] != 'i' ||
         page->magic[3] != 'n') {
-      fprintf (stderr, "hivex: %s: trailing garbage at end of file "
-               "(at 0x%zx, after %zu pages)\n",
-               filename, off, pages);
-      errno = ENOTSUP;
+      SET_ERRNO (ENOTSUP,
+                 "%s: trailing garbage at end of file "
+                 "(at 0x%zx, after %zu pages)",
+                 filename, off, pages);
       goto error;
     }
 
@@ -413,9 +410,9 @@ hivex_open (const char *filename, int flags)
 
     if (page_size <= sizeof (struct ntreg_hbin_page) ||
         (page_size & 0x0fff) != 0) {
-      fprintf (stderr, "hivex: %s: page size %zu at 0x%zx, bad registry\n",
-               filename, page_size, off);
-      errno = ENOTSUP;
+      SET_ERRNO (ENOTSUP,
+                 "%s: page size %zu at 0x%zx, bad registry",
+                 filename, page_size, off);
       goto error;
     }
 
@@ -436,10 +433,9 @@ hivex_open (const char *filename, int flags)
       int used;
       seg_len = block_len (h, blkoff, &used);
       if (seg_len <= 4 || (seg_len & 3) != 0) {
-        fprintf (stderr, "hivex: %s: block size %" PRIu32 " at 0x%zx,"
-                 " bad registry\n",
-                 filename, le32toh (block->seg_len), blkoff);
-        errno = ENOTSUP;
+        SET_ERRNO (ENOTSUP,
+                   "%s: block size %" PRIu32 " at 0x%zx, bad registry",
+                   filename, le32toh (block->seg_len), blkoff);
         goto error;
       }
 
@@ -469,14 +465,12 @@ hivex_open (const char *filename, int flags)
   }
 
   if (!seen_root_block) {
-    fprintf (stderr, "hivex: %s: no root block found\n", filename);
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP, "%s: no root block found", filename);
     goto error;
   }
 
   if (bad_root_block) {
-    fprintf (stderr, "hivex: %s: bad root block (free or not nk)\n", filename);
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP, "%s: bad root block (free or not nk)", filename);
     goto error;
   }
 
@@ -541,7 +535,7 @@ hivex_root (hive_h *h)
 {
   hive_node_h ret = h->rootoffs;
   if (!IS_VALID_BLOCK (h, ret)) {
-    errno = HIVEX_NO_KEY;
+    SET_ERRNO (HIVEX_NO_KEY, "no root key");
     return 0;
   }
   return ret;
@@ -551,7 +545,7 @@ size_t
 hivex_node_struct_length (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
 
@@ -563,9 +557,7 @@ hivex_node_struct_length (hive_h *h, hive_node_h node)
   int used;
   size_t seg_len = block_len (h, node, &used);
   if (ret > seg_len) {
-    DEBUG (2, "returning EFAULT because"
-           " node name is too long (%zu, %zu)", name_len, seg_len);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "node name is too long (%zu, %zu)", name_len, seg_len);
     return 0;
   }
   return ret;
@@ -575,7 +567,7 @@ char *
 hivex_node_name (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return NULL;
   }
 
@@ -593,10 +585,7 @@ hivex_node_name (hive_h *h, hive_node_h node)
   size_t len = le16toh (nk->name_len);
   size_t seg_len = block_len (h, node, NULL);
   if (sizeof (struct ntreg_nk_record) + len - 1 > seg_len) {
-    DEBUG (2, "returning EFAULT because node name"
-           " is too long (%zu, %zu)",
-           len, seg_len);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "node name is too long (%zu, %zu)", len, seg_len);
     return NULL;
   }
 
@@ -612,8 +601,8 @@ static int64_t
 timestamp_check (hive_h *h, hive_node_h node, int64_t timestamp)
 {
   if (timestamp < 0) {
-    DEBUG (2, "negative time reported at %zu: %" PRIi64, node, timestamp);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL,
+               "negative time reported at %zu: %" PRIi64, node, timestamp);
     return -1;
   }
 
@@ -632,7 +621,7 @@ hivex_node_timestamp (hive_h *h, hive_node_h node)
   int64_t ret;
 
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
 
@@ -654,7 +643,7 @@ hive_security_h
 hivex_node_security (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
 
@@ -663,7 +652,7 @@ hivex_node_security (hive_h *h, hive_node_h node)
   hive_node_h ret = le32toh (nk->sk);
   ret += 0x1000;
   if (!IS_VALID_BLOCK (h, ret)) {
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "invalid block");
     return 0;
   }
   return ret;
@@ -673,7 +662,7 @@ hive_classname_h
 hivex_node_classname (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
 
@@ -682,7 +671,7 @@ hivex_node_classname (hive_h *h, hive_node_h node)
   hive_node_h ret = le32toh (nk->classname);
   ret += 0x1000;
   if (!IS_VALID_BLOCK (h, ret)) {
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "invalid block");
     return 0;
   }
   return ret;
@@ -698,7 +687,7 @@ get_children (hive_h *h, hive_node_h node,
               int flags)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
 
@@ -717,10 +706,9 @@ get_children (hive_h *h, hive_node_h node,
 
   /* Arbitrarily limit the number of subkeys we will ever deal with. */
   if (nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS) {
-    DEBUG (2, "returning ERANGE because "
-           "nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS (%zu > %d)",
-           nr_subkeys_in_nk, HIVEX_MAX_SUBKEYS);
-    errno = ERANGE;
+    SET_ERRNO (ERANGE,
+               "nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS (%zu > %d)",
+               nr_subkeys_in_nk, HIVEX_MAX_SUBKEYS);
     goto error;
   }
 
@@ -735,10 +723,8 @@ get_children (hive_h *h, hive_node_h node,
   size_t subkey_lf = le32toh (nk->subkey_lf);
   subkey_lf += 0x1000;
   if (!IS_VALID_BLOCK (h, subkey_lf)) {
-    DEBUG (2, "returning EFAULT"
-           " because subkey_lf is not a valid block (0x%zx)",
-           subkey_lf);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT,
+               "subkey_lf is not a valid block (0x%zx)", subkey_lf);
     goto error;
   }
 
@@ -759,19 +745,16 @@ get_children (hive_h *h, hive_node_h node,
      */
     size_t nr_subkeys_in_lf = le16toh (lf->nr_keys);
 
-    DEBUG (2, "nr_subkeys_in_nk = %zu, nr_subkeys_in_lf = %zu",
-           nr_subkeys_in_nk, nr_subkeys_in_lf);
-
     if (nr_subkeys_in_nk != nr_subkeys_in_lf) {
-      errno = ENOTSUP;
+      SET_ERRNO (ENOTSUP,
+                 "nr_subkeys_in_nk = %zu is not equal to nr_subkeys_in_lf = %zu",
+                 nr_subkeys_in_nk, nr_subkeys_in_lf);
       goto error;
     }
 
     size_t len = block_len (h, subkey_lf, NULL);
     if (8 + nr_subkeys_in_lf * 8 > len) {
-      DEBUG (2, "returning EFAULT because too many subkeys (%zu, %zu)",
-             nr_subkeys_in_lf, len);
-      errno = EFAULT;
+      SET_ERRNO (EFAULT, "too many subkeys (%zu, %zu)", nr_subkeys_in_lf, len);
       goto error;
     }
 
@@ -781,10 +764,7 @@ get_children (hive_h *h, hive_node_h node,
       subkey += 0x1000;
       if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
         if (!IS_VALID_BLOCK (h, subkey)) {
-          DEBUG (2, "returning EFAULT"
-                 " because subkey is not a valid block (0x%zx)",
-                 subkey);
-          errno = EFAULT;
+          SET_ERRNO (EFAULT, "subkey is not a valid block (0x%zx)", subkey);
           goto error;
         }
       }
@@ -805,19 +785,15 @@ get_children (hive_h *h, hive_node_h node,
       hive_node_h offset = le32toh (ri->offset[i]);
       offset += 0x1000;
       if (!IS_VALID_BLOCK (h, offset)) {
-        DEBUG (2, "returning EFAULT because ri-offset is not a valid block (0x%zx)",
-               offset);
-        errno = EFAULT;
+        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
         goto error;
       }
       if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
         struct ntreg_lf_record *block =
           (struct ntreg_lf_record *) ((char *) h->addr + offset);
-        DEBUG (2, "returning ENOTSUP"
-               " because ri-record offset does not point to lf/lh"
-               " (0x%zx, %d, %d)",
-               offset, block->id[0], block->id[1]);
-        errno = ENOTSUP;
+        SET_ERRNO (ENOTSUP,
+                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
+                   offset, block->id[0], block->id[1]);
         goto error;
       }
 
@@ -830,11 +806,10 @@ get_children (hive_h *h, hive_node_h node,
       count += le16toh (lf->nr_keys);
     }
 
-    DEBUG (2, "nr_subkeys_in_nk = %zu, counted = %zu",
-           nr_subkeys_in_nk, count);
-
     if (nr_subkeys_in_nk != count) {
-      errno = ENOTSUP;
+      SET_ERRNO (ENOTSUP,
+                 "nr_subkeys_in_nk = %zu is not equal to counted = %zu",
+                 nr_subkeys_in_nk, count);
       goto error;
     }
 
@@ -845,20 +820,15 @@ get_children (hive_h *h, hive_node_h node,
       hive_node_h offset = le32toh (ri->offset[i]);
       offset += 0x1000;
       if (!IS_VALID_BLOCK (h, offset)) {
-        DEBUG (2, "returning EFAULT"
-               " because ri-offset is not a valid block (0x%zx)",
-               offset);
-        errno = EFAULT;
+        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
         goto error;
       }
       if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
         struct ntreg_lf_record *block =
           (struct ntreg_lf_record *) ((char *) h->addr + offset);
-        DEBUG (2, "returning ENOTSUP"
-               " because ri-record offset does not point to lf/lh"
-               " (0x%zx, %d, %d)",
-               offset, block->id[0], block->id[1]);
-        errno = ENOTSUP;
+        SET_ERRNO (ENOTSUP,
+                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
+                   offset, block->id[0], block->id[1]);
         goto error;
       }
 
@@ -871,11 +841,9 @@ get_children (hive_h *h, hive_node_h node,
         subkey += 0x1000;
         if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
           if (!IS_VALID_BLOCK (h, subkey)) {
-            DEBUG (2, "returning EFAULT"
-                   " because indirect subkey is not a valid block"
-                   " (0x%zx)",
-                   subkey);
-            errno = EFAULT;
+            SET_ERRNO (EFAULT,
+                       "indirect subkey is not a valid block (0x%zx)",
+                       subkey);
             goto error;
           }
         }
@@ -886,10 +854,9 @@ get_children (hive_h *h, hive_node_h node,
     goto ok;
   }
   /* else not supported, set errno and fall through */
-  DEBUG (2, "returning ENOTSUP"
-         " because subkey block is not lf/lh/ri (0x%zx, %d, %d)",
-         subkey_lf, block->id[0], block->id[1]);
-  errno = ENOTSUP;
+  SET_ERRNO (ENOTSUP,
+             "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
+             subkey_lf, block->id[0], block->id[1]);
  error:
   _hivex_free_offset_list (&children);
   _hivex_free_offset_list (&blocks);
@@ -950,7 +917,7 @@ hive_node_h
 hivex_node_parent (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
 
@@ -960,10 +927,7 @@ hivex_node_parent (hive_h *h, hive_node_h node)
   hive_node_h ret = le32toh (nk->parent);
   ret += 0x1000;
   if (!IS_VALID_BLOCK (h, ret)) {
-    DEBUG (2, "returning EFAULT"
-           " because parent is not a valid block (0x%zx)",
-           ret);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "parent is not a valid block (0x%zx)", ret);
     return 0;
   }
   return ret;
@@ -974,7 +938,7 @@ get_values (hive_h *h, hive_node_h node,
             hive_value_h **values_ret, size_t **blocks_ret)
 {
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
 
@@ -995,10 +959,9 @@ get_values (hive_h *h, hive_node_h node,
 
   /* Arbitrarily limit the number of values we will ever deal with. */
   if (nr_values > HIVEX_MAX_VALUES) {
-    DEBUG (2, "returning ERANGE"
-           " because nr_values > HIVEX_MAX_VALUES (%zu > %d)",
-           nr_values, HIVEX_MAX_VALUES);
-    errno = ERANGE;
+    SET_ERRNO (ERANGE,
+               "nr_values > HIVEX_MAX_VALUES (%zu > %d)",
+               nr_values, HIVEX_MAX_VALUES);
     goto error;
   }
 
@@ -1010,10 +973,8 @@ get_values (hive_h *h, hive_node_h node,
   size_t vlist_offset = le32toh (nk->vallist);
   vlist_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, vlist_offset)) {
-    DEBUG (2, "returning EFAULT"
-           " because value list is not a valid block (0x%zx)",
-           vlist_offset);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT,
+               "value list is not a valid block (0x%zx)", vlist_offset);
     goto error;
   }
 
@@ -1025,10 +986,7 @@ get_values (hive_h *h, hive_node_h node,
 
   size_t len = block_len (h, vlist_offset, NULL);
   if (4 + nr_values * 4 > len) {
-    DEBUG (2, "returning EFAULT"
-           " because value list is too long (%zu, %zu)",
-           nr_values, len);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "value list is too long (%zu, %zu)", nr_values, len);
     goto error;
   }
 
@@ -1037,10 +995,7 @@ get_values (hive_h *h, hive_node_h node,
     hive_node_h value = le32toh (vlist->offset[i]);
     value += 0x1000;
     if (!IS_VALID_BLOCK (h, value)) {
-      DEBUG (2, "returning EFAULT"
-             " because value is not a valid block (0x%zx)",
-             value);
-      errno = EFAULT;
+      SET_ERRNO (EFAULT, "value is not a valid block (0x%zx)", value);
       goto error;
     }
     if (_hivex_add_to_offset_list (&values, value) == -1)
@@ -1121,7 +1076,7 @@ size_t
 hivex_value_key_len (hive_h *h, hive_value_h value)
 {
   if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
 
@@ -1134,10 +1089,7 @@ hivex_value_key_len (hive_h *h, hive_value_h value)
   size_t ret = le16toh (vk->name_len);
   size_t seg_len = block_len (h, value, NULL);
   if (sizeof (struct ntreg_vk_record) + ret - 1 > seg_len) {
-    DEBUG (2, "returning EFAULT"
-           " because key length is too long (%zu, %zu)",
-           ret, seg_len);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", ret, seg_len);
     return 0;
   }
   return ret;
@@ -1147,7 +1099,7 @@ char *
 hivex_value_key (hive_h *h, hive_value_h value)
 {
   if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
 
@@ -1174,7 +1126,7 @@ int
 hivex_value_type (hive_h *h, hive_value_h value, hive_type *t, size_t *len)
 {
   if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return -1;
   }
 
@@ -1196,7 +1148,7 @@ hive_value_h
 hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
 {
   if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
 
@@ -1216,7 +1168,7 @@ hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
   DEBUG (2, "data_len=%zx", data_len);
 
   if (is_inline && data_len > 4) {
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP, "inline data with declared length (%zx) > 4", data_len);
     return 0;
   }
 
@@ -1235,10 +1187,7 @@ hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
   size_t data_offset = le32toh (vk->data_offset);
   data_offset += 0x1000;  /* Add 0x1000 because everything's off by 4KiB */
   if (!IS_VALID_BLOCK (h, data_offset)) {
-    DEBUG (2, "returning EFAULT because data "
-           "offset is not a valid block (0x%zx)",
-           data_offset);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "data offset is not a valid block (0x%zx)", data_offset);
     return 0;
   }
 
@@ -1252,7 +1201,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
                    hive_type *t_rtn, size_t *len_rtn)
 {
   if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return NULL;
   }
 
@@ -1278,16 +1227,14 @@ hivex_value_value (hive_h *h, hive_value_h value,
     *len_rtn = len;
 
   if (is_inline && len > 4) {
-    errno = ENOTSUP;
+    SET_ERRNO (ENOTSUP, "inline data with declared length (%zx) > 4", len);
     return NULL;
   }
 
   /* Arbitrarily limit the length that we will read. */
   if (len > HIVEX_MAX_VALUE_LEN) {
-    DEBUG (2, "returning ERANGE because data "
-           "length > HIVEX_MAX_VALUE_LEN (%zu > %d)",
-           len, HIVEX_MAX_SUBKEYS);
-    errno = ERANGE;
+    SET_ERRNO (ERANGE, "data length > HIVEX_MAX_VALUE_LEN (%zu > %d)",
+               len, HIVEX_MAX_SUBKEYS);
     return NULL;
   }
 
@@ -1303,10 +1250,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
   size_t data_offset = le32toh (vk->data_offset);
   data_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, data_offset)) {
-    DEBUG (2, "returning EFAULT because data "
-           "offset is not a valid block (0x%zx)",
-           data_offset);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "data offset is not a valid block (0x%zx)", data_offset);
     free (ret);
     return NULL;
   }
@@ -1323,12 +1267,12 @@ hivex_value_value (hive_h *h, hive_value_h value,
     memcpy (ret, data, len);
     return ret;
   } else {
-    if (!IS_VALID_BLOCK (h, data_offset) || !BLOCK_ID_EQ (h, data_offset, "db")) {
-      DEBUG (2, "warning: declared data length "
-             "is longer than the block and block is not a db block "
-             "(data 0x%zx, data len %zu)",
-             data_offset, len);
-      errno = EINVAL;
+    if (!IS_VALID_BLOCK (h, data_offset) ||
+        !BLOCK_ID_EQ (h, data_offset, "db")) {
+      SET_ERRNO (EINVAL,
+                 "declared data length is longer than the block and "
+                 "block is not a db block (data 0x%zx, data len %zu)",
+                 data_offset, len);
       free (ret);
       return NULL;
     }
@@ -1338,10 +1282,10 @@ hivex_value_value (hive_h *h, hive_value_h value,
     blocklist_offset += 0x1000;
     size_t nr_blocks = le16toh (db->nr_blocks);
     if (!IS_VALID_BLOCK (h, blocklist_offset)) {
-      DEBUG (2, "warning: blocklist is not a "
-             "valid block (db block 0x%zx, blocklist 0x%zx)",
-             data_offset, blocklist_offset);
-      errno = EINVAL;
+      SET_ERRNO (EINVAL,
+                 "blocklist is not a valid block "
+                 "(db block 0x%zx, blocklist 0x%zx)",
+                 data_offset, blocklist_offset);
       free (ret);
       return NULL;
     }
@@ -1352,10 +1296,10 @@ hivex_value_value (hive_h *h, hive_value_h value,
       size_t subblock_offset = le32toh (bl->offset[i]);
       subblock_offset += 0x1000;
       if (!IS_VALID_BLOCK (h, subblock_offset)) {
-        DEBUG (2, "warning: subblock is not "
-               "valid (db block 0x%zx, block list 0x%zx, data subblock 0x%zx)",
-               data_offset, blocklist_offset, subblock_offset);
-        errno = EINVAL;
+        SET_ERRNO (EINVAL,
+                   "subblock is not valid "
+                   "(db block 0x%zx, block list 0x%zx, data subblock 0x%zx)",
+                   data_offset, blocklist_offset, subblock_offset);
         free (ret);
         return NULL;
       }
@@ -1448,7 +1392,7 @@ hivex_value_string (hive_h *h, hive_value_h value)
 
   if (t != hive_t_string && t != hive_t_expand_string && t != hive_t_link) {
     free (data);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "type is not string/expand_string/link");
     return NULL;
   }
 
@@ -1517,7 +1461,7 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
 
   if (t != hive_t_multiple_strings) {
     free (data);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "type is not multiple_strings");
     return NULL;
   }
 
@@ -1570,7 +1514,7 @@ hivex_value_dword (hive_h *h, hive_value_h value)
 
   if ((t != hive_t_dword && t != hive_t_dword_be) || len < 4) {
     free (data);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "type is not dword/dword_be");
     return -1;
   }
 
@@ -1596,7 +1540,7 @@ hivex_value_qword (hive_h *h, hive_value_h value)
 
   if (t != hive_t_qword || len < 8) {
     free (data);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "type is not qword or length < 8");
     return -1;
   }
 
@@ -1667,10 +1611,7 @@ hivex__visit_node (hive_h *h, hive_node_h node,
   int ret = -1;
 
   if (!BITMAP_TST (unvisited, node)) {
-    DEBUG (2, "contains cycle: visited node 0x%zx already",
-           node);
-
-    errno = ELOOP;
+    SET_ERRNO (ELOOP, "contains cycle: visited node 0x%zx already", node);
     return skip_bad ? 0 : -1;
   }
   BITMAP_CLR (unvisited, node);
@@ -1968,25 +1909,20 @@ allocate_page (hive_h *h, size_t allocation_hint)
 static size_t
 allocate_block (hive_h *h, size_t seg_len, const char id[2])
 {
-  if (!h->writable) {
-    errno = EROFS;
-    return 0;
-  }
+  CHECK_WRITABLE (0);
 
   if (seg_len < 4) {
     /* The caller probably forgot to include the header.  Note that
      * value lists have no ID field, so seg_len == 4 would be possible
      * for them, albeit unusual.
      */
-    DEBUG (2, "refusing too small allocation (%zu), returning ERANGE", seg_len);
-    errno = ERANGE;
+    SET_ERRNO (ERANGE, "refusing too small allocation (%zu)", seg_len);
     return 0;
   }
 
   /* Refuse really large allocations. */
   if (seg_len > HIVEX_MAX_ALLOCATION) {
-    DEBUG (2, "refusing large allocation (%zu), returning ERANGE", seg_len);
-    errno = ERANGE;
+    SET_ERRNO (ERANGE, "refusing too large allocation (%zu)", seg_len);
     return 0;
   }
 
@@ -2117,14 +2053,11 @@ hivex_commit (hive_h *h, const char *filename, int flags)
   int fd;
 
   if (flags != 0) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "flags != 0");
     return -1;
   }
 
-  if (!h->writable) {
-    errno = EROFS;
-    return -1;
-  }
+  CHECK_WRITABLE (-1);
 
   filename = filename ? : h->filename;
 #ifdef O_CLOEXEC
@@ -2289,23 +2222,20 @@ compare_name_with_nk_name (hive_h *h, const char *name, hive_node_h nk_offs)
 hive_node_h
 hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 {
-  if (!h->writable) {
-    errno = EROFS;
-    return 0;
-  }
+  CHECK_WRITABLE (0);
 
   if (!IS_VALID_BLOCK (h, parent) || !BLOCK_ID_EQ (h, parent, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
 
   if (name == NULL || strlen (name) == 0) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "name is NULL or zero length");
     return 0;
   }
 
   if (hivex_node_get_child (h, parent, name) != 0) {
-    errno = EEXIST;
+    SET_ERRNO (EEXIST, "a child with that name exists already");
     return 0;
   }
 
@@ -2336,10 +2266,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   parent_sk_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, parent_sk_offset) ||
       !BLOCK_ID_EQ (h, parent_sk_offset, "sk")) {
-    DEBUG (2, "returning EFAULT"
-           " because parent sk is not a valid block (%zu)",
-           parent_sk_offset);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT,
+               "parent sk is not a valid block (%zu)", parent_sk_offset);
     return 0;
   }
   struct ntreg_sk_record *sk =
@@ -2460,8 +2388,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
       }
 
       /* Not found ..  This is an internal error. */
-      DEBUG (2, "returning ENOTSUP because could not find ri->lf link");
-      errno = ENOTSUP;
+      SET_ERRNO (ENOTSUP, "could not find ri->lf link");
       free (blocks);
       return 0;
 
@@ -2491,8 +2418,7 @@ static int
 delete_sk (hive_h *h, size_t sk_offset)
 {
   if (!IS_VALID_BLOCK (h, sk_offset) || !BLOCK_ID_EQ (h, sk_offset, "sk")) {
-    DEBUG (2, "not an sk record: 0x%zx", sk_offset);
-    errno = EFAULT;
+    SET_ERRNO (EFAULT, "not an sk record: 0x%zx", sk_offset);
     return -1;
   }
 
@@ -2500,9 +2426,7 @@ delete_sk (hive_h *h, size_t sk_offset)
     (struct ntreg_sk_record *) ((char *) h->addr + sk_offset);
 
   if (sk->refcount == 0) {
-    DEBUG (2, "sk record already has refcount 0: 0x%zx",
-               sk_offset);
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "sk record already has refcount 0: 0x%zx", sk_offset);
     return -1;
   }
 
@@ -2595,19 +2519,15 @@ delete_node (hive_h *h, void *opaque, hive_node_h node, const char *name)
 int
 hivex_node_delete_child (hive_h *h, hive_node_h node)
 {
-  if (!h->writable) {
-    errno = EROFS;
-    return -1;
-  }
+  CHECK_WRITABLE (-1);
 
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
 
   if (node == hivex_root (h)) {
-    DEBUG (2, "cannot delete root node");
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "cannot delete root node");
     return -1;
   }
 
@@ -2651,8 +2571,7 @@ hivex_node_delete_child (hive_h *h, hive_node_h node)
         }
     }
   }
-  DEBUG (2, "could not find parent to child link");
-  errno = ENOTSUP;
+  SET_ERRNO (ENOTSUP, "could not find parent to child link");
   return -1;
 
  found:;
@@ -2672,13 +2591,10 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
                        size_t nr_values, const hive_set_value *values,
                        int flags)
 {
-  if (!h->writable) {
-    errno = EROFS;
-    return -1;
-  }
+  CHECK_WRITABLE (-1);
 
   if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
-    errno = EINVAL;
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
 

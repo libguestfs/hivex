@@ -102,4 +102,19 @@ extern size_t * _hivex_return_offset_list (offset_list *list);
     }                                                           \
   } while (0)
 
+#define SET_ERRNO(errval,fs,...)                                        \
+  do {                                                                  \
+    DEBUG (1, "returning " #errval " because: " fs, ## __VA_ARGS__);    \
+    errno = errval;                                                     \
+  } while (0)
+
+#define CHECK_WRITABLE(retcode)                                         \
+  do {                                                                  \
+    if (!h->writable) {                                                 \
+      SET_ERRNO (EROFS,                                                 \
+                 "HIVEX_OPEN_WRITE flag was not specified when opening this hive"); \
+      return (retcode);                                                 \
+    }                                                                   \
+  } while (0)
+
 #endif /* HIVEX_INTERNAL_H_ */
