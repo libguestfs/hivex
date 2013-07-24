@@ -184,7 +184,20 @@ hivex_node_classname (hive_h *h, hive_node_h node)
 }
 #endif
 
-/* Iterate over children, returning child nodes and intermediate blocks. */
+/* Iterate over children (ie. subkeys of a node), returning child
+ * nodes and intermediate blocks.
+ *
+ * 'node' is the nk block.
+ *
+ * 'flags' can be 0, or GET_CHILDREN_NO_CHECK_NK which bypasses a
+ * check that each child is a valid block.
+ *
+ * The list of child nodes (all nk blocks) is returned in
+ * 'children_ret'.
+ *
+ * The list of intermediate nodes (a mix of lf/lh/ri/li blocks) is
+ * returned in 'blocks_ret'.
+ */
 int
 _hivex_get_children (hive_h *h, hive_node_h node,
                      hive_node_h **children_ret, size_t **blocks_ret,
@@ -206,7 +219,7 @@ _hivex_get_children (hive_h *h, hive_node_h node,
 
   /* Deal with the common "no subkeys" case quickly. */
   if (nr_subkeys_in_nk == 0)
-    goto ok;
+    goto out;
 
   /* Arbitrarily limit the number of subkeys we will ever deal with. */
   if (nr_subkeys_in_nk > HIVEX_MAX_SUBKEYS) {
@@ -275,7 +288,6 @@ _hivex_get_children (hive_h *h, hive_node_h node,
       if (_hivex_add_to_offset_list (&children, subkey) == -1)
         goto error;
     }
-    goto ok;
   }
   /* Points to ri-record? */
   else if (block->id[0] == 'r' && block->id[1] == 'i') {
@@ -355,23 +367,25 @@ _hivex_get_children (hive_h *h, hive_node_h node,
           goto error;
       }
     }
-    goto ok;
   }
-  /* else not supported, set errno and fall through */
-  SET_ERRNO (ENOTSUP,
-             "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
-             subkey_lf, block->id[0], block->id[1]);
- error:
-  _hivex_free_offset_list (&children);
-  _hivex_free_offset_list (&blocks);
-  return -1;
+  else {
+    SET_ERRNO (ENOTSUP,
+               "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
+               subkey_lf, block->id[0], block->id[1]);
+    goto error;
+  }
 
- ok:
+ out:
   *children_ret = _hivex_return_offset_list (&children);
   *blocks_ret = _hivex_return_offset_list (&blocks);
   if (!*children_ret || !*blocks_ret)
     goto error;
   return 0;
+
+ error:
+  _hivex_free_offset_list (&children);
+  _hivex_free_offset_list (&blocks);
+  return -1;
 }
 
 hive_node_h *
