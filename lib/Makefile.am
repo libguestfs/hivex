@@ -68,7 +68,7 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  --outfile $(top_builddir)/html/hivex.3.html \
 	  $<
 
-CLEANFILES = $(man_MANS)
+CLEANFILES = $(man_MANS) *~
 
 # Tests.
 
