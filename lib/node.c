@@ -229,6 +229,16 @@ _hivex_get_children (hive_h *h, hive_node_h node,
     goto error;
   }
 
+  /* Don't read more child nodes than the declared number of subkeys. */
+  _hivex_set_offset_list_limit (&children, nr_subkeys_in_nk);
+
+  /* Pre-1.3.8 hivex did not limit the number of intermediate blocks
+   * it would return, and there is no obvious limit to use.  However
+   * if we ever exceeded HIVEX_MAX_SUBKEYS then there's something
+   * fishy going on.
+   */
+  _hivex_set_offset_list_limit (&blocks, HIVEX_MAX_SUBKEYS);
+
   /* Preallocate space for the children. */
   if (_hivex_grow_offset_list (&children, nr_subkeys_in_nk) == -1)
     goto error;
