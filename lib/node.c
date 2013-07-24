@@ -387,6 +387,15 @@ check_child_is_nk_block (hive_h *h, hive_node_h child, int flags)
     return -1;
   }
 
+  struct ntreg_hbin_block *block =
+    (struct ntreg_hbin_block *) ((char *) h->addr + child);
+
+  if (!BLOCK_ID_EQ (h, child, "nk")) {
+    SET_ERRNO (EFAULT, "subkey is not an 'nk' block (0x%zx, %d, %d)",
+               child, block->id[0], block->id[1]);
+    return -1;
+  }
+
   return 0;
 }
 
