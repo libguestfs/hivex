@@ -342,27 +342,9 @@ _get_children (hive_h *h, hive_node_h blkoff,
         SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
         return -1;
       }
-      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
-        struct ntreg_lf_record *block =
-          (struct ntreg_lf_record *) ((char *) h->addr + offset);
-        SET_ERRNO (ENOTSUP,
-                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
-                   offset, block->id[0], block->id[1]);
+
+      if (_get_children (h, offset, children, blocks, flags) == -1)
         return -1;
-      }
-
-      struct ntreg_lf_record *lf =
-        (struct ntreg_lf_record *) ((char *) h->addr + offset);
-
-      size_t j;
-      for (j = 0; j < le16toh (lf->nr_keys); ++j) {
-        hive_node_h subkey = le32toh (lf->keys[j].offset);
-        subkey += 0x1000;
-        if (check_child_is_nk_block (h, subkey, flags) == -1)
-          return -1;
-        if (_hivex_add_to_offset_list (children, subkey) == -1)
-          return -1;
-      }
     }
   }
   else {
