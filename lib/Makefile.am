@@ -26,11 +26,17 @@ lib_LTLIBRARIES = libhivex.la
 libhivex_la_SOURCES = \
 	byte_conversions.h \
 	gettext.h \
-	hivex.c \
+	handle.c \
 	hivex.h \
 	hivex-internal.h \
 	mmap.h \
-	offset-list.c
+	node.c \
+	offset-list.c \
+	utf16.c \
+	util.c \
+	value.c \
+	visit.c \
+	write.c
 
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
