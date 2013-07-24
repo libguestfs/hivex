@@ -300,6 +300,8 @@ _get_children (hive_h *h, hive_node_h blkoff,
   struct ntreg_hbin_block *block =
     (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
 
+  size_t len = block_len (h, blkoff, NULL);
+
   /* Points to lf-record?  (Note, also "lh" but that is basically the
    * same as "lf" as far as we are concerned here).
    */
@@ -311,7 +313,6 @@ _get_children (hive_h *h, hive_node_h blkoff,
      */
     size_t nr_subkeys_in_lf = le16toh (lf->nr_keys);
 
-    size_t len = block_len (h, blkoff, NULL);
     if (8 + nr_subkeys_in_lf * 8 > len) {
       SET_ERRNO (EFAULT, "too many subkeys (%zu, %zu)", nr_subkeys_in_lf, len);
       return -1;
@@ -332,6 +333,11 @@ _get_children (hive_h *h, hive_node_h blkoff,
     struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
 
     size_t nr_offsets = le16toh (ri->nr_offsets);
+
+    if (8 + nr_offsets * 4 > len) {
+      SET_ERRNO (EFAULT, "too many offsets (%zu, %zu)", nr_offsets, len);
+      return -1;
+    }
 
     /* Copy list of children. */
     size_t i;
