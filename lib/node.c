@@ -187,6 +187,7 @@ hivex_node_classname (hive_h *h, hive_node_h node)
 static int _get_children (hive_h *h, hive_node_h blkoff,
                           offset_list *children, offset_list *blocks,
                           int flags);
+static int check_child_is_nk_block (hive_h *h, hive_node_h child, int flags);
 
 /* Iterate over children (ie. subkeys of a node), returning child
  * nodes and intermediate blocks.
@@ -320,12 +321,8 @@ _get_children (hive_h *h, hive_node_h blkoff,
     for (i = 0; i < nr_subkeys_in_lf; ++i) {
       hive_node_h subkey = le32toh (lf->keys[i].offset);
       subkey += 0x1000;
-      if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
-        if (!IS_VALID_BLOCK (h, subkey)) {
-          SET_ERRNO (EFAULT, "subkey is not a valid block (0x%zx)", subkey);
-          return -1;
-        }
-      }
+      if (check_child_is_nk_block (h, subkey, flags) == -1)
+        return -1;
       if (_hivex_add_to_offset_list (children, subkey) == -1)
         return -1;
     }
@@ -361,14 +358,8 @@ _get_children (hive_h *h, hive_node_h blkoff,
       for (j = 0; j < le16toh (lf->nr_keys); ++j) {
         hive_node_h subkey = le32toh (lf->keys[j].offset);
         subkey += 0x1000;
-        if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
-          if (!IS_VALID_BLOCK (h, subkey)) {
-            SET_ERRNO (EFAULT,
-                       "indirect subkey is not a valid block (0x%zx)",
-                       subkey);
-            return -1;
-          }
-        }
+        if (check_child_is_nk_block (h, subkey, flags) == -1)
+          return -1;
         if (_hivex_add_to_offset_list (children, subkey) == -1)
           return -1;
       }
@@ -378,6 +369,21 @@ _get_children (hive_h *h, hive_node_h blkoff,
     SET_ERRNO (ENOTSUP,
                "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
                blkoff, block->id[0], block->id[1]);
+    return -1;
+  }
+
+  return 0;
+}
+
+static int
+check_child_is_nk_block (hive_h *h, hive_node_h child, int flags)
+{
+  /* Bypass the check if flag set. */
+  if (flags & GET_CHILDREN_NO_CHECK_NK)
+    return 0;
+
+  if (!IS_VALID_BLOCK (h, child)) {
+    SET_ERRNO (EFAULT, "subkey is not a valid block (0x%zx)", child);
     return -1;
   }
 
