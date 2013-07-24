@@ -202,6 +202,64 @@ static int check_child_is_nk_block (hive_h *h, hive_node_h child, int flags);
  *
  * The list of intermediate nodes (a mix of lf/lh/ri/li blocks) is
  * returned in 'blocks_ret'.
+ *
+ * ----------------------------------------
+ *
+ * The format of the intermediate blocks is not documented, but
+ * appears to be this:
+ *
+ * +-------------+  This is the parent registry key.
+ * | nk          |
+ * |-------------|
+ * | subkey_lf  ---->  Points to either lf/lh, li or ri
+ * |             |     (all 3 cases have to be dealt with
+ * |             |     separately, see below)
+ * +-------------+
+ *
+ * The subkey_lf field can point to one of three things, which are
+ * all subtly different:
+ *
+ * (1) lf/lh record.  (It's not clear what the precise difference
+ * is but we treat them as the same thing)
+ *
+ * +-------------+
+ * | lf/lh       |
+ * |-------------|
+ * | nr_keys     |
+ * |   keys[0].offset ------>  points to nk blocks (the children)
+ * |   keys[1].offset ------>
+ * |   keys[2].offset ------>
+ * +-------------+
+ *
+ * (2) li record.
+ *
+ * Although the format of an li-record is the same as the format of an
+ * ri-record, the difference is that the offsets point directly to the
+ * nk blocks (children).
+ *
+ * +-------------+
+ * | li          |
+ * |-------------|
+ * | nr_offsets  |
+ * |   offset[0] ------>  points to nk blocks (the children)
+ * |   offset[1] ------>
+ * |   offset[2] ------>
+ * +-------------+
+ *
+ * (3) ri record.
+ *
+ * The format of the block is the same as the li-record, BUT ri-record
+ * offsets *never* point directly to nk blocks.  They only point to
+ * other lf/lh/li/ri-records, thus forming a tree of arbitrary depth.
+ *
+ * +-------------+
+ * | ri          |
+ * |-------------|
+ * | nr_offsets  |
+ * |   offset[0] ------>  points to another lf/lh/li/ri block
+ * |   offset[1] ------>
+ * |   offset[2] ------>
+ * +-------------+
  */
 int
 _hivex_get_children (hive_h *h, hive_node_h node,
@@ -328,6 +386,34 @@ _get_children (hive_h *h, hive_node_h blkoff,
         return -1;
     }
   }
+  /* Points to li-record? */
+  else if (block->id[0] == 'l' && block->id[1] == 'i') {
+    /* li-records are formatted the same as ri-records, but they
+     * contain direct links to child records (same as lf/lh), so
+     * we treat them the same way as lf/lh.
+     */
+    struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
+
+    /* Check number of subkeys in the nk-record matches number of subkeys
+     * in the li-record.
+     */
+    size_t nr_offsets = le16toh (ri->nr_offsets);
+
+    if (8 + nr_offsets * 4 > len) {
+      SET_ERRNO (EFAULT, "too many offsets (%zu, %zu)", nr_offsets, len);
+      return -1;
+    }
+
+    size_t i;
+    for (i = 0; i < nr_offsets; ++i) {
+      hive_node_h subkey = le32toh (ri->offset[i]);
+      subkey += 0x1000;
+      if (check_child_is_nk_block (h, subkey, flags) == -1)
+        return -1;
+      if (_hivex_add_to_offset_list (children, subkey) == -1)
+        return -1;
+    }
+  }
   /* Points to ri-record? */
   else if (block->id[0] == 'r' && block->id[1] == 'i') {
     struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
@@ -355,7 +441,7 @@ _get_children (hive_h *h, hive_node_h blkoff,
   }
   else {
     SET_ERRNO (ENOTSUP,
-               "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
+               "subkey block is not lf/lh/li/ri (0x%zx, %d, %d)",
                blkoff, block->id[0], block->id[1]);
     return -1;
   }
