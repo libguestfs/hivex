@@ -184,6 +184,10 @@ hivex_node_classname (hive_h *h, hive_node_h node)
 }
 #endif
 
+static int _get_children (hive_h *h, hive_node_h blkoff,
+                          offset_list *children, offset_list *blocks,
+                          int flags);
+
 /* Iterate over children (ie. subkeys of a node), returning child
  * nodes and intermediate blocks.
  *
@@ -255,133 +259,18 @@ _hivex_get_children (hive_h *h, hive_node_h node,
     goto error;
   }
 
-  if (_hivex_add_to_offset_list (&blocks, subkey_lf) == -1)
+  if (_get_children (h, subkey_lf, &children, &blocks, flags) == -1)
     goto error;
 
-  struct ntreg_hbin_block *block =
-    (struct ntreg_hbin_block *) ((char *) h->addr + subkey_lf);
-
-  /* Points to lf-record?  (Note, also "lh" but that is basically the
-   * same as "lf" as far as we are concerned here).
+  /* Check the number of children we ended up reading matches
+   * nr_subkeys_in_nk.
    */
-  if (block->id[0] == 'l' && (block->id[1] == 'f' || block->id[1] == 'h')) {
-    struct ntreg_lf_record *lf = (struct ntreg_lf_record *) block;
-
-    /* Check number of subkeys in the nk-record matches number of subkeys
-     * in the lf-record.
-     */
-    size_t nr_subkeys_in_lf = le16toh (lf->nr_keys);
-
-    if (nr_subkeys_in_nk != nr_subkeys_in_lf) {
-      SET_ERRNO (ENOTSUP,
-                 "nr_subkeys_in_nk = %zu is not equal to nr_subkeys_in_lf = %zu",
-                 nr_subkeys_in_nk, nr_subkeys_in_lf);
-      goto error;
-    }
-
-    size_t len = block_len (h, subkey_lf, NULL);
-    if (8 + nr_subkeys_in_lf * 8 > len) {
-      SET_ERRNO (EFAULT, "too many subkeys (%zu, %zu)", nr_subkeys_in_lf, len);
-      goto error;
-    }
-
-    size_t i;
-    for (i = 0; i < nr_subkeys_in_lf; ++i) {
-      hive_node_h subkey = le32toh (lf->keys[i].offset);
-      subkey += 0x1000;
-      if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
-        if (!IS_VALID_BLOCK (h, subkey)) {
-          SET_ERRNO (EFAULT, "subkey is not a valid block (0x%zx)", subkey);
-          goto error;
-        }
-      }
-      if (_hivex_add_to_offset_list (&children, subkey) == -1)
-        goto error;
-    }
-  }
-  /* Points to ri-record? */
-  else if (block->id[0] == 'r' && block->id[1] == 'i') {
-    struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
-
-    size_t nr_offsets = le16toh (ri->nr_offsets);
-
-    /* Count total number of children. */
-    size_t i, count = 0;
-    for (i = 0; i < nr_offsets; ++i) {
-      hive_node_h offset = le32toh (ri->offset[i]);
-      offset += 0x1000;
-      if (!IS_VALID_BLOCK (h, offset)) {
-        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
-        goto error;
-      }
-      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
-        struct ntreg_lf_record *block =
-          (struct ntreg_lf_record *) ((char *) h->addr + offset);
-        SET_ERRNO (ENOTSUP,
-                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
-                   offset, block->id[0], block->id[1]);
-        goto error;
-      }
-
-      if (_hivex_add_to_offset_list (&blocks, offset) == -1)
-        goto error;
-
-      struct ntreg_lf_record *lf =
-        (struct ntreg_lf_record *) ((char *) h->addr + offset);
-
-      count += le16toh (lf->nr_keys);
-    }
-
-    if (nr_subkeys_in_nk != count) {
-      SET_ERRNO (ENOTSUP,
-                 "nr_subkeys_in_nk = %zu is not equal to counted = %zu",
-                 nr_subkeys_in_nk, count);
-      goto error;
-    }
-
-    /* Copy list of children.  Note nr_subkeys_in_nk is limited to
-     * something reasonable above.
-     */
-    for (i = 0; i < nr_offsets; ++i) {
-      hive_node_h offset = le32toh (ri->offset[i]);
-      offset += 0x1000;
-      if (!IS_VALID_BLOCK (h, offset)) {
-        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
-        goto error;
-      }
-      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
-        struct ntreg_lf_record *block =
-          (struct ntreg_lf_record *) ((char *) h->addr + offset);
-        SET_ERRNO (ENOTSUP,
-                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
-                   offset, block->id[0], block->id[1]);
-        goto error;
-      }
-
-      struct ntreg_lf_record *lf =
-        (struct ntreg_lf_record *) ((char *) h->addr + offset);
-
-      size_t j;
-      for (j = 0; j < le16toh (lf->nr_keys); ++j) {
-        hive_node_h subkey = le32toh (lf->keys[j].offset);
-        subkey += 0x1000;
-        if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
-          if (!IS_VALID_BLOCK (h, subkey)) {
-            SET_ERRNO (EFAULT,
-                       "indirect subkey is not a valid block (0x%zx)",
-                       subkey);
-            goto error;
-          }
-        }
-        if (_hivex_add_to_offset_list (&children, subkey) == -1)
-          goto error;
-      }
-    }
-  }
-  else {
+  size_t nr_children = _hivex_get_offset_list_length (&children);
+  if (nr_subkeys_in_nk != nr_children) {
     SET_ERRNO (ENOTSUP,
-               "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
-               subkey_lf, block->id[0], block->id[1]);
+               "nr_subkeys_in_nk = %zu "
+               "is not equal to number of children read %zu",
+               nr_subkeys_in_nk, nr_children);
     goto error;
   }
 
@@ -396,6 +285,103 @@ _hivex_get_children (hive_h *h, hive_node_h node,
   _hivex_free_offset_list (&children);
   _hivex_free_offset_list (&blocks);
   return -1;
+}
+
+static int
+_get_children (hive_h *h, hive_node_h blkoff,
+               offset_list *children, offset_list *blocks,
+               int flags)
+{
+  /* Add this intermediate block. */
+  if (_hivex_add_to_offset_list (blocks, blkoff) == -1)
+    return -1;
+
+  struct ntreg_hbin_block *block =
+    (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
+
+  /* Points to lf-record?  (Note, also "lh" but that is basically the
+   * same as "lf" as far as we are concerned here).
+   */
+  if (block->id[0] == 'l' && (block->id[1] == 'f' || block->id[1] == 'h')) {
+    struct ntreg_lf_record *lf = (struct ntreg_lf_record *) block;
+
+    /* Check number of subkeys in the nk-record matches number of subkeys
+     * in the lf-record.
+     */
+    size_t nr_subkeys_in_lf = le16toh (lf->nr_keys);
+
+    size_t len = block_len (h, blkoff, NULL);
+    if (8 + nr_subkeys_in_lf * 8 > len) {
+      SET_ERRNO (EFAULT, "too many subkeys (%zu, %zu)", nr_subkeys_in_lf, len);
+      return -1;
+    }
+
+    size_t i;
+    for (i = 0; i < nr_subkeys_in_lf; ++i) {
+      hive_node_h subkey = le32toh (lf->keys[i].offset);
+      subkey += 0x1000;
+      if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
+        if (!IS_VALID_BLOCK (h, subkey)) {
+          SET_ERRNO (EFAULT, "subkey is not a valid block (0x%zx)", subkey);
+          return -1;
+        }
+      }
+      if (_hivex_add_to_offset_list (children, subkey) == -1)
+        return -1;
+    }
+  }
+  /* Points to ri-record? */
+  else if (block->id[0] == 'r' && block->id[1] == 'i') {
+    struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
+
+    size_t nr_offsets = le16toh (ri->nr_offsets);
+
+    /* Copy list of children. */
+    size_t i;
+    for (i = 0; i < nr_offsets; ++i) {
+      hive_node_h offset = le32toh (ri->offset[i]);
+      offset += 0x1000;
+      if (!IS_VALID_BLOCK (h, offset)) {
+        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
+        return -1;
+      }
+      if (!BLOCK_ID_EQ (h, offset, "lf") && !BLOCK_ID_EQ (h, offset, "lh")) {
+        struct ntreg_lf_record *block =
+          (struct ntreg_lf_record *) ((char *) h->addr + offset);
+        SET_ERRNO (ENOTSUP,
+                   "ri-record offset does not point to lf/lh (0x%zx, %d, %d)",
+                   offset, block->id[0], block->id[1]);
+        return -1;
+      }
+
+      struct ntreg_lf_record *lf =
+        (struct ntreg_lf_record *) ((char *) h->addr + offset);
+
+      size_t j;
+      for (j = 0; j < le16toh (lf->nr_keys); ++j) {
+        hive_node_h subkey = le32toh (lf->keys[j].offset);
+        subkey += 0x1000;
+        if (!(flags & GET_CHILDREN_NO_CHECK_NK)) {
+          if (!IS_VALID_BLOCK (h, subkey)) {
+            SET_ERRNO (EFAULT,
+                       "indirect subkey is not a valid block (0x%zx)",
+                       subkey);
+            return -1;
+          }
+        }
+        if (_hivex_add_to_offset_list (children, subkey) == -1)
+          return -1;
+      }
+    }
+  }
+  else {
+    SET_ERRNO (ENOTSUP,
+               "subkey block is not lf/lh/ri (0x%zx, %d, %d)",
+               blkoff, block->id[0], block->id[1]);
+    return -1;
+  }
+
+  return 0;
 }
 
 hive_node_h *
