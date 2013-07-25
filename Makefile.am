@@ -70,4 +70,9 @@ WEBSITEDIR = $(HOME)/d/redhat/websites/libguestfs
 website: $(HTMLFILES)
 	cp $(HTMLFILES) $(WEBSITEDIR)
 
+# Tag HEAD with current version (only for maintainer).
+
+maintainer-tag:
+	git tag -a $(VERSION) -m "Version $(VERSION)" -f
+
 CLEANFILES = $(HTMLFILES) pod2*.tmp *~
