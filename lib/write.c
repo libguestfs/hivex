@@ -385,6 +385,57 @@ insert_lf_record (hive_h *h, size_t old_offs, size_t posn,
   return new_offs;
 }
 
+/* Insert node into existing li-record at position.  Pretty much the
+ * same as insert_lf_record above, but the record layout is a bit
+ * different.
+ */
+static size_t
+insert_li_record (hive_h *h, size_t old_offs, size_t posn,
+                  const char *name, hive_node_h node)
+{
+  assert (IS_VALID_BLOCK (h, old_offs));
+  assert (BLOCK_ID_EQ (h, old_offs, "li"));
+
+  struct ntreg_ri_record *old_li =
+    (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
+  size_t nr_offsets = le16toh (old_li->nr_offsets);
+
+  nr_offsets++; /* in new record ... */
+
+  size_t seg_len = sizeof (struct ntreg_ri_record) + (nr_offsets-1) * 4;
+
+  /* Copy the old_li->id in case it moves during allocate_block. */
+  char id[2];
+  memcpy (id, old_li->id, sizeof id);
+
+  size_t new_offs = allocate_block (h, seg_len, id);
+  if (new_offs == 0)
+    return 0;
+
+  /* old_li could have been invalidated by allocate_block. */
+  old_li = (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
+
+  struct ntreg_ri_record *new_li =
+    (struct ntreg_ri_record *) ((char *) h->addr + new_offs);
+  new_li->nr_offsets = htole16 (nr_offsets);
+
+  /* Copy the offsets until we reach posn, insert the new offset
+   * there, then copy the remaining offsets.
+   */
+  size_t i;
+  for (i = 0; i < posn; ++i)
+    new_li->offset[i] = old_li->offset[i];
+
+  new_li->offset[i] = htole32 (node - 0x1000);
+
+  for (i = posn+1; i < nr_offsets; ++i)
+    new_li->offset[i] = old_li->offset[i-1];
+
+  /* Old block is unused, return new block. */
+  mark_block_unused (h, old_offs);
+  return new_offs;
+}
+
 /* Compare name with name in nk-record. */
 static int
 compare_name_with_nk_name (hive_h *h, const char *name, hive_node_h nk_offs)
@@ -407,19 +458,34 @@ compare_name_with_nk_name (hive_h *h, const char *name, hive_node_h nk_offs)
   return r;
 }
 
+/* See comment about keeping things sorted in hivex_node_add_child. */
 static int
 insert_subkey (hive_h *h, const char *name,
                size_t parent, size_t nkoffset, size_t *blocks)
 {
   size_t old_offs = 0, new_offs = 0;
-  size_t i, j;
+  size_t i, j = SIZE_MAX;
   struct ntreg_lf_record *old_lf = NULL;
+  struct ntreg_ri_record *old_li = NULL;
 
-  /* Find lf/lh key name just after the one we are inserting. */
+  /* The caller already dealt with the no subkeys case, so this should
+   * be true.
+   */
+  assert (blocks[0] != 0);
+
+  /* Find the intermediate block which contains a link to the key that
+   * is just after the one we are inserting.  This intermediate block
+   * might be an lf/lh-record or an li-record (but it won't be a
+   * ri-record so we can ignore those).  The lf/lh- and li-records
+   * have different formats.  If we cannot find the key after, then we
+   * end up at the final block and we have to insert the new key at
+   * the end.
+   */
   for (i = 0; blocks[i] != 0; ++i) {
     if (BLOCK_ID_EQ (h, blocks[i], "lf") || BLOCK_ID_EQ (h, blocks[i], "lh")) {
       old_offs = blocks[i];
       old_lf = (struct ntreg_lf_record *) ((char *) h->addr + old_offs);
+      old_li = NULL;
       for (j = 0; j < le16toh (old_lf->nr_keys); ++j) {
         hive_node_h nk_offs = le32toh (old_lf->keys[j].offset);
         nk_offs += 0x1000;
@@ -427,39 +493,62 @@ insert_subkey (hive_h *h, const char *name,
           goto insert_it;
       }
     }
+    else if (BLOCK_ID_EQ (h, blocks[i], "li")) {
+      old_offs = blocks[i];
+      old_lf = NULL;
+      old_li = (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
+      for (j = 0; j < le16toh (old_li->nr_offsets); ++j) {
+        hive_node_h nk_offs = le32toh (old_li->offset[j]);
+        nk_offs += 0x1000;
+        if (compare_name_with_nk_name (h, name, nk_offs) < 0)
+          goto insert_it;
+      }
+    }
   }
 
-  /* Insert it at the end.
-   * old_offs points to the last lf record, set j.
-   */
-  assert (old_offs != 0);  /* should never happen if nr_subkeys > 0 */
-  j = le16toh (old_lf->nr_keys);
+  /* To insert it at the end, we fall through here. */
+  assert (j != SIZE_MAX);
 
-  /* Insert it. */
  insert_it:
-  DEBUG (2, "insert key in existing lh-record at 0x%zx, posn %zu",
-         old_offs, j);
+  /* Verify that the search worked. */
+  assert (old_lf || old_li);
+  assert (!(old_lf && old_li));
 
-  new_offs = insert_lf_record (h, old_offs, j, name, nkoffset);
-  if (new_offs == 0)
-    return -1;
+  if (old_lf) {
+    DEBUG (2, "insert key in existing lf/lh-record at 0x%zx, posn %zu",
+           old_offs, j);
 
-  DEBUG (2, "new lh-record at 0x%zx", new_offs);
+    new_offs = insert_lf_record (h, old_offs, j, name, nkoffset);
+    if (new_offs == 0)
+      return -1;
+
+    DEBUG (2, "new lf/lh-record at 0x%zx", new_offs);
+  }
+  else /* old_li */ {
+    DEBUG (2, "insert key in existing li-record at 0x%zx, posn %zu",
+           old_offs, j);
+
+    new_offs = insert_li_record (h, old_offs, j, name, nkoffset);
+    if (new_offs == 0)
+      return -1;
+
+    DEBUG (2, "new li-record at 0x%zx", new_offs);
+  }
 
   /* Recalculate pointers that could have been invalidated by
-   * previous call to allocate_block (via new_lh_record).
+   * previous call to allocate_block (via new_{lf,li}_record).
    */
   struct ntreg_nk_record *parent_nk =
     (struct ntreg_nk_record *) ((char *) h->addr + parent);
 
-  /* If the lf/lh-record was directly referenced by the parent nk,
-   * then update the parent nk.
+  /* Since the lf/lh/li-record has moved, now we have to find the old
+   * reference to it and update it.  It might be referenced directly
+   * from the parent_nk->subkey_lf, or it might be referenced
+   * indirectly from some ri-record in blocks[].  Since we can update
+   * either of these in-place, we don't need to do this recursively.
    */
   if (le32toh (parent_nk->subkey_lf) + 0x1000 == old_offs)
     parent_nk->subkey_lf = htole32 (new_offs - 0x1000);
-  /* Else we have to look for the intermediate ri-record and update
-   * that in-place.
-   */
   else {
     for (i = 0; blocks[i] != 0; ++i) {
       if (BLOCK_ID_EQ (h, blocks[i], "ri")) {
@@ -548,11 +637,11 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
    * Windows won't see the subkey _and_ Windows will corrupt the hive
    * itself when it modifies or saves it.
    *
-   * So use get_children() to get a list of intermediate
-   * lf/lh-records.  get_children() returns these in reading order
-   * (which is sorted), so we look for the lf/lh-records in sequence
-   * until we find the key name just after the one we are inserting,
-   * and we insert the subkey just before it.
+   * So use get_children() to get a list of intermediate records.
+   * get_children() returns these in reading order (which is sorted),
+   * so we look for the lf/lh/li-records in sequence until we find the
+   * key name just after the one we are inserting, and we insert the
+   * subkey just before it.
    *
    * The only other case is the no-subkeys case, where we have to
    * create a brand new lh-record.
