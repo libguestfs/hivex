@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-11 12:43+0100\n"
+"POT-Creation-Date: 2013-07-25 22:49+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Oriya <None>\n"
@@ -66,7 +66,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr ""
@@ -96,40 +96,40 @@ msgstr ""
 msgid "%s: %s: key not found\n"
 msgstr ""
 
-#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
+#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: ଅବୈଧ ଗଣନ ସଂଖ୍ୟା ପ୍ରାଚଳ (%s ଫେରାଇଥାଏ %d)\n"
 
-#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
+#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: ଗଣନସଂଖ୍ୟାଟି ପରିସର ବାହାରେ\n"
 
-#: sh/hivexsh.c:875 sh/hivexsh.c:893
+#: sh/hivexsh.c:882 sh/hivexsh.c:900
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr ""
 
-#: sh/hivexsh.c:914 sh/hivexsh.c:933
+#: sh/hivexsh.c:921 sh/hivexsh.c:940
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr ""
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1058
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
 
-#: sh/hivexsh.c:1080
+#: sh/hivexsh.c:1087
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-11 12:43+0100\n"
+"POT-Creation-Date: 2013-07-25 22:49+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: sandeeps <sshedmak@redhat.com>\n"
 "Language-Team: Marathi <None>\n"
@@ -82,7 +82,7 @@ msgstr ""
 " https://bugzilla.redhat.com/ येथील बग अहवालात जोडा\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' आदेश यांस घटके देऊ नका\n"
@@ -117,34 +117,34 @@ msgstr ""
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: कि आढळली नाही\n"
 
-#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
+#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: अवैध इंटीजर घटक (%s ने %d पाठवले)\n"
 
-#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
+#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: इंटीजर व्याप्तीच्या बाहेर आहे\n"
 
-#: sh/hivexsh.c:875 sh/hivexsh.c:893
+#: sh/hivexsh.c:882 sh/hivexsh.c:900
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: इंपुटची अनेपक्षीत समाप्ति\n"
 
-#: sh/hivexsh.c:914 sh/hivexsh.c:933
+#: sh/hivexsh.c:921 sh/hivexsh.c:940
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
 "hivexsh: string(utf16le): फक्त 7 बिट ASCII अक्षरमाळा इंपुटकरीता समर्थीत आहे\n"
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: hex स्ट्रिंग नंतर ट्रेलिंग गार्बेज\n"
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1058
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -153,7 +153,7 @@ msgstr ""
 "hivexsh: setval: वॅल्यू स्ट्रिंग वाचणे अशक्य, कृपया मदतीसाठी man page hivexsh(1) पहा: "
 "%s\n"
 
-#: sh/hivexsh.c:1080
+#: sh/hivexsh.c:1087
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: रूट नोड नष्ट करणे शक्य आहे\n"

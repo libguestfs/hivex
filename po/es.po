@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-11 12:43+0100\n"
+"POT-Creation-Date: 2013-07-25 22:49+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Spanish (Castilian) <trans-es@lists.fedoraproject.org>\n"
@@ -84,7 +84,7 @@ msgstr ""
 "redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: el comando '%s' no debería necesitar argumentos\n"
@@ -120,22 +120,22 @@ msgstr ""
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: no se ha encontrado la llave\n"
 
-#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
+#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: parámetro entero no válido (%s devolvió %d)\n"
 
-#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
+#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: el entero se encuentra fuera del rango\n"
 
-#: sh/hivexsh.c:875 sh/hivexsh.c:893
+#: sh/hivexsh.c:882 sh/hivexsh.c:900
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: final inesperado de la salida\n"
 
-#: sh/hivexsh.c:914 sh/hivexsh.c:933
+#: sh/hivexsh.c:921 sh/hivexsh.c:940
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
@@ -143,12 +143,12 @@ msgstr ""
 "hivexsh: string(utf16le): para la entrada, solo existe soporte para cadenas "
 "ASCII de 7 bit\n"
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: rastreando basura luego de la cadena hex\n"
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1058
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -157,7 +157,7 @@ msgstr ""
 "hivexsh: setval: no es posible analizar el valor de la cadena, por favor "
 "consulte la página man de hivexsh(1) para obtener ayuda: %s\n"
 
-#: sh/hivexsh.c:1080
+#: sh/hivexsh.c:1087
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: el nodo raíz no puede ser eliminado\n"

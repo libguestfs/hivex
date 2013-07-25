@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-11 12:43+0100\n"
+"POT-Creation-Date: 2013-07-25 22:49+0100\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Kannada <None>\n"
@@ -84,7 +84,7 @@ msgstr ""
 "ಲಗತ್ತಿಸಿ\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1074
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' ಎಂಬ ಆಜ್ಞೆಯೊಂದಿಗೆ ಆರ್ಗುಮೆಂಟ್‌ಗಳನ್ನು ಒದಗಿಸುವಂತಿಲ್ಲ\n"
@@ -119,22 +119,22 @@ msgstr ""
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: ಕೀಲಿಯು ಕಂಡುಬಂದಿಲ್ಲ\n"
 
-#: sh/hivexsh.c:848 sh/hivexsh.c:952 sh/hivexsh.c:978 sh/hivexsh.c:1007
+#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: ಅಮಾನ್ಯವಾದ ಪೂರ್ಣ ನಿಯತಾಂಕ (%s ಮರಳಿಸಲಾಗಿದೆ %d)\n"
 
-#: sh/hivexsh.c:853 sh/hivexsh.c:958 sh/hivexsh.c:984 sh/hivexsh.c:1013
+#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: ಪೂರ್ಣಾಂಕವು ವ್ಯಾಪ್ತಿಯ ಹೊರಗಿದೆ\n"
 
-#: sh/hivexsh.c:875 sh/hivexsh.c:893
+#: sh/hivexsh.c:882 sh/hivexsh.c:900
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: ಇನ್‌ಪುಟ್‌ಗೆ ಅನಿರೀಕ್ಷಿತವಾದ ಅಂತ್ಯ\n"
 
-#: sh/hivexsh.c:914 sh/hivexsh.c:933
+#: sh/hivexsh.c:921 sh/hivexsh.c:940
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
@@ -142,12 +142,12 @@ msgstr ""
 "hivexsh: string(utf16le): ಇನ್‌ಪುಟ್‌ನಲ್ಲಿ ಕೇವಲ 7 ಬಿಟ್‌ ASCII ವಾಕ್ಯಗಳನ್ನು ಮಾತ್ರ "
 "ಬೆಂಬಲಿಸಲಾಗುತ್ತದೆ\n"
 
-#: sh/hivexsh.c:1044
+#: sh/hivexsh.c:1051
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: ಹೆಕ್ಸ್ ವಾಕ್ಯದ ನಂತರ ಹಿಂಬಾಲಿಸುವ ಗಾರ್ಬೇಜ್\n"
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1058
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -156,7 +156,7 @@ msgstr ""
 "hivexsh: setval: ಮೌಲ್ಯದ ವಾಕ್ಯವನ್ನು ಪಾರ್ಸ್ ಮಾಡಲು ಸಾಧ್ಯವಾಗಿಲ್ಲ, ದಯವಿಟ್ಟು ನೆರವಿಗಾಗಿ "
 "hivexsh(1) ಅನ್ನು ನೋಡಿ: %s\n"
 
-#: sh/hivexsh.c:1080
+#: sh/hivexsh.c:1087
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: ಮೂಲ ನೋಡ್ ಅನ್ನು ಅಳಿಸಲು ಸಾಧ್ಯವಿಲ್ಲ\n"
