@@ -38,6 +38,7 @@ Makefile.in
 /config.sub
 /configure
 /depcomp
+/extra-tests/*.hive
 /generator/.pod2text.data.version.2
 /generator/stamp-generator
 /GNUmakefile

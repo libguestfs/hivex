@@ -62,6 +62,11 @@ See the configure output for more details.
 Directories and tools
 ---------------------
 
+extra-tests/
+
+        Extra tests which need external test data.  See
+        hivex-test-data on http://git.annexia.org
+
 generator/
 
 	Generator used to write a lot of boilerplate code for

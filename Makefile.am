@@ -42,6 +42,10 @@ if HAVE_RUBY
 SUBDIRS += ruby
 endif
 
+if ALWAYS_FALSE
+SUBDIRS += extra-tests
+endif
+
 EXTRA_DIST = hivex.pc hivex.pc.in LICENSE README run.in tx-pull.sh
 
 # Generate the ChangeLog automatically from the gitlog.
