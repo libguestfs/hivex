@@ -1,0 +1,104 @@
+#!/bin/bash -
+# hivex 'run' programs locally script
+# Copyright (C) 2011-2013 Red Hat Inc.
+#
+# @configure_input@
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+#----------------------------------------------------------------------
+
+# With this script you can run all the hivex tools without needing to
+# install them first.  You just have to do for example:
+#
+#   ./run ./regedit/hivexregedit [args ...]
+#
+# This works for any C program, hivex tool, and most non-C bindings.
+
+#----------------------------------------------------------------------
+
+# Source and build directories (absolute paths so this works from any
+# directory).
+s="$(cd @abs_srcdir@ && pwd)"
+b="$(cd @abs_builddir@ && pwd)"
+
+# Set LD_LIBRARY_PATH to contain library.
+if [ -z "$LD_LIBRARY_PATH" ]; then
+    LD_LIBRARY_PATH="$b/lib/.libs"
+else
+    LD_LIBRARY_PATH="$b/lib/.libs:$LD_LIBRARY_PATH"
+fi
+export LD_LIBRARY_PATH
+
+# For Perl.
+if [ -z "$PERL5LIB" ]; then
+    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch"
+else
+    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch:$PERL5LIB"
+fi
+export PERL5LIB
+
+# Enable Perl valgrinding.
+# XXX Unclear if this actually makes any difference.  It seems you
+# have to recompile the Perl interpreter with debugging enabled.
+export PERL_DEBUG=1
+export PERL_VALGRIND=1
+export PERL_DESTRUCT_LEVEL=2
+
+# For Python.
+export PYTHON=@PYTHON@
+if [ -z "$PYTHONPATH" ]; then
+    PYTHONPATH="$s/python:$b/python:$b/python/.libs"
+else
+    PYTHONPATH="$s/python:$b/python:$b/python/.libs:$PYTHONPATH"
+fi
+export PYTHONPATH
+
+# For Ruby.
+export RUBY=@RUBY@
+export RAKE=@RAKE@
+if [ -z "$RUBYLIB" ]; then
+    RUBYLIB="$b/ruby/lib:$b/ruby/ext/hivex"
+else
+    RUBYLIB="$b/ruby/lib:$b/ruby/ext/hivex:$RUBYLIB"
+fi
+export RUBYLIB
+export LD_LIBRARY_PATH="$b/ruby/ext/hivex:$LD_LIBRARY_PATH"
+
+# For OCaml.
+if [ -z "$CAML_LD_LIBRARY_PATH" ]; then
+    CAML_LD_LIBRARY_PATH="$b/ocaml"
+else
+    CAML_LD_LIBRARY_PATH="$b/ocaml:$CAML_LD_LIBRARY_PATH"
+fi
+export CAML_LD_LIBRARY_PATH
+
+# This is a cheap way to find some use-after-free and uninitialized
+# read problems when using glibc.
+random_val="$(awk 'BEGIN{srand(); print 1+int(255*rand())}' < /dev/null)"
+export MALLOC_PERTURB_=$random_val
+
+# Do we have libtool?  If we have it then we can use it to make
+# running valgrind simpler.  However don't depend on it.
+if libtool --help >/dev/null 2>&1; then
+    libtool="libtool --mode=execute"
+fi
+
+# Avoid GNOME keyring stupidity
+export GNOME_KEYRING_CONTROL=
+export GNOME_KEYRING_PID=
+
+# Run the program.
+exec $libtool "$@"

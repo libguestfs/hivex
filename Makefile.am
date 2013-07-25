@@ -42,7 +42,7 @@ if HAVE_RUBY
 SUBDIRS += ruby
 endif
 
-EXTRA_DIST = hivex.pc hivex.pc.in LICENSE README tx-pull.sh
+EXTRA_DIST = hivex.pc hivex.pc.in LICENSE README run.in tx-pull.sh
 
 # Generate the ChangeLog automatically from the gitlog.
 dist-hook:

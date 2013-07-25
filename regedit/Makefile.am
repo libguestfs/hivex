@@ -16,8 +16,7 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 EXTRA_DIST = \
-	hivexregedit \
-	run-locally
+	hivexregedit
 
 bin_SCRIPTS = hivexregedit
 

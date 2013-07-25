@@ -38,8 +38,7 @@ libhivexmod_la_CFLAGS = -Wall $(PYTHON_CFLAGS) \
 libhivexmod_la_LIBADD = $(top_builddir)/lib/libhivex.la
 libhivexmod_la_LDFLAGS = -avoid-version -shared -module -shrext $(PYTHON_EXT_SUFFIX)
 
-TESTS_ENVIRONMENT = \
-	PYTHONPATH=$(builddir):$(builddir)/.libs
+TESTS_ENVIRONMENT = ../run
 
 TESTS = run-python-tests
 

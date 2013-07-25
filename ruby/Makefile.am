@@ -39,9 +39,7 @@ if HAVE_RUBY
 
 TESTS = run-ruby-tests
 
-TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/src/.libs \
-	RUBY=$(RUBY) RAKE=$(RAKE)
+TESTS_ENVIRONMENT = ../run
 
 all:
 	$(RAKE) build

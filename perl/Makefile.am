@@ -41,8 +41,7 @@ TESTS = run-perl-tests
 
 $(TESTS): src_deps all
 
-TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs
+TESTS_ENVIRONMENT = ../run
 
 INSTALLDIRS = site
 

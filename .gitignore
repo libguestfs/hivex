@@ -122,6 +122,7 @@ Makefile.in
 /ruby/ext/hivex/_hivex.so
 /ruby/ext/hivex/mkmf.log
 /ruby/Rakefile
+/run
 /sh/*.1
 /sh/hivexsh
 /stamp-h1

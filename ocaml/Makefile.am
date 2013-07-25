@@ -49,9 +49,7 @@ mlhivex.cmxa: $(XOBJS)
 hivex_c.o: hivex_c.c
 	$(CC) $(AM_CPPFLAGS) $(CFLAGS) -fPIC -Wall -c $<
 
-TESTS_ENVIRONMENT = \
-	LD_LIBRARY_PATH=$(top_builddir)/lib/.libs:$(top_builddir)/ocaml \
-	$(VG)
+TESTS_ENVIRONMENT = ../run
 
 TESTS = \
 	t/hivex_005_load \
