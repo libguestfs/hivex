@@ -348,6 +348,12 @@ insert_lf_record (hive_h *h, size_t old_offs, size_t posn,
     (struct ntreg_lf_record *) ((char *) h->addr + old_offs);
   size_t nr_keys = le16toh (old_lf->nr_keys);
 
+  if (nr_keys == UINT16_MAX) {
+    SET_ERRNO (EOVERFLOW,
+               "cannot extend record because it already contains the maximum number of subkeys (%zu)",
+               nr_keys);
+    return 0;
+  }
   nr_keys++; /* in new record ... */
 
   size_t seg_len = sizeof (struct ntreg_lf_record) + (nr_keys-1) * 8;
@@ -400,6 +406,12 @@ insert_li_record (hive_h *h, size_t old_offs, size_t posn,
     (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
   size_t nr_offsets = le16toh (old_li->nr_offsets);
 
+  if (nr_offsets == UINT16_MAX) {
+    SET_ERRNO (EOVERFLOW,
+               "cannot extend record because it already contains the maximum number of subkeys (%zu)",
+               nr_offsets);
+    return 0;
+  }
   nr_offsets++; /* in new record ... */
 
   size_t seg_len = sizeof (struct ntreg_ri_record) + (nr_offsets-1) * 4;
@@ -655,6 +667,14 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 
   size_t i;
   size_t nr_subkeys_in_parent_nk = le32toh (parent_nk->nr_subkeys);
+
+  if (nr_subkeys_in_parent_nk == UINT32_MAX) {
+    free (blocks);
+    SET_ERRNO (EOVERFLOW,
+               "too many subkeys (%zu)", nr_subkeys_in_parent_nk);
+    return 0;
+  }
+
   if (nr_subkeys_in_parent_nk == 0) { /* No subkeys case. */
     /* Free up any existing intermediate blocks. */
     for (i = 0; blocks[i] != 0; ++i)
