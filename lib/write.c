@@ -559,8 +559,11 @@ insert_subkey (hive_h *h, const char *name,
    * indirectly from some ri-record in blocks[].  Since we can update
    * either of these in-place, we don't need to do this recursively.
    */
-  if (le32toh (parent_nk->subkey_lf) + 0x1000 == old_offs)
+  if (le32toh (parent_nk->subkey_lf) + 0x1000 == old_offs) {
+    DEBUG (2, "replacing parent_nk->subkey_lf 0x%zx -> 0x%zx",
+           old_offs, new_offs);
     parent_nk->subkey_lf = htole32 (new_offs - 0x1000);
+  }
   else {
     for (i = 0; blocks[i] != 0; ++i) {
       if (BLOCK_ID_EQ (h, blocks[i], "ri")) {
@@ -568,6 +571,8 @@ insert_subkey (hive_h *h, const char *name,
           (struct ntreg_ri_record *) ((char *) h->addr + blocks[i]);
         for (j = 0; j < le16toh (ri->nr_offsets); ++j)
           if (le32toh (ri->offset[j] + 0x1000) == old_offs) {
+            DEBUG (2, "replacing ri (0x%zx) ->offset[%zu] 0x%zx -> 0x%zx",
+                   blocks[i], j, old_offs, new_offs);
             ri->offset[j] = htole32 (new_offs - 0x1000);
             goto found_it;
           }
