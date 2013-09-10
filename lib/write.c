@@ -570,7 +570,7 @@ insert_subkey (hive_h *h, const char *name,
         struct ntreg_ri_record *ri =
           (struct ntreg_ri_record *) ((char *) h->addr + blocks[i]);
         for (j = 0; j < le16toh (ri->nr_offsets); ++j)
-          if (le32toh (ri->offset[j] + 0x1000) == old_offs) {
+          if (le32toh (ri->offset[j]) + 0x1000 == old_offs) {
             DEBUG (2, "replacing ri (0x%zx) ->offset[%zu] 0x%zx -> 0x%zx",
                    blocks[i], j, old_offs, new_offs);
             ri->offset[j] = htole32 (new_offs - 0x1000);
