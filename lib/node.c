@@ -334,6 +334,16 @@ _hivex_get_children (hive_h *h, hive_node_h node,
   }
 
  out:
+#if 0
+  if (h->msglvl >= 2) {
+    fprintf (stderr, "%s: %s: children = ", "hivex", __func__);
+    _hivex_print_offset_list (&children, stderr);
+    fprintf (stderr, "\n%s: %s: blocks = ", "hivex", __func__);
+    _hivex_print_offset_list (&blocks, stderr);
+    fprintf (stderr, "\n");
+  }
+#endif
+
   *children_ret = _hivex_return_offset_list (&children);
   *blocks_ret = _hivex_return_offset_list (&blocks);
   if (!*children_ret || !*blocks_ret)

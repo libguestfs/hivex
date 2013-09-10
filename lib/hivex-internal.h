@@ -251,6 +251,7 @@ extern size_t _hivex_get_offset_list_length (offset_list *list);
 extern void _hivex_set_offset_list_limit (offset_list *list, size_t limit);
 extern void _hivex_free_offset_list (offset_list *list);
 extern size_t * _hivex_return_offset_list (offset_list *list);
+extern void _hivex_print_offset_list (offset_list *list, FILE *fp);
 
 /* utf16.c */
 extern char *_hivex_windows_utf16_to_utf8 (/* const */ char *input, size_t len);

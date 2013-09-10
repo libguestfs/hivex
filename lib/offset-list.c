@@ -105,3 +105,17 @@ _hivex_return_offset_list (offset_list *list)
     return NULL;
   return list->offsets;         /* caller frees */
 }
+
+void
+_hivex_print_offset_list (offset_list *list, FILE *fp)
+{
+  size_t i;
+
+  fprintf (fp, "[");
+  for (i = 0; i < list->len; ++i) {
+    if (i > 0)
+      fputc (',', fp);
+    fprintf (fp, "%zu", list->offsets[i]);
+  }
+  fprintf (fp, "]");
+}
