@@ -155,7 +155,7 @@ struct ntreg_lf_record {
   struct {
     uint32_t offset;            /* offset of nk-record for this subkey */
     char hash[4];               /* hash of subkey name */
-  } keys[1];
+  } __attribute__((__packed__)) keys[1];
 } __attribute__((__packed__));
 
 struct ntreg_ri_record {
