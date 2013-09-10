@@ -32,7 +32,7 @@
 char *
 _hivex_windows_utf16_to_utf8 (/* const */ char *input, size_t len)
 {
-  iconv_t ic = iconv_open ("UTF-8", "UTF-16");
+  iconv_t ic = iconv_open ("UTF-8", "UTF-16LE");
   if (ic == (iconv_t) -1)
     return NULL;
 
