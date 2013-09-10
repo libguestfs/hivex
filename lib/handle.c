@@ -40,6 +40,7 @@
 
 #include "full-read.h"
 #include "full-write.h"
+#include "c-ctype.h"
 
 #include "hivex.h"
 #include "hivex-internal.h"
@@ -263,9 +264,20 @@ hivex_open (const char *filename, int flags)
         goto error;
       }
 
-      DEBUG (2, "%s block id %d,%d at 0x%zx size %zu%s",
-             used ? "used" : "free", block->id[0], block->id[1], blkoff,
-             seg_len, is_root ? " (root)" : "");
+      if (h->msglvl >= 2) {
+        unsigned char *id = (unsigned char *) block->id;
+        int id0 = id[0], id1 = id[1];
+
+        fprintf (stderr, "%s: %s: "
+                 "%s block id %d,%d (%c%c) at 0x%zx size %zu%s\n",
+                 "hivex", __func__,
+                 used ? "used" : "free",
+                 id0, id1,
+                 c_isprint (id0) ? id0 : '.',
+                 c_isprint (id1) ? id1 : '.',
+                 blkoff,
+                 seg_len, is_root ? " (root)" : "");
+      }
 
       blocks_bytes += seg_len;
       if (seg_len < smallest_block) smallest_block = seg_len;
