@@ -22,6 +22,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 
+#include "byte_conversions.h"
+
 struct hive_h {
   char *filename;
   int fd;

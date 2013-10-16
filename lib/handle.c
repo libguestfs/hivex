@@ -44,7 +44,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 static uint32_t
 header_checksum (const hive_h *h)

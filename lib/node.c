@@ -34,7 +34,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 hive_node_h
 hivex_root (hive_h *h)

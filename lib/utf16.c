@@ -27,7 +27,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 char *
 _hivex_windows_utf16_to_utf8 (/* const */ char *input, size_t len)

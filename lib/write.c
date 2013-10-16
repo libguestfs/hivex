@@ -41,7 +41,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 /*----------------------------------------------------------------------
  * Writing.

@@ -32,7 +32,6 @@
 
 #include "hivex.h"
 #include "hivex-internal.h"
-#include "byte_conversions.h"
 
 int
 _hivex_get_values (hive_h *h, hive_node_h node,
