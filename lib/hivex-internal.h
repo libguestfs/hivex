@@ -268,11 +268,13 @@ extern size_t * _hivex_return_offset_list (offset_list *list);
 extern void _hivex_print_offset_list (offset_list *list, FILE *fp);
 
 /* utf16.c */
-extern char* _hivex_to_utf8 (/* const */ char *input, size_t len, char* input_encoding);
+extern char* _hivex_recode (char *input_encoding,
+                            const char *input, size_t input_len,
+                            char *output_encoding, size_t *output_len);
 #define _hivex_windows_utf16_to_utf8(_input, _len) \
-  _hivex_to_utf8 (_input, _len, "UTF-16LE")
+  _hivex_recode ("UTF-16LE", _input, _len, "UTF-8", NULL)
 #define _hivex_windows_latin1_to_utf8(_input, _len) \
-  _hivex_to_utf8 (_input, _len, "LATIN1")
+  _hivex_recode ("LATIN1", _input, _len, "UTF-8", NULL)
 extern size_t _hivex_utf16_string_len_in_bytes_max (const char *str, size_t len);
 
 /* util.c */

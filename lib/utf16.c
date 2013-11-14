@@ -29,18 +29,19 @@
 #include "hivex-internal.h"
 
 char *
-_hivex_to_utf8 (/* const */ char *input, size_t len, char* input_encoding)
+_hivex_recode (char *input_encoding, const char *input, size_t input_len,
+               char *output_encoding, size_t *output_len)
 {
-  iconv_t ic = iconv_open ("UTF-8", input_encoding);
+  iconv_t ic = iconv_open (output_encoding, input_encoding);
   if (ic == (iconv_t) -1)
     return NULL;
 
   /* iconv(3) has an insane interface ... */
 
-  size_t outalloc = len;
+  size_t outalloc = input_len;
 
  again:;
-  size_t inlen = len;
+  size_t inlen = input_len;
   size_t outlen = outalloc;
   char *out = malloc (outlen + 1);
   if (out == NULL) {
@@ -79,6 +80,8 @@ _hivex_to_utf8 (/* const */ char *input, size_t len, char* input_encoding)
 
   *outp = '\0';
   iconv_close (ic);
+  if (output_len != NULL)
+    *output_len = outp - out;
 
   return out;
 }
