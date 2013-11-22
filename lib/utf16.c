@@ -29,15 +29,14 @@
 #include "hivex-internal.h"
 
 char *
-_hivex_windows_utf16_to_utf8 (/* const */ char *input, size_t len)
+_hivex_to_utf8 (/* const */ char *input, size_t len, char* input_encoding)
 {
-  iconv_t ic = iconv_open ("UTF-8", "UTF-16LE");
+  iconv_t ic = iconv_open ("UTF-8", input_encoding);
   if (ic == (iconv_t) -1)
     return NULL;
 
   /* iconv(3) has an insane interface ... */
 
-  /* Mostly UTF-8 will be smaller, so this is a good initial guess. */
   size_t outalloc = len;
 
  again:;

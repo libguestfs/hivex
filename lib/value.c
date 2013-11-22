@@ -215,12 +215,7 @@ hivex_value_key (hive_h *h, hive_value_h value)
     return NULL;
   size_t flags = le16toh (vk->flags);
   if (flags & 0x01) {
-    char *ret = malloc (len + 1);
-    if (ret == NULL)
-      return NULL;
-    memcpy (ret, vk->name, len);
-    ret[len] = '\0';
-    return ret;
+    return _hivex_windows_latin1_to_utf8 (vk->name, len);
   } else {
     return _hivex_windows_utf16_to_utf8 (vk->name, len);
   }

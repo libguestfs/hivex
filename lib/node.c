@@ -90,12 +90,7 @@ hivex_node_name (hive_h *h, hive_node_h node)
   }
   size_t flags = le16toh (nk->flags);
   if (flags & 0x20) {
-    char *ret = malloc (len + 1);
-    if (ret == NULL)
-      return NULL;
-    memcpy (ret, nk->name, len);
-    ret[len] = '\0';
-    return ret;
+    return _hivex_windows_latin1_to_utf8 (nk->name, len);
   } else {
     return _hivex_windows_utf16_to_utf8 (nk->name, len);
   }
