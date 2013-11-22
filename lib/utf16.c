@@ -24,6 +24,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <iconv.h>
+#include <string.h>
 
 #include "hivex.h"
 #include "hivex-internal.h"
@@ -84,6 +85,24 @@ _hivex_recode (char *input_encoding, const char *input, size_t input_len,
     *output_len = outp - out;
 
   return out;
+}
+
+/* Encode a given UTF-8 string to Latin1 (preferred) or UTF-16 for
+ * storing in the hive file, as needed.
+ */
+char*
+_hivex_encode_string(const char *str, size_t *size, int *utf16)
+{
+  char* outstr;
+  *utf16 = 0;
+  outstr = _hivex_recode ("UTF-8", str, strlen(str),
+                          "LATIN1", size);
+  if (outstr != NULL)
+    return outstr;
+  *utf16 = 1;
+  outstr = _hivex_recode ("UTF-8", str, strlen(str),
+                          "UTF-16LE", size);
+  return outstr;
 }
 
 /* Get the length of a UTF-16 format string.  Handle the string as
