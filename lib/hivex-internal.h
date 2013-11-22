@@ -125,7 +125,19 @@ struct ntreg_hbin_block {
 struct ntreg_nk_record {
   int32_t seg_len;              /* length (always -ve because used) */
   char id[2];                   /* "nk" */
-  uint16_t flags;
+  uint16_t flags;               /* bit 1: HiveExit
+                                   bit 2: HiveEntry == root key
+                                   bit 3: NoDelete
+                                   bit 4: SymbolicLink
+                                   bit 5: CompressedName: Name is encoded
+                                          in ASCII (actually: Latin-1)
+                                          rather than UTF-16.
+                                   bit 6: PredefinedHandle
+                                   bit 7: VirtMirrored
+                                   bit 8: VirtTarget
+                                   bit 9: VirtualStore */
+  /* Information from: Peter Norris: The Internal Structure of the
+     Windows Registry, 2008, p.220 ff. */
   int64_t timestamp;
   uint32_t unknown1;
   uint32_t parent;              /* offset of owner/parent */
