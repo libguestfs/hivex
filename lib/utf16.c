@@ -30,8 +30,8 @@
 #include "hivex-internal.h"
 
 char *
-_hivex_recode (char *input_encoding, const char *input, size_t input_len,
-               char *output_encoding, size_t *output_len)
+_hivex_recode (const char *input_encoding, const char *input, size_t input_len,
+               const char *output_encoding, size_t *output_len)
 {
   iconv_t ic = iconv_open (output_encoding, input_encoding);
   if (ic == (iconv_t) -1)
@@ -51,10 +51,11 @@ _hivex_recode (char *input_encoding, const char *input, size_t input_len,
     errno = err;
     return NULL;
   }
-  char *inp = input;
+  const char *inp = input;
   char *outp = out;
 
-  size_t r = iconv (ic, &inp, &inlen, &outp, &outlen);
+  /* Surely iconv doesn't really modify the input buffer? XXX */
+  size_t r = iconv (ic, (char **) &inp, &inlen, &outp, &outlen);
   if (r == (size_t) -1) {
     if (errno == E2BIG) {
       int err = errno;
