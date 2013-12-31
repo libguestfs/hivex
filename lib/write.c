@@ -954,7 +954,6 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
   for (i = 0; i < nr_values; ++i) {
     /* Allocate vk record to store this (key, value) pair. */
     static const char vk_id[2] = { 'v', 'k' };
-    size_t name_len = strlen (values[i].key);
     size_t recoded_name_len;
     int use_utf16;
     char* recoded_name = _hivex_encode_string (values[i].key, &recoded_name_len,
