@@ -380,6 +380,11 @@ new key is added.  Key matching is case insensitive.
 C<node> is the node to modify.";
 ]
 
+let f_len_exists n =
+  List.exists
+    (function (cand, _, _, _) -> cand = (String.concat "" [n; "_len"]))
+    functions
+
 (* Useful functions.
  * Note we don't want to use any external OCaml libraries which
  * makes this a bit harder than it should be.
@@ -1839,9 +1844,7 @@ static void raise_closed (const char *) Noreturn;
        * call, so don't do it.  XXX
        *)
       (*pr "  caml_enter_blocking_section ();\n";*)
-      pr "  r = hivex_%s (%s" name (List.hd c_params);
-      List.iter (pr ", %s") (List.tl c_params);
-      pr ");\n";
+      pr "  r = hivex_%s (%s);\n" name (String.concat ", " c_params);
       (*pr "  caml_leave_blocking_section ();\n";*)
       pr "\n";
 
@@ -1890,7 +1893,13 @@ static void raise_closed (const char *) Noreturn;
            pr "  rv = copy_int_array (r);\n";
            pr "  free (r);\n"
        | RString ->
-           pr "  rv = caml_copy_string (r);\n";
+           if f_len_exists name then (
+             pr "  size_t sz;\n  sz = hivex_%s_len (%s);\n"
+               name (String.concat ", " c_params);
+             pr "  rv = caml_alloc_string (sz);\n";
+             pr "  memcpy (String_val (rv), r, sz);\n"
+           ) else
+             pr "  rv = caml_copy_string (r);\n";
            pr "  free (r);\n"
        | RStringList ->
            pr "  rv = caml_copy_string_array ((const char **) r);\n";
@@ -2638,7 +2647,11 @@ DESTROY (h)
              pr "      if (r == NULL)\n";
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
 	       name;
-             pr "      RETVAL = newSVpv (r, 0);\n";
+             if f_len_exists name then
+               pr "      RETVAL = newSVpvn (r, hivex_%s_len (%s));\n"
+                 name (String.concat ", " c_params)
+             else
+               pr "      RETVAL = newSVpv (r, 0);\n";
 	     pr "      free (r);\n";
              pr " OUTPUT:\n";
              pr "      RETVAL\n"
@@ -3178,10 +3191,19 @@ put_val_type (char *val, size_t len, hive_type t)
        | RValue ->
            pr "  py_r = PyLong_FromLongLong (r);\n"
        | RString ->
+           if f_len_exists name then
+             pr "  size_t sz = hivex_%s_len (%s);\n"
+               name (String.concat ", " c_params);
            pr "#ifdef HAVE_PYSTRING_ASSTRING\n";
-           pr "  py_r = PyString_FromString (r);\n";
+           if f_len_exists name then
+             pr "  py_r = PyString_FromStringAndSize (r, sz);\n"
+           else
+             pr "  py_r = PyString_FromString (r);\n";
            pr "#else\n";
-           pr "  py_r = PyUnicode_FromString (r);\n";
+           if f_len_exists name then
+             pr "  py_r = PyUnicode_FromStringAndSize (r, sz);\n"
+           else
+             pr "  py_r = PyUnicode_FromString (r);\n";
            pr "#endif\n";
            pr "  free (r);"
        | RStringList ->
@@ -3633,7 +3655,11 @@ get_values (VALUE valuesv, size_t *nr_values)
         pr "  free (r);\n";
         pr "  return rv;\n"
       | RString ->
-        pr "  VALUE rv = rb_str_new2 (r);\n";
+        if f_len_exists name then (
+          pr "  size_t sz = hivex_%s_len (%s);\n" name (String.concat ", " c_params);
+          pr "  VALUE rv = rb_str_new (r, sz);\n"
+        ) else
+          pr "  VALUE rv = rb_str_new2 (r);\n";
         pr "  free (r);\n";
         pr "  return rv;\n"
       | RStringList ->
