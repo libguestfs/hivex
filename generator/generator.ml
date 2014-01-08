@@ -179,7 +179,14 @@ C<$$$PROTO.HIV> (other names are possible: it seems to depend on the
 tool or program that created the hive in the first place).  You can
 only know the \"real\" name of the root node by knowing which registry
 file this hive originally comes from, which is knowledge that is
-outside the scope of this library.";
+outside the scope of this library.
+
+The name is recoded to UTF-8 and may contain embedded NUL characters.";
+
+  "node_name_len", (RSize, [AHive; ANode "node"]),
+    "return the length of a node's name",
+    "\
+Return the length of the node name as produced by C<hivex_node_name>.";
 
   "node_timestamp", (RInt64, [AHive; ANode "node"]),
     "return the modification time of the node",
@@ -233,13 +240,15 @@ default key.";
   "value_key_len", (RSize, [AHive; AValue "val"]),
     "return the length of a value's key",
     "\
-Return the length of the key (name) of a (key, value) pair.  The
-length can legitimately be 0, so errno is the necesary mechanism
-to check for errors.
+Return the length of the key (name) of a (key, value) pair as produced
+by C<hivex_value_key>. The length can legitimately be 0, so errno is 
+the necesary mechanism to check for errors.
 
 In the context of Windows Registries, a zero-length name means
 that this value is the default key for this node in the tree.
-This is usually written as C<\"@\">.";
+This is usually written as C<\"@\">.
+
+The key is recoded to UTF-8 and may contain embedded NUL characters.";
 
   "value_key", (RString, [AHive; AValue "val"]),
     "return the key of a (key, value) pair",

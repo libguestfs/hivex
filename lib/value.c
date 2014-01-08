@@ -186,13 +186,14 @@ hivex_value_key_len (hive_h *h, hive_value_h value)
   /* vk->name_len is unsigned, 16 bit, so this is safe ...  However
    * we have to make sure the length doesn't exceed the block length.
    */
-  size_t ret = le16toh (vk->name_len);
+  size_t len = le16toh (vk->name_len);
+
   size_t seg_len = block_len (h, value, NULL);
-  if (sizeof (struct ntreg_vk_record) + ret - 1 > seg_len) {
-    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", ret, seg_len);
+  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
+    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", len, seg_len);
     return 0;
   }
-  return ret;
+  return _hivex_utf8_strlen (vk->name, len, ! (le16toh (vk->flags) & 0x01));
 }
 
 char *
