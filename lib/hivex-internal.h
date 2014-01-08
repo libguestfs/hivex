@@ -277,6 +277,7 @@ extern char * _hivex_recode (const char *input_encoding,
   _hivex_recode ("LATIN1", _input, _len, "UTF-8", NULL)
 extern char* _hivex_encode_string(const char *str, size_t *size, int *utf16);
 extern size_t _hivex_utf16_string_len_in_bytes_max (const char *str, size_t len);
+extern size_t _hivex_utf8_strlen (const char* str, size_t len, int utf16);
 
 /* util.c */
 extern void _hivex_free_strings (char **argv);
