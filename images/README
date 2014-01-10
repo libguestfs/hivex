@@ -11,3 +11,17 @@ hand-crafted binary blob.
 tests.
 
 - Richard W.M. Jones 2010-02-24.
+
+'special' was created by importing 'minimal' into a VM running Windows
+XP, loading it into HKEY_LOCAL_MACHINE\minimal using regedit.exe
+(File/Load Hive...), and running 'mkzero.exe'.
+
+'mkzero.exe' creates the following keys and values:
+
+- A key 'zero\0key' containing a REG_DWORD value 'zero\0val' (\0 = zero
+  character)
+- A key 'asdf_äöüß' containing a REG_DWORD value 'asdf_äöüß'
+- A key 'weird™' containing a REG_DWORD value 'symbols $£₤₧€' (SMALL
+  DOLLAR SIGN, FULLWIDTH POUND SIGN, PESETA SIGN, EURO SIGN)
+
+- Hilko Bengen 2014-01-10.
