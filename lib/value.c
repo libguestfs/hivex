@@ -207,14 +207,14 @@ hivex_value_key (hive_h *h, hive_value_h value)
   struct ntreg_vk_record *vk =
     (struct ntreg_vk_record *) ((char *) h->addr + value);
 
-  /* AFAIK the key is always plain ASCII, so no conversion to UTF-8 is
-   * necessary.  However we do need to nul-terminate the string.
-   */
-  errno = 0;
-  size_t len = hivex_value_key_len (h, value);
-  if (len == 0 && errno != 0)
-    return NULL;
   size_t flags = le16toh (vk->flags);
+  size_t len = le16toh (vk->name_len);
+
+  size_t seg_len = block_len (h, value, NULL);
+  if (sizeof (struct ntreg_vk_record) + len - 1 > seg_len) {
+    SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", len, seg_len);
+    return NULL;
+  }
   if (flags & 0x01) {
     return _hivex_windows_latin1_to_utf8 (vk->name, len);
   } else {
