@@ -38,5 +38,5 @@ moderate_value_node = h.node_get_child (root, "ModerateValueParent")
 moderate_value_value = h.node_get_value (moderate_value_node, "33Bytes")
 
 r = h.value_data_cell_offset (moderate_value_value)
-assert r[0] == 37L
-assert r[1] == 8712L
+assert r[0] == 37
+assert r[1] == 8712
