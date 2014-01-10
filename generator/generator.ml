@@ -2648,7 +2648,7 @@ DESTROY (h)
              pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
 	       name;
              if f_len_exists name then
-               pr "      RETVAL = newSVpvn (r, hivex_%s_len (%s));\n"
+               pr "      RETVAL = newSVpvn_utf8 (r, hivex_%s_len (%s), 1);\n"
                  name (String.concat ", " c_params)
              else
                pr "      RETVAL = newSVpv (r, 0);\n";
