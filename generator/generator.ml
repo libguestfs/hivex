@@ -3367,6 +3367,9 @@ and generate_ruby_c () =
 #include <stdint.h>
 
 #include <ruby.h>
+#ifdef HAVE_RUBY_ENCODING_H
+#include <ruby/encoding.h>
+#endif
 
 #include \"hivex.h\"
 
@@ -3657,7 +3660,10 @@ get_values (VALUE valuesv, size_t *nr_values)
       | RString ->
         if f_len_exists name then (
           pr "  size_t sz = hivex_%s_len (%s);\n" name (String.concat ", " c_params);
-          pr "  VALUE rv = rb_str_new (r, sz);\n"
+          pr "  VALUE rv = rb_str_new (r, sz);\n";
+          pr "#ifdef HAVE_RUBY_ENCODING_H\n";
+          pr "  rb_enc_associate (rv, rb_utf8_encoding ());\n";
+          pr "#endif\n";
         ) else
           pr "  VALUE rv = rb_str_new2 (r);\n";
         pr "  free (r);\n";
