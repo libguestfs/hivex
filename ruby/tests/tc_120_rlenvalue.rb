@@ -22,13 +22,11 @@
 # 8712.
 
 require 'test/unit'
-$:.unshift(File::join(File::dirname(__FILE__), "..", "lib"))
-$:.unshift(File::join(File::dirname(__FILE__), "..", "ext", "hivex"))
 require 'hivex'
 
 class TestRLenValue < Test::Unit::TestCase
   def test_RLenValue
-    h = Hivex::open("../images/rlenvalue_test_hive", {})
+    h = Hivex::open(File::join(ENV['abs_srcdir'], '..', 'images', 'rlenvalue_test_hive'), {})
     assert_not_nil(h)
 
     root = h.root()

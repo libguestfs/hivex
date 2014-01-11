@@ -564,6 +564,7 @@ AC_CONFIG_FILES([Makefile
                  sh/Makefile
                  xml/Makefile])
 AC_CONFIG_FILES([python/run-python-tests], [chmod +x python/run-python-tests])
+AC_CONFIG_FILES([ruby/run-ruby-tests], [chmod +x ruby/run-ruby-tests])
 AC_CONFIG_FILES([run], [chmod +x,-w run])
 AC_OUTPUT
 

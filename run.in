@@ -70,9 +70,9 @@ export PYTHONPATH
 export RUBY=@RUBY@
 export RAKE=@RAKE@
 if [ -z "$RUBYLIB" ]; then
-    RUBYLIB="$b/ruby/lib:$b/ruby/ext/hivex"
+    RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex"
 else
-    RUBYLIB="$b/ruby/lib:$b/ruby/ext/hivex:$RUBYLIB"
+    RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex:$RUBYLIB"
 fi
 export RUBYLIB
 export LD_LIBRARY_PATH="$b/ruby/ext/hivex:$LD_LIBRARY_PATH"
