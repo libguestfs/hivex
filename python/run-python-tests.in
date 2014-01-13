@@ -18,8 +18,9 @@
 
 set -e
 shopt -s nullglob
+export srcdir=@srcdir@
 
-for f in @srcdir@t/*.py; do
+for f in @srcdir@/t/*.py; do
   basename "$f"
   $PYTHON "$f"
 done
