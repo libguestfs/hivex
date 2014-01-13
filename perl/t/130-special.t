@@ -2,7 +2,11 @@
 
 use strict;
 use warnings;
-use utf8::all; # so the strings in this file are interpreted correctly.
+use utf8; # so the strings in this file are interpreted correctly.
+BEGIN {
+    binmode STDOUT, ':encoding(UTF-8)';
+    binmode STDERR, ':encoding(UTF-8)';
+}
 use Test::More;
 
 use Win::Hivex;
