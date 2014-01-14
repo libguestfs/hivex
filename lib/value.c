@@ -462,7 +462,27 @@ hivex_value_string (hive_h *h, hive_value_h value)
   return ret;
 }
 
-/* http://blogs.msdn.com/oldnewthing/archive/2009/10/08/9904646.aspx */
+/* Even though
+ * http://msdn.microsoft.com/en-us/library/windows/desktop/ms724884.aspx
+ * and
+ * http://blogs.msdn.com/oldnewthing/archive/2009/10/08/9904646.aspx
+ * claim that it is not possible to store empty strings in MULTI_SZ
+ * string lists, such lists are used by Windows itself:
+ *
+ * The MoveFileEx function can schedule files to be renamed (or
+ * removed) at restart time by storing pairs of filenames in the
+ * HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\PendingFileRenameOperations
+ * value.
+ *
+ * The documentation for MoveFileEx
+ * (http://msdn.microsoft.com/en-us/library/windows/desktop/aa365240)
+ * states that "[i]f dwFlags specifies MOVEFILE_DELAY_UNTIL_REBOOT,
+ * and lpNewFileName is NULL, MoveFileEx registers the
+ * lpExistingFileName file to be deleted when the system restarts."
+ *
+ * For scheduled removals, the second file name of any pair stored in
+ * PendingFileRenameOperations is an empty string.
+ */
 char **
 hivex_value_multiple_strings (hive_h *h, hive_value_h value)
 {
@@ -490,8 +510,8 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
   char *p = data;
   size_t plen;
 
-  while (p < data + len &&
-         (plen = _hivex_utf16_string_len_in_bytes_max (p, data + len - p)) > 0) {
+  while (p < data + len) {
+    plen = _hivex_utf16_string_len_in_bytes_max (p, data + len - p);
     nr_strings++;
     char **ret2 = realloc (ret, (1 + nr_strings) * sizeof (char *));
     if (ret2 == NULL) {
