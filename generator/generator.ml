@@ -2925,11 +2925,7 @@ put_string_list (char * const * const argv)
 
   list = PyList_New (argc);
   for (i = 0; i < argc; ++i) {
-#ifdef HAVE_PYSTRING_ASSTRING
-    PyList_SetItem (list, i, PyString_FromString (argv[i]));
-#else
-    PyList_SetItem (list, i, PyUnicode_FromString (argv[i]));
-#endif
+    PyList_SetItem (list, i, PyUnicode_DecodeUTF8 (argv[i], strlen (argv[i]), NULL));
   }
 
   return list;
@@ -2985,11 +2981,7 @@ put_val_type (char *val, size_t len, hive_type t)
 {
   PyObject *r = PyTuple_New (2);
   PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
-#ifdef HAVE_PYSTRING_ASSTRING
-  PyTuple_SetItem (r, 1, PyString_FromStringAndSize (val, len));
-#else
-  PyTuple_SetItem (r, 1, PyBytes_FromStringAndSize (val, len));
-#endif
+  PyTuple_SetItem (r, 1, PyUnicode_DecodeUTF8 (val, len, NULL));
   return r;
 }
 
@@ -3194,17 +3186,10 @@ put_val_type (char *val, size_t len, hive_type t)
            if f_len_exists name then
              pr "  size_t sz = hivex_%s_len (%s);\n"
                name (String.concat ", " c_params);
-           pr "#ifdef HAVE_PYSTRING_ASSTRING\n";
            if f_len_exists name then
-             pr "  py_r = PyString_FromStringAndSize (r, sz);\n"
+             pr "  py_r = PyUnicode_DecodeUTF8 (r, sz, NULL);\n"
            else
-             pr "  py_r = PyString_FromString (r);\n";
-           pr "#else\n";
-           if f_len_exists name then
-             pr "  py_r = PyUnicode_FromStringAndSize (r, sz);\n"
-           else
-             pr "  py_r = PyUnicode_FromString (r);\n";
-           pr "#endif\n";
+             pr "  py_r = PyUnicode_DecodeUTF8 (r, strlen (r), NULL);\n";
            pr "  free (r);"
        | RStringList ->
            pr "  py_r = put_string_list (r);\n";
