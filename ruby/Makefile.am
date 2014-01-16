@@ -45,13 +45,17 @@ all:
 	$(RAKE) build
 	$(RAKE) rdoc
 
-RUBY_SITELIB := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitelibdir']")
-RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitearchdir']")
+# Packagers can override this by doing: make INSTALLDIRS=vendor install
+# INSTALLDIRS also affects where Perl bindings are installed.
+INSTALLDIRS = site
+
+RUBY_LIBDIR := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['$(INSTALLDIRS)libdir']")
+RUBY_ARCHDIR := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['$(INSTALLDIRS)archdir']")
 
 install:
-	$(MKDIR_P) $(DESTDIR)$(RUBY_SITELIB)
-	$(MKDIR_P) $(DESTDIR)$(RUBY_SITEARCH)
-	$(INSTALL) -p -m 0644 ${srcdir}/lib/hivex.rb $(DESTDIR)$(RUBY_SITELIB)
-	$(INSTALL) -p -m 0755 ${builddir}/ext/hivex/_hivex.so $(DESTDIR)$(RUBY_SITEARCH)
+	$(MKDIR_P) $(DESTDIR)$(RUBY_LIBDIR)
+	$(MKDIR_P) $(DESTDIR)$(RUBY_ARCHDIR)
+	$(INSTALL) -p -m 0644 $(srcdir)/lib/hivex.rb $(DESTDIR)$(RUBY_LIBDIR)
+	$(INSTALL) -p -m 0755 $(builddir)/ext/hivex/_hivex.so $(DESTDIR)$(RUBY_ARCHDIR)
 
 endif
