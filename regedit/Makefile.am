@@ -39,6 +39,6 @@ $(top_builddir)/html/hivexregedit.1.html: hivexregedit
 	  --css 'pod.css' \
 	  --htmldir html \
 	  --outfile html/hivexregedit.1.html \
-	  regedit/hivexregedit
+	  $(abs_srcdir)/hivexregedit
 
 CLEANFILES = $(man_MANS)
