@@ -51,7 +51,7 @@ RUBY_SITEARCH := $(shell $(RUBY) -rrbconfig -e "puts RbConfig::CONFIG['sitearchd
 install:
 	$(MKDIR_P) $(DESTDIR)$(RUBY_SITELIB)
 	$(MKDIR_P) $(DESTDIR)$(RUBY_SITEARCH)
-	$(INSTALL) -p -m 0644 lib/hivex.rb $(DESTDIR)$(RUBY_SITELIB)
-	$(INSTALL) -p -m 0755 ext/hivex/_hivex.so $(DESTDIR)$(RUBY_SITEARCH)
+	$(INSTALL) -p -m 0644 ${srcdir}/lib/hivex.rb $(DESTDIR)$(RUBY_SITELIB)
+	$(INSTALL) -p -m 0755 ${builddir}/ext/hivex/_hivex.so $(DESTDIR)$(RUBY_SITEARCH)
 
 endif
