@@ -2981,7 +2981,7 @@ put_val_type (char *val, size_t len, hive_type t)
 {
   PyObject *r = PyTuple_New (2);
   PyTuple_SetItem (r, 0, PyLong_FromLong ((long) t));
-  PyTuple_SetItem (r, 1, PyUnicode_DecodeUTF8 (val, len, NULL));
+  PyTuple_SetItem (r, 1, PyBytes_FromStringAndSize (val, len));
   return r;
 }
 
