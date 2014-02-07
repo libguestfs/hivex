@@ -334,7 +334,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
   /* Arbitrarily limit the length that we will read. */
   if (len > HIVEX_MAX_VALUE_LEN) {
     SET_ERRNO (ERANGE, "data length > HIVEX_MAX_VALUE_LEN (%zu > %d)",
-               len, HIVEX_MAX_SUBKEYS);
+               len, HIVEX_MAX_VALUE_LEN);
     return NULL;
   }
 
