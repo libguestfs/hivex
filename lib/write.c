@@ -610,7 +610,8 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 
   size_t recoded_name_len;
   int use_utf16 = 0;
-  char* recoded_name = _hivex_encode_string (name, &recoded_name_len, &use_utf16);
+  char *recoded_name =
+    _hivex_encode_string (name, &recoded_name_len, &use_utf16);
   if (recoded_name == NULL) {
     SET_ERRNO (EINVAL, "malformed name");
     return 0;
@@ -620,8 +621,10 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   static const char nk_id[2] = { 'n', 'k' };
   size_t seg_len = sizeof (struct ntreg_nk_record) + recoded_name_len;
   hive_node_h nkoffset = allocate_block (h, seg_len, nk_id);
-  if (nkoffset == 0)
+  if (nkoffset == 0) {
+    free (recoded_name);
     return 0;
+  }
 
   DEBUG (2, "allocated new nk-record for child at 0x%zx", nkoffset);
 
