@@ -15,6 +15,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-require 'test/unit'
+begin
+  require 'minitest/autorun'
+rescue LoadError
+  require 'test/unit'
+  MiniTest = Test
+  module Test
+    Assertions = Unit::Assertions
+    module Assertions
+      alias refute_nil assert_not_nil
+    end
+  end
+end
 
 require 'hivex'

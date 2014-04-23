@@ -17,10 +17,10 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestSetValue < Test::Unit::TestCase
+class TestSetValue < MiniTest::Unit::TestCase
   def test_set_value
     h = Hivex::open("../images/minimal", {:write => 1})
-    assert_not_nil (h)
+    refute_nil (h)
 
     root = h.root()
     assert (root)

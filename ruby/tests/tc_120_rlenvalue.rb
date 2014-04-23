@@ -23,16 +23,16 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestRLenValue < Test::Unit::TestCase
+class TestRLenValue < MiniTest::Unit::TestCase
   def test_RLenValue
     h = Hivex::open(File::join(ENV['abs_srcdir'], '..', 'images', 'rlenvalue_test_hive'), {})
-    assert_not_nil(h)
+    refute_nil(h)
 
     root = h.root()
-    assert_not_nil(root)
+    refute_nil(root)
 
     moderate_value_node = h.node_get_child(root, "ModerateValueParent")
-    assert_not_nil(moderate_value_node)
+    refute_nil(moderate_value_node)
 
     moderate_value_value = h.node_get_value(moderate_value_node, "33Bytes")
 

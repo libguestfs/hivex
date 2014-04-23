@@ -17,10 +17,10 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestClose < Test::Unit::TestCase
+class TestClose < MiniTest::Unit::TestCase
   def test_close
     h = Hivex::open("../images/minimal", {})
-    assert_not_nil (h)
+    refute_nil (h)
     h.close()
   end
 end

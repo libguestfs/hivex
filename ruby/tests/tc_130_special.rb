@@ -3,13 +3,13 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestRLenValue < Test::Unit::TestCase
+class TestRLenValue < MiniTest::Unit::TestCase
   def test_RLenValue
     h = Hivex::open(File::join(ENV['abs_srcdir'], '..', 'images', 'special'), {})
-    assert_not_nil(h)
+    refute_nil(h)
 
     root = h.root()
-    assert_not_nil(root)
+    refute_nil(root)
 
     nodes = h.node_children (root)
     node = nodes.find { |n| h.node_name(n) == "abcd_äöüß" }
