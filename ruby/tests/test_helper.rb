@@ -15,12 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-require File::join(File::dirname(__FILE__), 'test_helper')
+require 'test/unit'
 
-class TestClose < Test::Unit::TestCase
-  def test_close
-    h = Hivex::open("../images/minimal", {})
-    assert_not_nil (h)
-    h.close()
-  end
-end
+require 'hivex'

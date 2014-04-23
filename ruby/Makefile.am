@@ -23,7 +23,8 @@ EXTRA_DIST = \
 	ext/hivex/_hivex.c \
 	lib/hivex.rb \
 	run-ruby-tests \
-	tests/tc_*.rb
+	tests/tc_*.rb \
+	tests/test_helper.rb
 
 CLEANFILES = \
 	lib/*~ \

@@ -1,5 +1,5 @@
 # hivex Ruby bindings -*- ruby -*-
-# Copyright (C) 2009-2011 Red Hat Inc.
+# Copyright (C) 2009-2014 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,8 +21,7 @@
 # length and offset for this value cell should be 37 bytes, position
 # 8712.
 
-require 'test/unit'
-require 'hivex'
+require File::join(File::dirname(__FILE__), 'test_helper')
 
 class TestRLenValue < Test::Unit::TestCase
   def test_RLenValue

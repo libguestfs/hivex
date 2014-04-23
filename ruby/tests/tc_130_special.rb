@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 # -*- ruby -*-
 
-require 'test/unit'
-require 'hivex'
+require File::join(File::dirname(__FILE__), 'test_helper')
 
 class TestRLenValue < Test::Unit::TestCase
   def test_RLenValue
