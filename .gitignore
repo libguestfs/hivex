@@ -123,6 +123,7 @@ Makefile.in
 /ruby/ext/hivex/_hivex.so
 /ruby/ext/hivex/mkmf.log
 /ruby/Rakefile
+/ruby/run-ruby-tests
 /run
 /sh/*.1
 /sh/hivexsh
