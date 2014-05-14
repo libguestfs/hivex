@@ -7,7 +7,15 @@ BEGIN {
     binmode STDOUT, ':encoding(UTF-8)';
     binmode STDERR, ':encoding(UTF-8)';
 }
+
 use Test::More;
+
+# Old Perl hivex bindings cannot handle Unicode properly.
+if ($] < 5.012) {
+    plan skip_all => "Version of Perl is too old to handle Unicode";
+} else {
+    plan tests => 8;
+}
 
 use Win::Hivex;
 
@@ -34,5 +42,3 @@ ok $value, 'value has been found';
 ok $node, q<'weird™' (node) has been found>;
 ($value) = grep { $h->value_key($_) eq 'symbols $£₤₧€' } $h->node_values($node);
 ok $value, q<'weird™\symbols $£₤₧€' (value) has been found>;
-
-done_testing;
