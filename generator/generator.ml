@@ -242,7 +242,7 @@ default key.";
     "\
 Return the length of the key (name) of a (key, value) pair as produced
 by C<hivex_value_key>. The length can legitimately be 0, so errno is 
-the necesary mechanism to check for errors.
+the necessary mechanism to check for errors.
 
 In the context of Windows Registries, a zero-length name means
 that this value is the default key for this node in the tree.
