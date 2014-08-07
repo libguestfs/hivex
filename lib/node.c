@@ -49,7 +49,7 @@ hivex_root (hive_h *h)
 size_t
 hivex_node_struct_length (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
@@ -71,7 +71,7 @@ hivex_node_struct_length (hive_h *h, hive_node_h node)
 char *
 hivex_node_name (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return NULL;
   }
@@ -99,7 +99,7 @@ hivex_node_name (hive_h *h, hive_node_h node)
 size_t
 hivex_node_name_len (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
@@ -143,7 +143,7 @@ hivex_node_timestamp (hive_h *h, hive_node_h node)
 {
   int64_t ret;
 
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
@@ -165,7 +165,7 @@ hivex_node_timestamp (hive_h *h, hive_node_h node)
 hive_security_h
 hivex_node_security (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
@@ -184,7 +184,7 @@ hivex_node_security (hive_h *h, hive_node_h node)
 hive_classname_h
 hivex_node_classname (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
@@ -283,7 +283,7 @@ _hivex_get_children (hive_h *h, hive_node_h node,
                      hive_node_h **children_ret, size_t **blocks_ret,
                      int flags)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
@@ -491,7 +491,7 @@ check_child_is_nk_block (hive_h *h, hive_node_h child, int flags)
   struct ntreg_hbin_block *block =
     (struct ntreg_hbin_block *) ((char *) h->addr + child);
 
-  if (!BLOCK_ID_EQ (h, child, "nk")) {
+  if (!block_id_eq (h, child, "nk")) {
     SET_ERRNO (EFAULT, "subkey is not an 'nk' block (0x%zx, %d, %d)",
                child, block->id[0], block->id[1]);
     return -1;
@@ -546,7 +546,7 @@ hivex_node_get_child (hive_h *h, hive_node_h node, const char *nname)
 hive_node_h
 hivex_node_parent (hive_h *h, hive_node_h node)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }

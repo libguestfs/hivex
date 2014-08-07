@@ -37,7 +37,7 @@ int
 _hivex_get_values (hive_h *h, hive_node_h node,
                    hive_value_h **values_ret, size_t **blocks_ret)
 {
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
@@ -175,7 +175,7 @@ hivex_value_struct_length (hive_h *h, hive_value_h value)
 size_t
 hivex_value_key_len (hive_h *h, hive_value_h value)
 {
-  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+  if (!IS_VALID_BLOCK (h, value) || !block_id_eq (h, value, "vk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
@@ -199,7 +199,7 @@ hivex_value_key_len (hive_h *h, hive_value_h value)
 char *
 hivex_value_key (hive_h *h, hive_value_h value)
 {
-  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+  if (!IS_VALID_BLOCK (h, value) || !block_id_eq (h, value, "vk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
@@ -225,7 +225,7 @@ hivex_value_key (hive_h *h, hive_value_h value)
 int
 hivex_value_type (hive_h *h, hive_value_h value, hive_type *t, size_t *len)
 {
-  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+  if (!IS_VALID_BLOCK (h, value) || !block_id_eq (h, value, "vk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return -1;
   }
@@ -247,7 +247,7 @@ hivex_value_type (hive_h *h, hive_value_h value, hive_type *t, size_t *len)
 hive_value_h
 hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
 {
-  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+  if (!IS_VALID_BLOCK (h, value) || !block_id_eq (h, value, "vk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return 0;
   }
@@ -300,7 +300,7 @@ char *
 hivex_value_value (hive_h *h, hive_value_h value,
                    hive_type *t_rtn, size_t *len_rtn)
 {
-  if (!IS_VALID_BLOCK (h, value) || !BLOCK_ID_EQ (h, value, "vk")) {
+  if (!IS_VALID_BLOCK (h, value) || !block_id_eq (h, value, "vk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'vk' block");
     return NULL;
   }
@@ -368,7 +368,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
     return ret;
   } else {
     if (!IS_VALID_BLOCK (h, data_offset) ||
-        !BLOCK_ID_EQ (h, data_offset, "db")) {
+        !block_id_eq (h, data_offset, "db")) {
       SET_ERRNO (EINVAL,
                  "declared data length is longer than the block and "
                  "block is not a db block (data 0x%zx, data len %zu)",

@@ -340,7 +340,7 @@ insert_lf_record (hive_h *h, size_t old_offs, size_t posn,
   /* Work around C stupidity.
    * http://www.redhat.com/archives/libguestfs/2010-February/msg00056.html
    */
-  int test = BLOCK_ID_EQ (h, old_offs, "lf") || BLOCK_ID_EQ (h, old_offs, "lh");
+  int test = block_id_eq (h, old_offs, "lf") || block_id_eq (h, old_offs, "lh");
   assert (test);
 
   struct ntreg_lf_record *old_lf =
@@ -399,7 +399,7 @@ insert_li_record (hive_h *h, size_t old_offs, size_t posn,
                   const char *name, hive_node_h node)
 {
   assert (IS_VALID_BLOCK (h, old_offs));
-  assert (BLOCK_ID_EQ (h, old_offs, "li"));
+  assert (block_id_eq (h, old_offs, "li"));
 
   struct ntreg_ri_record *old_li =
     (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
@@ -452,7 +452,7 @@ static int
 compare_name_with_nk_name (hive_h *h, const char *name, hive_node_h nk_offs)
 {
   assert (IS_VALID_BLOCK (h, nk_offs));
-  assert (BLOCK_ID_EQ (h, nk_offs, "nk"));
+  assert (block_id_eq (h, nk_offs, "nk"));
 
   /* Name in nk is not necessarily nul-terminated. */
   char *nname = hivex_node_name (h, nk_offs);
@@ -493,7 +493,7 @@ insert_subkey (hive_h *h, const char *name,
    * the end.
    */
   for (i = 0; blocks[i] != 0; ++i) {
-    if (BLOCK_ID_EQ (h, blocks[i], "lf") || BLOCK_ID_EQ (h, blocks[i], "lh")) {
+    if (block_id_eq (h, blocks[i], "lf") || block_id_eq (h, blocks[i], "lh")) {
       old_offs = blocks[i];
       old_lf = (struct ntreg_lf_record *) ((char *) h->addr + old_offs);
       old_li = NULL;
@@ -504,7 +504,7 @@ insert_subkey (hive_h *h, const char *name,
           goto insert_it;
       }
     }
-    else if (BLOCK_ID_EQ (h, blocks[i], "li")) {
+    else if (block_id_eq (h, blocks[i], "li")) {
       old_offs = blocks[i];
       old_lf = NULL;
       old_li = (struct ntreg_ri_record *) ((char *) h->addr + old_offs);
@@ -565,7 +565,7 @@ insert_subkey (hive_h *h, const char *name,
   }
   else {
     for (i = 0; blocks[i] != 0; ++i) {
-      if (BLOCK_ID_EQ (h, blocks[i], "ri")) {
+      if (block_id_eq (h, blocks[i], "ri")) {
         struct ntreg_ri_record *ri =
           (struct ntreg_ri_record *) ((char *) h->addr + blocks[i]);
         for (j = 0; j < le16toh (ri->nr_offsets); ++j)
@@ -593,7 +593,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 {
   CHECK_WRITABLE (0);
 
-  if (!IS_VALID_BLOCK (h, parent) || !BLOCK_ID_EQ (h, parent, "nk")) {
+  if (!IS_VALID_BLOCK (h, parent) || !block_id_eq (h, parent, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return 0;
   }
@@ -649,7 +649,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   size_t parent_sk_offset = le32toh (parent_nk->sk);
   parent_sk_offset += 0x1000;
   if (!IS_VALID_BLOCK (h, parent_sk_offset) ||
-      !BLOCK_ID_EQ (h, parent_sk_offset, "sk")) {
+      !block_id_eq (h, parent_sk_offset, "sk")) {
     SET_ERRNO (EFAULT,
                "parent sk is not a valid block (%zu)", parent_sk_offset);
     return 0;
@@ -747,7 +747,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
 static int
 delete_sk (hive_h *h, size_t sk_offset)
 {
-  if (!IS_VALID_BLOCK (h, sk_offset) || !BLOCK_ID_EQ (h, sk_offset, "sk")) {
+  if (!IS_VALID_BLOCK (h, sk_offset) || !block_id_eq (h, sk_offset, "sk")) {
     SET_ERRNO (EFAULT, "not an sk record: 0x%zx", sk_offset);
     return -1;
   }
@@ -852,7 +852,7 @@ hivex_node_delete_child (hive_h *h, hive_node_h node)
 {
   CHECK_WRITABLE (-1);
 
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }
@@ -925,7 +925,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
 {
   CHECK_WRITABLE (-1);
 
-  if (!IS_VALID_BLOCK (h, node) || !BLOCK_ID_EQ (h, node, "nk")) {
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
     return -1;
   }

@@ -21,8 +21,19 @@
 
 #include <stdarg.h>
 #include <stddef.h>
+#include <string.h>
 
 #include "byte_conversions.h"
+
+#define STREQ(a,b) (strcmp((a),(b)) == 0)
+#define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
+#define STRNEQ(a,b) (strcmp((a),(b)) != 0)
+#define STRCASENEQ(a,b) (strcasecmp((a),(b)) != 0)
+#define STREQLEN(a,b,n) (strncmp((a),(b),(n)) == 0)
+#define STRCASEEQLEN(a,b,n) (strncasecmp((a),(b),(n)) == 0)
+#define STRNEQLEN(a,b,n) (strncmp((a),(b),(n)) != 0)
+#define STRCASENEQLEN(a,b,n) (strncasecmp((a),(b),(n)) != 0)
+#define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
 
 struct hive_h {
   char *filename;
@@ -119,8 +130,11 @@ struct ntreg_hbin_block {
   /* Block data follows here. */
 } __attribute__((__packed__));
 
-#define BLOCK_ID_EQ(h,offs,eqid) \
-  (STREQLEN (((struct ntreg_hbin_block *)((char *) (h)->addr + (offs)))->id, (eqid), 2))
+static inline int
+block_id_eq (const hive_h *h, size_t offs, const char *eqid)
+{
+  return (STREQLEN (((struct ntreg_hbin_block *)((char *) (h)->addr + (offs)))->id, (eqid), 2));
+}
 
 struct ntreg_nk_record {
   int32_t seg_len;              /* length (always -ve because used) */
@@ -284,16 +298,6 @@ extern void _hivex_free_strings (char **argv);
 
 /* value.c */
 extern int _hivex_get_values (hive_h *h, hive_node_h node, hive_value_h **values_ret, size_t **blocks_ret);
-
-#define STREQ(a,b) (strcmp((a),(b)) == 0)
-#define STRCASEEQ(a,b) (strcasecmp((a),(b)) == 0)
-#define STRNEQ(a,b) (strcmp((a),(b)) != 0)
-#define STRCASENEQ(a,b) (strcasecmp((a),(b)) != 0)
-#define STREQLEN(a,b,n) (strncmp((a),(b),(n)) == 0)
-#define STRCASEEQLEN(a,b,n) (strncasecmp((a),(b),(n)) == 0)
-#define STRNEQLEN(a,b,n) (strncmp((a),(b),(n)) != 0)
-#define STRCASENEQLEN(a,b,n) (strncasecmp((a),(b),(n)) != 0)
-#define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
 
 #define DEBUG(lvl,fs,...)                                       \
   do {                                                          \
