@@ -128,7 +128,7 @@ size_t
 _hivex_utf8_strlen (const char* str, size_t len, int utf16)
 {
   const char *encoding = utf16 ? "UTF-16LE" : "LATIN1";
-  size_t ret;
+  size_t ret = 0;
   char *buf = _hivex_recode(encoding, str, len, "UTF-8", &ret);
   free(buf);
   return ret;
