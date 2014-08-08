@@ -264,7 +264,6 @@ delete_values (hive_h *h, hive_node_h node)
     int is_inline;
     len = le32toh (vk->data_len);
     is_inline = !!(len & 0x80000000); /* top bit indicates is inline */
-    len &= 0x7fffffff;
 
     if (!is_inline) {           /* non-inline, so remove data block */
       size_t data_offset = le32toh (vk->data_offset);
@@ -707,7 +706,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     /* Recalculate pointers that could have been invalidated by
      * previous call to allocate_block (via new_lh_record).
      */
-    nk = (struct ntreg_nk_record *) ((char *) h->addr + nkoffset);
+    /* nk could be invalid here */
     parent_nk = (struct ntreg_nk_record *) ((char *) h->addr + parent);
 
     DEBUG (2, "no keys, allocated new lh-record at 0x%zx", lh_offs);
@@ -723,7 +722,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     /* Recalculate pointers that could have been invalidated by
      * previous call to allocate_block (via new_lh_record).
      */
-    nk = (struct ntreg_nk_record *) ((char *) h->addr + nkoffset);
+    /* nk could be invalid here */
     parent_nk = (struct ntreg_nk_record *) ((char *) h->addr + parent);
   }
 
@@ -950,8 +949,6 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
   nk->nr_values = htole32 (nr_values);
   nk->vallist = htole32 (vallist_offs - 0x1000);
 
-  struct ntreg_value_list *vallist =
-    (struct ntreg_value_list *) ((char *) h->addr + vallist_offs);
 
   size_t i;
   for (i = 0; i < nr_values; ++i) {
@@ -970,7 +967,8 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
      * previous call to allocate_block.
      */
     nk = (struct ntreg_nk_record *) ((char *) h->addr + node);
-    vallist = (struct ntreg_value_list *) ((char *) h->addr + vallist_offs);
+    struct ntreg_value_list *vallist =
+      (struct ntreg_value_list *) ((char *) h->addr + vallist_offs);
 
     vallist->offset[i] = htole32 (vk_offs - 0x1000);
 
@@ -1000,7 +998,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
        * previous call to allocate_block.
        */
       nk = (struct ntreg_nk_record *) ((char *) h->addr + node);
-      vallist = (struct ntreg_value_list *) ((char *) h->addr + vallist_offs);
+      /* vallist could be invalid here */
       vk = (struct ntreg_vk_record *) ((char *) h->addr + vk_offs);
 
       memcpy ((char *) h->addr + offs + 4, values[i].value, values[i].len);
