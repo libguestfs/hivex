@@ -622,6 +622,10 @@ cmd_ls (char *args)
   for (len = 0; children[len] != 0; ++len)
     ;
 
+  /* No children, no need to print anything. */
+  if (len == 0)
+      return 0;
+
   char **names = calloc (len, sizeof (char *));
   if (names == NULL) {
     perror ("malloc");
