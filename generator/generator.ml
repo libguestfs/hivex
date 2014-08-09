@@ -3798,7 +3798,8 @@ Run it from the top source directory using the command
   output_to "perl/lib/Win/Hivex.pm" generate_perl_pm;
   output_to "perl/Hivex.xs" generate_perl_xs;
 
-  output_to "python/hivex.py" generate_python_py;
+  (try Unix.mkdir "python/hivex" 0o755 with Unix_error _ -> ());
+  output_to "python/hivex/__init__.py" generate_python_py;
   output_to "python/hivex-py.c" generate_python_c;
 
   output_to "ruby/ext/hivex/_hivex.c" generate_ruby_c;
