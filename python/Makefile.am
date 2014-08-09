@@ -21,6 +21,7 @@ builddir ?= $(top_builddir)/python
 EXTRA_DIST = \
 	run-python-tests \
 	hivex/__init__.py \
+	hivex/hive_types.py \
 	hivex-py.c \
 	t/*.py
 
@@ -30,6 +31,7 @@ pythondir = $(PYTHON_INSTALLDIR)
 pythonmoddir = $(PYTHON_INSTALLDIR)/hivex
 
 pythonmod_DATA = \
+	hivex/hive_types.py \
 	hivex/__init__.py
 
 python_LTLIBRARIES = libhivexmod.la
@@ -48,6 +50,7 @@ TESTS = run-python-tests
 CLEANFILES = \
 	hivex.py \
 	hivex.pyc \
+	hivex/hive_types.pyc \
 	hivex/__init__.pyc
 
 # For Python 3

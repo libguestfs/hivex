@@ -3354,6 +3354,23 @@ class Hivex(object):
       )
   ) functions
 
+and generate_python_hive_types_py () =
+  generate_header HashStyle LGPLv2plus;
+
+  pr "\
+\"\"\"Define integer constants for hive type
+
+The names correspond with the hive_type enum type of the C API, but without
+'hive_t_' prefix.
+\"\"\"
+
+";
+  List.iter (
+    fun (t, _, new_style, description) ->
+      pr "# %s\n" description;
+      pr "REG_%s = %d\n" new_style t
+  ) hive_types;
+
 and generate_ruby_c () =
   generate_header CStyle LGPLv2plus;
 
@@ -3800,6 +3817,7 @@ Run it from the top source directory using the command
 
   (try Unix.mkdir "python/hivex" 0o755 with Unix_error _ -> ());
   output_to "python/hivex/__init__.py" generate_python_py;
+  output_to "python/hivex/hive_types.py" generate_python_hive_types_py;
   output_to "python/hivex-py.c" generate_python_c;
 
   output_to "ruby/ext/hivex/_hivex.c" generate_ruby_c;
