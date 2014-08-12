@@ -113,7 +113,7 @@ Makefile.in
 /python/*.pyc
 /python/__pycache__/
 /python/hivex-py.c
-/python/hivex.py
+/python/hivex
 /python/run-python-tests
 /regedit/hivexregedit.1
 /ruby/doc/site/api
