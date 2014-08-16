@@ -2846,7 +2846,7 @@ get_value (PyObject *v, hive_set_value *ret)
 
   obj = PyDict_GetItemString (v, \"key\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 'key' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 'key' element in dictionary\");
     return -1;
   }
 #ifdef HAVE_PYSTRING_ASSTRING
@@ -2858,14 +2858,14 @@ get_value (PyObject *v, hive_set_value *ret)
 
   obj = PyDict_GetItemString (v, \"t\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 't' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 't' element in dictionary\");
     return -1;
   }
   ret->t = PyLong_AsLong (obj);
 
   obj = PyDict_GetItemString (v, \"value\");
   if (!obj) {
-    PyErr_SetString (PyExc_RuntimeError, \"no 'value' element in dictionary\");
+    PyErr_SetString (PyExc_KeyError, \"no 'value' element in dictionary\");
     return -1;
   }
 #ifdef HAVE_PYSTRING_ASSTRING
