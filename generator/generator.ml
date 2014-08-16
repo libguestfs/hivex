@@ -2844,6 +2844,11 @@ get_value (PyObject *v, hive_set_value *ret)
   PyObject *bytes;
 #endif
 
+  if (!PyDict_Check (v)) {
+    PyErr_SetString (PyExc_TypeError, \"expected dictionary type for value\");
+    return -1;
+  }
+
   obj = PyDict_GetItemString (v, \"key\");
   if (!obj) {
     PyErr_SetString (PyExc_KeyError, \"no 'key' element in dictionary\");
@@ -2862,6 +2867,10 @@ get_value (PyObject *v, hive_set_value *ret)
     return -1;
   }
   ret->t = PyLong_AsLong (obj);
+  if (PyErr_Occurred ()) {
+    PyErr_SetString (PyExc_TypeError, \"expected int type for 't'\");
+    return -1;
+  }
 
   obj = PyDict_GetItemString (v, \"value\");
   if (!obj) {
