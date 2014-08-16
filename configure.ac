@@ -345,10 +345,6 @@ AS_IF([test "x$enable_python" != "xno"],
                          [AC_DEFINE([HAVE_PYCAPSULE_NEW],1,
                                     [Found PyCapsule_New in libpython])],
                          [],[$PYTHON_BLDLIBRARY])
-            AC_CHECK_LIB([c],[PyString_AsString],
-                         [AC_DEFINE([HAVE_PYSTRING_ASSTRING],1,
-                                    [Found PyString_AsString in libpython])],
-                         [],[$PYTHON_BLDLIBRARY])
 
             LIBS="$old_LIBS"
         fi

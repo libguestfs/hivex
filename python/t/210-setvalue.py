@@ -19,14 +19,6 @@ import sys
 import os
 import hivex
 
-if sys.version >= '3':
-    import codecs
-    def b(x):
-        return codecs.encode(x)
-else:
-    def b(x):
-        return x
-
 srcdir = os.environ["srcdir"]
 if not srcdir:
     srcdir = "."
@@ -44,23 +36,23 @@ B = h.node_get_child (root, "B")
 assert B
 
 values = [
-    { "key": "Key1", "t": 3, "value": "ABC" },
-    { "key": "Key2", "t": 3, "value": "DEF" }
+    { "key": "Key1", "t": 3, "value": b"ABC" },
+    { "key": "Key2", "t": 3, "value": b"DEF" }
 ]
 h.node_set_values (B, values)
 
-value1 = { "key": "Key3", "t": 3, "value": "GHI" }
+value1 = { "key": "Key3", "t": 3, "value": b"GHI" }
 h.node_set_value (B, value1)
 
-value1 = { "key": "Key1", "t": 3, "value": "JKL" }
+value1 = { "key": "Key1", "t": 3, "value": b"JKL" }
 h.node_set_value (B, value1)
 
 val = h.node_get_value (B, "Key1")
-t_data = h.value_value (val)
-assert t_data[0] == 3
-assert t_data[1] == b("JKL")
+val_t, val_value = h.value_value (val)
+assert val_t == 3
+assert val_value == b"JKL"
 
 val = h.node_get_value (B, "Key3")
-t_data = h.value_value (val)
-assert t_data[0] == 3
-assert t_data[1] == b("GHI")
+val_t, val_value = h.value_value (val)
+assert val_t == 3
+assert val_value == b"GHI"

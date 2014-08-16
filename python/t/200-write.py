@@ -37,7 +37,7 @@ b = h.node_get_child (root, "B")
 assert b
 
 values = [
-    { "key": "Key1", "t": 3, "value": "ABC" },
-    { "key": "Key2", "t": 3, "value": "DEF" }
+    { "key": "Key1", "t": 3, "value": b"ABC" },
+    { "key": "Key2", "t": 3, "value": b"DEF" }
 ]
 h.node_set_values (b, values)

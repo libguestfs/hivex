@@ -2840,9 +2840,7 @@ static int
 get_value (PyObject *v, hive_set_value *ret)
 {
   PyObject *obj;
-#ifndef HAVE_PYSTRING_ASSTRING
   PyObject *bytes;
-#endif
 
   if (!PyDict_Check (v)) {
     PyErr_SetString (PyExc_TypeError, \"expected dictionary type for value\");
@@ -2854,12 +2852,20 @@ get_value (PyObject *v, hive_set_value *ret)
     PyErr_SetString (PyExc_KeyError, \"no 'key' element in dictionary\");
     return -1;
   }
-#ifdef HAVE_PYSTRING_ASSTRING
-  ret->key = PyString_AsString (obj);
-#else
-  bytes = PyUnicode_AsUTF8String (obj);
-  ret->key = PyBytes_AS_STRING (bytes);
-#endif
+  if (PyUnicode_Check (obj)) {
+    /* TODO: use PyUnicode_DecodeASCII or PyUnicode_AsUTF16String instead? */
+    bytes = PyUnicode_AsUTF8String (obj);
+    if (bytes == NULL) {
+      PyErr_SetString (PyExc_ValueError, \"failed to decode 'key'\");
+      return -1;
+    }
+    ret->key = PyBytes_AS_STRING (bytes);
+  } else if (PyBytes_Check (obj)) {
+    ret->key = PyBytes_AS_STRING (obj);
+  } else {
+    PyErr_SetString (PyExc_TypeError, \"expected bytes type for 'key'\");
+    return -1;
+  }
 
   obj = PyDict_GetItemString (v, \"t\");
   if (!obj) {
@@ -2877,14 +2883,17 @@ get_value (PyObject *v, hive_set_value *ret)
     PyErr_SetString (PyExc_KeyError, \"no 'value' element in dictionary\");
     return -1;
   }
-#ifdef HAVE_PYSTRING_ASSTRING
-  ret->value = PyString_AsString (obj);
-  ret->len = PyString_Size (obj);
-#else
-  bytes = PyUnicode_AsUTF8String (obj);
-  ret->value = PyBytes_AS_STRING (bytes);
-  ret->len = PyBytes_GET_SIZE (bytes);
-#endif
+  /* Support bytes only. As the registry can use multiple character sets, reject
+   * Unicode str types and let the caller handle conversion to nul-terminated
+   * UTF-16-LE, ASCII, etc. as necessary. This means that 'x' and b'x' are valid
+   * in Python 2 (but not u'x') but that in Python 3, only b'x' is valid. */
+  if (PyBytes_Check (obj)) {
+    ret->len = PyBytes_GET_SIZE (obj);
+    ret->value = PyBytes_AS_STRING (obj);
+  } else {
+    PyErr_SetString (PyExc_TypeError, \"expected bytes type for 'value'\");
+    return -1;
+  }
 
   return 0;
 }
