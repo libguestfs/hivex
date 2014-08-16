@@ -68,6 +68,7 @@ _hivex_recode (const char *input_encoding, const char *input, size_t input_len,
         errno = err;
         return NULL;
       }
+      errno = 0;
       goto again;
     }
     else {
