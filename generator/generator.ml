@@ -2905,7 +2905,7 @@ get_values (PyObject *v, py_set_values *ret)
   ret->nr_values = len;
   ret->values = malloc (len * sizeof (hive_set_value));
   if (!ret->values) {
-    PyErr_SetString (PyExc_RuntimeError, strerror (errno));
+    PyErr_NoMemory ();
     return -1;
   }
 
