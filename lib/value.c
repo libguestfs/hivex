@@ -276,6 +276,7 @@ hivex_value_data_cell_offset (hive_h *h, hive_value_h value, size_t *len)
     /* There is no other location for the value data. */
     if (len)
       *len = 0;
+    errno = 0;
     return 0;
   } else {
     if (len)
