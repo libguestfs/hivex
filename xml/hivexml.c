@@ -116,7 +116,7 @@ main (int argc, char *argv[])
 
   hive_h *h = hivex_open (argv[optind], open_flags);
   if (h == NULL) {
-    perror (argv[optind]);
+    fprintf (stderr, "hivex_open: %s: %m\n", argv[optind]);
     exit (EXIT_FAILURE);
   }
 
@@ -148,12 +148,12 @@ main (int argc, char *argv[])
   }
 
   if (hivex_visit (h, &visitor, sizeof visitor, writer, visit_flags) == -1) {
-    perror (argv[optind]);
+    fprintf (stderr, "hivex_visit: %s: %m\n", argv[optind]);
     exit (EXIT_FAILURE);
   }
 
   if (hivex_close (h) == -1) {
-    perror (argv[optind]);
+    fprintf (stderr, "hivex_close: %s: %m\n", argv[optind]);
     exit (EXIT_FAILURE);
   }
 
@@ -217,12 +217,9 @@ node_byte_runs (hive_h *h, void *writer_v, hive_node_h node)
 {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   char buf[1+BYTE_RUN_BUF_LEN];
-  errno = 0;
   size_t node_struct_length = hivex_node_struct_length (h, node);
-  if (errno) {
-    if (errno == EINVAL) {
-      fprintf (stderr, "node_byte_runs: Invoked on what does not seem to be a node (%zu).\n", node);
-    }
+  if (node_struct_length == 0) {
+    fprintf (stderr, "node_byte_runs: hivex_node_struct_length: %m\n");
     return -1;
   }
   /* A node has one byte run. */
@@ -301,17 +298,18 @@ value_byte_runs (hive_h *h, void *writer_v, hive_value_h value) {
   xmlTextWriterPtr writer = (xmlTextWriterPtr) writer_v;
   char buf[1+BYTE_RUN_BUF_LEN];
   size_t value_data_cell_length;
-  errno = 0;
   size_t value_data_structure_length = hivex_value_struct_length (h, value);
-  if (errno != 0) {
-    if (errno == EINVAL) {
-      fprintf (stderr, "value_byte_runs: Invoked on what does not seem to be a value (%zu).\n", value);
-    }
+  if (value_data_structure_length == 0) {
+    fprintf (stderr, "value_byte_runs: hivex_value_struct_length: %m\n");
     return -1;
   }
-  hive_value_h value_data_cell_offset = hivex_value_data_cell_offset (h, value, &value_data_cell_length);
-  if (errno != 0)
+  errno = 0;
+  hive_value_h value_data_cell_offset =
+    hivex_value_data_cell_offset (h, value, &value_data_cell_length);
+  if (value_data_cell_offset == 0 && errno != 0) {
+    fprintf (stderr, "value_byte_runs: hivex_value_data_cell_offset: %m\n");
     return -1;
+  }
 
   XML_CHECK (xmlTextWriterStartElement, (writer, BAD_CAST "byte_runs"));
   memset (buf, 0, 1+BYTE_RUN_BUF_LEN);
