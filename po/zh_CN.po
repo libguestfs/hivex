@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-23 15:50+0100\n"
+"POT-Creation-Date: 2014-10-30 15:18+0000\n"
 "PO-Revision-Date: 2011-03-26 15:06+0000\n"
 "Last-Translator: lovenemesis <lovenemesis@gmail.com>\n"
 "Language-Team: Chinese (China) <None>\n"
@@ -80,7 +80,7 @@ msgstr ""
 "的附件，提交至 https://bugzilla.redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' 命令不应该包含任何参数\n"
@@ -108,38 +108,38 @@ msgstr ""
 "包含了文件系统一样，并使用 'ls' 来列出当前键之下的子键。\n"
 "  完整的说明位于 hivexsh(1) 手册中。\n"
 
-#: sh/hivexsh.c:672
+#: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: 键未找到\n"
 
-#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
+#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: 非法的整数参数 (%s 返回 %d)\n"
 
-#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
+#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: 超出范围的整数\n"
 
-#: sh/hivexsh.c:882 sh/hivexsh.c:900
+#: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: 输入意外结束\n"
 
-#: sh/hivexsh.c:921 sh/hivexsh.c:940
+#: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr "hivexsh: string(utf16le): 仅支持输入 7 bit ASCII 字符串\n"
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: 十六进制字符串后包含无用的结尾\n"
 
-#: sh/hivexsh.c:1058
+#: sh/hivexsh.c:1062
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -147,7 +147,7 @@ msgid ""
 msgstr ""
 "hivexsh: setval: 不能解析值域字符串，请参阅手册页 hivexsh(1) 以获得帮助：%s\n"
 
-#: sh/hivexsh.c:1087
+#: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: 不能删除根节点\n"

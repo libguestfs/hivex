@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-04-23 15:50+0100\n"
+"POT-Creation-Date: 2014-10-30 15:18+0000\n"
 "PO-Revision-Date: 2011-03-22 15:29+0000\n"
 "Last-Translator: sweta <swkothar@redhat.com>\n"
 "Language-Team: Gujarati <trans-gu@lists.fedoraproject.org>\n"
@@ -80,7 +80,7 @@ msgstr ""
 "કે જે https://bugzilla.redhat.com પર ભૂલને અહેવાલ કરવામાં નિષ્ફળ જાય છે/\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1081
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' આદેશે દલીલોને આપવી જોઇએ નહિં\n"
@@ -106,45 +106,45 @@ msgid ""
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
 
-#: sh/hivexsh.c:672
+#: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: કી મળી નથી\n"
 
-#: sh/hivexsh.c:855 sh/hivexsh.c:959 sh/hivexsh.c:985 sh/hivexsh.c:1014
+#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: અયોગ્ય ઇંટિજર પરિમાણ (%s એ %d ને પાછુ લાવેલ છે)\n"
 
-#: sh/hivexsh.c:860 sh/hivexsh.c:965 sh/hivexsh.c:991 sh/hivexsh.c:1020
+#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: સીમાની બહાર ઇંટિજર\n"
 
-#: sh/hivexsh.c:882 sh/hivexsh.c:900
+#: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: ઇનપુટનો અનિચ્છનીય અંત\n"
 
-#: sh/hivexsh.c:921 sh/hivexsh.c:940
+#: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr "hivexsh: string(utf16le): ફક્ત 7 bit ASCII શબ્દમાળા ઇનપુટ માટે આધારભૂત છે\n"
 
-#: sh/hivexsh.c:1051
+#: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr ""
 
-#: sh/hivexsh.c:1058
+#: sh/hivexsh.c:1062
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
 
-#: sh/hivexsh.c:1087
+#: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: રુટ નોડને કાઢી શકાતુ નથી\n"
