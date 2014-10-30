@@ -247,6 +247,13 @@ hivex_open (const char *filename, int flags)
       goto error;
     }
 
+    if (off + page_size > h->size) {
+      SET_ERRNO (ENOTSUP,
+                 "%s: page size %zu at 0x%zx extends beyond end of file, bad registry",
+                 filename, page_size, off);
+      goto error;
+    }
+
     /* Read the blocks in this page. */
     size_t blkoff;
     struct ntreg_hbin_block *block;
