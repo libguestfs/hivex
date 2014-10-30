@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-EXTRA_DIST = README check-regedit.sh
+EXTRA_DIST = README check-regedit.sh insert-keys.pl fuzz.pl
 
 # User should normally override this.
 HIVEX_TEST_DATA ?= $(top_srcdir)/../hivex-test-data
@@ -32,6 +32,6 @@ check_DATA = $(test_hives)
 	mv $@-t $@
 
 TESTS_ENVIRONMENT = ../run
-TESTS = check-regedit.sh insert-keys.pl
+TESTS = check-regedit.sh insert-keys.pl fuzz.pl
 
 CLEANFILES = *~ *.hive
