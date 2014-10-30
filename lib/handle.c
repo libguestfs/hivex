@@ -104,6 +104,13 @@ hivex_open (const char *filename, int flags)
 
   h->size = statbuf.st_size;
 
+  if (h->size < 0x2000) {
+    SET_ERRNO (EINVAL,
+               "%s: file is too small to be a Windows NT Registry hive file",
+               filename);
+    goto error;
+  }
+
   if (!h->writable) {
     h->addr = mmap (NULL, h->size, PROT_READ, MAP_SHARED, h->fd, 0);
     if (h->addr == MAP_FAILED)
