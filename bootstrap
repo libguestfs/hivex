@@ -63,6 +63,7 @@ full-write
 gitlog-to-changelog
 gnu-make
 gnumakefile
+iconv
 ignore-value
 inttypes
 maintainer-makefile
