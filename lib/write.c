@@ -902,10 +902,13 @@ hivex_node_delete_child (hive_h *h, hive_node_h node)
         }
     }
   }
+  free (blocks);
   SET_ERRNO (ENOTSUP, "could not find parent to child link");
   return -1;
 
  found:;
+  free (blocks);
+
   struct ntreg_nk_record *nk =
     (struct ntreg_nk_record *) ((char *) h->addr + parent);
   size_t nr_subkeys_in_nk = le32toh (nk->nr_subkeys);
