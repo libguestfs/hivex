@@ -1,6 +1,6 @@
 #!/bin/bash -
-# Pull translations from Transifex.
-# Copyright (C) 2011 Red Hat Inc.
+# Pull translations from Zanata.
+# Copyright (C) 2011-2015 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,13 +17,12 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 set -e
-set -v
 
-echo tx pull
-tx pull
+echo zanata po pull
+zanata po pull
 
 # Remove PO files that have no translations in them.
-for f in po/*.po; do
+for f in *.po; do
   if ! grep -q '^msgstr "[^"]' $f; then
     echo rm $f
     rm $f

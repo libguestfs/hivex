@@ -1,7 +1,0 @@
-[main]
-host = https://www.transifex.com
-
-[hivex.hivexpot]
-file_filter = po/<lang>.po
-source_file = po/hivex.pot
-source_lang = en
