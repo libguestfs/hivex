@@ -1,20 +1,23 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+# Translators:
+# Hajime Taira <htaira@redhat.com>, 2011
+# Tomoyuki KATO <tomo@dream.daynight.jp>, 2011
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-30 15:18+0000\n"
-"PO-Revision-Date: 2011-03-22 11:29-0400\n"
-"Last-Translator: rjones <rjones@redhat.com>\n"
-"Language-Team: Spanish (Castilian) <trans-es@lists.fedoraproject.org>\n"
+"PO-Revision-Date: 2013-11-20 05:59-0500\n"
+"Last-Translator: Hajime Taira <htaira@redhat.com>\n"
+"Language-Team: Japanese (http://www.transifex.com/projects/p/hivex/language/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: es\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Zanata 3.5.1\n"
 
 #: sh/hivexsh.c:156
@@ -29,38 +32,37 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Bienvenido a hivexsh, el entorno interactivo de hivex para examinar\n"
-"archivos binarios hive de registro Windows.\n"
+"hivexsh へようこそ、hivexsh は Windows レジストリのバイナリーハイブファイル\n"
+"を検査する hivex の対話式シェルです。\n"
 "\n"
-"Ingrese: 'help' para obtener ayuda\n"
-"      'quit' para abandonar este entorno\n"
+"入力: 'help' ヘルプの概要\n"
+"      'quit' シェルの終了\n"
 "\n"
 
 #: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr "hivexsh: error al intentar obtener padre del nodo %zu\n"
+msgstr "hivexsh: ノード %zu の親の取得でエラーが発生しました。\n"
 
 #: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr "hivexsh: error al intentar obtener el nombre-nodo del nodo %zu\n"
+msgstr "hivexsh: ノード %zx の名前の取得でエラーが発生しました。\n"
 
 #: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
-msgstr "hivexsh: debe caragr un archivo hive utilizando 'load hivefile'\n"
+msgstr "hivexsh: まず 'load hivefile' を使用してハイブファイルを読み込まなければいけません。\n"
 
 #: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
-msgstr "hivexsh: comando '%s' desconocido, utilice 'help' para obtener ayuda\n"
+msgstr "hivexsh: 未知のコマンド '%s'、ヘルプの概要は 'help' を使用してください。\n"
 
 #: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
-msgstr ""
-"hivexsh: cargar: no se ha indicado un nombre de archivo hive para cargar\n"
+msgstr "hivexsh: load: 読み込むハイブファイル名が指定されていません。\n"
 
 #: sh/hivexsh.c:466
 #, c-format
@@ -73,32 +75,31 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
-"hivexsh: falló al intentar abrir el archivo hive: %s: %m\n"
+"hivexsh: ハイブファイルを開けませんでした: %s: %m\n"
 "\n"
-"Si considera que este archivo es un archivo hive binario de windows válido\n"
-"(_no_ un archivo regedit *.reg), entonces por favor ejecute el siguiente comando\n"
-"nuevamente, utilizando la opción hivexsh '-d', y adjunte la salida completa _y_\n"
-"el archivo hive que ha fallado, en un reporte de error en https://bugzilla.redhat.com/\n"
+"このファイルが有効な Windows バイナリーハイブファイル (レジストリー\n"
+"エディターの *.reg ファイルではありません) と考えているのならば、\n"
+"hivexsh のオプション '-d' オプションを付けてコマンドを実行してください。\n"
+"そして、https://bugzilla.redhat.com/ のバグ報告において\n"
+"この出力全体と失敗したハイブファイルを添付してください。\n"
 "\n"
 
 #: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr "hivexsh: el comando '%s' no debería necesitar argumentos\n"
+msgstr "hivexsh: '%s' コマンドは引数を与えられるべきではありません\n"
 
 #: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
-msgstr ""
-"%s: %s: \\ los caracteres en la ruta se encuentran duplicados - ¿está "
-"escapando el parámetro correctamente?\n"
+msgstr "%s: %s: \\ パスの文字列が重複しています - パスのパラメーターを正しくエスケープしていますか？\n"
 
 #: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr "hivexsh: cd: no se encuentra la subllave '%s'\n"
+msgstr "hivexsh: cd: サブキー '%s' が見つかりません\n"
 
 #: sh/hivexsh.c:597
 #, c-format
@@ -107,43 +108,41 @@ msgid ""
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
-"Desplácese a través de las llaves hive utilizando el comando 'cd',\n"
-"como si fuera un sistema de archivos, y utilice 'ls' para listar las\n"
-"subllaves de la llave actual. Puede encontrar documentación completa\n"
-"en la página man de hivexsh(1).\n"
+"ファイルシステムを移動するかのように、'cd' コマンドを使用して\n"
+"ハイブのキーを移動します。また、現在のキーにあるサブキーの一覧を\n"
+"表示するには 'ls' を使用します。\n"
+"完全なドキュメントは hivexsh(1) マニュアルページにあります。\n"
 
 #: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
-msgstr "%s: %s: no se ha encontrado la llave\n"
+msgstr "%s: %s: キーが見つかりません\n"
 
 #: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
 #, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
-msgstr "%s: %s: parámetro entero no válido (%s devolvió %d)\n"
+msgstr "%s: %s: 無効な整数パラメーターです (%s が %d を返しました)\n"
 
 #: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
-msgstr "%s: %s: el entero se encuentra fuera del rango\n"
+msgstr "%s: %s: 範囲外の整数です\n"
 
 #: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
-msgstr "hivexsh: setval: final inesperado de la salida\n"
+msgstr "hivexsh: setval: 予期しない入力値の終端です\n"
 
 #: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
-msgstr ""
-"hivexsh: string(utf16le): para la entrada, solo existe soporte para cadenas "
-"ASCII de 7 bit\n"
+msgstr "hivexsh: string(utf16le): 7 ビット ASCII 文字列のみが入力値としてサポートされます\n"
 
 #: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
-msgstr "hivexsh: setval: rastreando basura luego de la cadena hex\n"
+msgstr "hivexsh: setval: 16進文字列の後ろに文字のゴミがあります\n"
 
 #: sh/hivexsh.c:1062
 #, c-format
@@ -151,25 +150,24 @@ msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: no es posible analizar el valor de la cadena, por favor "
-"consulte la página man de hivexsh(1) para obtener ayuda: %s\n"
+"hivexsh: setval: 値の文字列を解析できませんでした、ヘルプのためにマニュアルページ hivexsh(1) を参照してください: %s\n"
 
 #: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
-msgstr "hivexsh: del: el nodo raíz no puede ser eliminado\n"
+msgstr "hivexsh: del: ルートノードは削除できません\n"
 
 #: xml/hivexml.c:80
 #, c-format
 msgid "%s: failed to write XML document\n"
-msgstr "%s: falló al escribir documento XML\n"
+msgstr "%s: XML ドキュメントを書き込めませんでした\n"
 
 #: xml/hivexml.c:113
 #, c-format
 msgid "hivexml: missing name of input file\n"
-msgstr "hivexml: no se encuentra el nombre del archivo de entrada\n"
+msgstr "hivexml: 入力ファイル名がありません\n"
 
 #: xml/hivexml.c:132
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
-msgstr "xmlNewTextWriterFilename: falló al crear escritor XML\n"
+msgstr "xmlNewTextWriterFilename: XML ライターを作成できませんでした\n"
