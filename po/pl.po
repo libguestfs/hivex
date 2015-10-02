@@ -2,20 +2,21 @@
 # Copyright (C) YEAR Free Software Foundation, Inc.
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Piotr Drąg <piotrdrag@gmail.com>, 2015. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-10-30 15:18+0000\n"
-"PO-Revision-Date: 2011-03-22 11:29-0400\n"
-"Last-Translator: rjones <rjones@redhat.com>\n"
+"PO-Revision-Date: 2015-08-27 04:13-0400\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <None>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Language: pl\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Zanata 3.5.1\n"
+"X-Generator: Zanata 3.7.2\n"
 
 #: sh/hivexsh.c:156
 #, c-format
@@ -30,10 +31,10 @@ msgid ""
 msgstr ""
 "\n"
 "Witaj w hivexsh, interaktywnej powłoce hivex do sprawdzania\n"
-"binarnych plików typu \"hive\" Rejestru systemu Windows.\n"
+"binarnych plików typu „hive” Rejestru systemu Windows.\n"
 "\n"
-"Proszę podać: \"help\", aby uzyskać podsumowanie pomocy\n"
-"              \"quit\", aby zakończyć powłokę\n"
+"Proszę podać: „help”, aby uzyskać podsumowanie pomocy\n"
+"              „quit”, aby zakończyć powłokę\n"
 "\n"
 
 #: sh/hivexsh.c:270
@@ -49,19 +50,20 @@ msgstr "hivexsh: błąd podczas uzyskiwania nazwy węzła %zx\n"
 #: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
-msgstr "hivexsh: należy najpierw wczytać plik \"hive\" używając \"load plik_hive\"\n"
+msgstr ""
+"hivexsh: należy najpierw wczytać plik „hive” używając „load plik_hive”\n"
 
 #: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
-"hivexsh: nieznane polecenie \"%s\", należy użyć \"help\", aby uzyskać "
+"hivexsh: nieznane polecenie „%s”, należy użyć „help”, aby uzyskać "
 "podsumowanie pomocy\n"
 
 #: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
-msgstr "hivexsh: load: nie podano nazwy pliku \"hive\" do wczytania\n"
+msgstr "hivexsh: load: nie podano nazwy pliku „hive” do wczytania\n"
 
 #: sh/hivexsh.c:466
 #, c-format
@@ -74,18 +76,18 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
-"hivexsh: otwarcie pliku \"hive\" nie powiodło się: %s: %m\n"
+"hivexsh: otwarcie pliku „hive” się nie powiodło: %s: %m\n"
 "\n"
-"Jeśli ten plik jest binarnym plikiem \"hive\" systemu Windows (a _nie_\n"
+"Jeśli ten plik jest binarnym plikiem „hive” systemu Windows (a _nie_\n"
 "plikiem *.reg programu regedit), proszę wykonać te polecenie ponownie,\n"
-"używając opcji \"-d\" programu hivexsh i dołączyć pełne wyjście _oraz_ ten\n"
-"plik \"hive\" do zgłoszenia błędu na https://bugzilla.redhat.com/\n"
+"używając opcji „-d” programu hivexsh i dołączyć pełne wyjście _oraz_ ten\n"
+"plik „hive” do zgłoszenia błędu na https://bugzilla.redhat.com/\n"
 "\n"
 
 #: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr "hivexsh: polecenie \"%s\" nie przyjmuje parametrów\n"
+msgstr "hivexsh: polecenie „%s” nie przyjmuje parametrów\n"
 
 #: sh/hivexsh.c:541
 #, c-format
@@ -99,7 +101,7 @@ msgstr ""
 #: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr "hivexsh: cd: nie odnaleziono podklucza \"%s\"\n"
+msgstr "hivexsh: cd: nie odnaleziono podklucza „%s”\n"
 
 #: sh/hivexsh.c:597
 #, c-format
@@ -108,8 +110,8 @@ msgid ""
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
-"Należy nawigować między kluczami \"hive\" używając polecenia \"cd\", jakby\n"
-"zawierały system plików oraz \"ls\" do wyświetlania podkluczy bieżącego\n"
+"Należy nawigować między kluczami „hive” używając polecenia „cd”, jakby\n"
+"zawierały system plików oraz „ls” do wyświetlania podkluczy bieżącego\n"
 "klucza. Pełna dokumentacja znajduje się na stronie podręcznika hivexsh(1).\n"
 
 #: sh/hivexsh.c:676
@@ -162,7 +164,7 @@ msgstr "hivexsh: del: główny węzeł nie może zostać usunięty\n"
 #: xml/hivexml.c:80
 #, c-format
 msgid "%s: failed to write XML document\n"
-msgstr "%s: zapisanie dokumentu XML nie powiodło się\n"
+msgstr "%s: zapisanie dokumentu XML się nie powiodło\n"
 
 #: xml/hivexml.c:113
 #, c-format
@@ -172,4 +174,4 @@ msgstr "hivexml: brak nazwy pliku wejściowego\n"
 #: xml/hivexml.c:132
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
-msgstr "xmlNewTextWriterFilename: utworzenie zapisu XML nie powiodło się\n"
+msgstr "xmlNewTextWriterFilename: utworzenie zapisu XML się nie powiodło\n"
