@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # hivex extra tests
 # Copyright (C) 2013 Red Hat Inc.
 #
@@ -21,6 +21,7 @@
 # get the expected data and don't get any errors.
 
 use strict;
+use warnings;
 
 use Win::Hivex;
 

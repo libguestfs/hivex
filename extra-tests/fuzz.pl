@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/env perl
 # hivex extra tests
 # Copyright (C) 2014 Red Hat Inc.
 #
@@ -20,6 +20,7 @@
 # crash on the fuzzed hives, not that it can read them.
 
 use strict;
+use warnings;
 
 use File::Temp qw(tempfile);
 use File::Copy;
