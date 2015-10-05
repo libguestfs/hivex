@@ -7,6 +7,7 @@
 /closeout.m4
 /close-stream.m4
 /codeset.m4
+/ctype.m4
 /dos.m4
 /dup2.m4
 /eealloc.m4
@@ -97,6 +98,7 @@
 /sockpfaf.m4
 /ssize_t.m4
 /stat.m4
+/stdalign.m4
 /stdbool.m4
 /stddef_h.m4
 /stdint_h.m4
