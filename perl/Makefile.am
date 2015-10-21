@@ -41,7 +41,9 @@ TESTS = run-perl-tests
 
 $(TESTS): src_deps all
 
-TESTS_ENVIRONMENT = ../run
+TESTS_ENVIRONMENT = \
+  MAKE=$(MAKE) \
+  ../run
 
 INSTALLDIRS = site
 
