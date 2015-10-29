@@ -856,7 +856,7 @@ cmd_setval (char *nrvals_str)
   long nrvals;
   xerr = xstrtol (nrvals_str, NULL, 0, &nrvals, "");
   if (xerr != LONGINT_OK) {
-    fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+    fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
              "setval", "nrvals", "xstrtol", xerr);
     return -1;
   }
@@ -960,7 +960,7 @@ cmd_setval (char *nrvals_str)
       long n;
       xerr = xstrtol (buf, NULL, 0, &n, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "dword", "xstrtol", xerr);
         goto error;
       }
@@ -986,7 +986,7 @@ cmd_setval (char *nrvals_str)
       long long n;
       xerr = xstrtoll (buf, NULL, 0, &n, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "dword", "xstrtoll", xerr);
         goto error;
       }
@@ -1015,7 +1015,7 @@ cmd_setval (char *nrvals_str)
       long t;
       xerr = xstrtol (buf, NULL, 0, &t, "");
       if (xerr != LONGINT_OK) {
-        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %d)\n"),
+        fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
                  "setval", "hex", "xstrtol", xerr);
         goto error;
       }
