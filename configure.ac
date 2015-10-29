@@ -77,23 +77,9 @@ if test "$gl_gcc_warnings" = yes; then
   nw="$nw -Wc++-compat"             # We don't care about C++ compilers
   nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
   nw="$nw -Wtraditional"            # Warns on #elif which we use often
-  nw="$nw -Wcast-qual"              # Too many warnings for now
-  nw="$nw -Wconversion"             # Too many warnings for now
   nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
-  nw="$nw -Wsign-conversion"        # Too many warnings for now
-  nw="$nw -Wtraditional-conversion" # Too many warnings for now
-  nw="$nw -Wunreachable-code"       # Too many warnings for now
   nw="$nw -Wpadded"                 # Our structs are not padded
-  nw="$nw -Wredundant-decls"        # openat.h declares e.g., mkdirat
-  nw="$nw -Wlogical-op"             # any use of fwrite provokes this
-  nw="$nw -Wvla"                    # two warnings in mount.c
-  # things I might fix soon:
-  nw="$nw -Wmissing-format-attribute" # daemon.h's asprintf_nowarn
-  nw="$nw -Winline"                 # daemon.h's asprintf_nowarn
-  nw="$nw -Wshadow"                 # numerous, plus we're not unanimous
-  # ?? -Wstrict-overflow
-  nw="$nw -Wunsafe-loop-optimizations" # just a warning that an optimization
-                                    # was not possible, safe to ignore
+  nw="$nw -Wvla"                    # Allow variable length arrays.
   nw="$nw -Wpacked"                 # Allow attribute((packed)) on structs
   nw="$nw -Wlong-long"              # Allow long long since it's required
                                     # by xstrtoll.
