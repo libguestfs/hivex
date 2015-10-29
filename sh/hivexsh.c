@@ -787,7 +787,7 @@ cmd_lsval (char *key)
           goto error;
 
         if (t != hive_t_string)
-          printf ("str(%d):", t);
+          printf ("str(%u):", t);
         putchar ('"');
         size_t j;
         for (j = 0; str[j] != 0; ++j) {
@@ -820,7 +820,7 @@ cmd_lsval (char *key)
         if (!data)
           goto error;
 
-        printf ("hex(%d):", t);
+        printf ("hex(%u):", t);
         size_t j;
         for (j = 0; j < len; ++j) {
           if (j > 0)

@@ -319,7 +319,7 @@ hivex_value_value (hive_h *h, hive_value_h value,
   is_inline = !!(len & 0x80000000);
   len &= 0x7fffffff;
 
-  DEBUG (2, "value=0x%zx, t=%d, len=%zu, inline=%d",
+  DEBUG (2, "value=0x%zx, t=%u, len=%zu, inline=%d",
          value, t, len, is_inline);
 
   if (t_rtn)
