@@ -174,7 +174,7 @@ hivex_open (const char *filename, int flags)
              "  file version             %" PRIu32 ".%" PRIu32 "\n"
              "  sequence nos             %" PRIu32 " %" PRIu32 "\n"
              "    (sequences nos should match if hive was synched at shutdown)\n"
-             "  last modified            %" PRIu64 "\n"
+             "  last modified            %" PRIi64 "\n"
              "    (Windows filetime, x 100 ns since 1601-01-01)\n"
              "  original file name       %s\n"
              "    (only 32 chars are stored, name is probably truncated)\n"
