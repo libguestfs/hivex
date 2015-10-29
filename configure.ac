@@ -118,6 +118,10 @@ if test "$gl_gcc_warnings" = yes; then
   # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
   gl_WARN_ADD([-Wno-logical-op])
 
+  # False positives about our use of [1] for arbitrary length arrays
+  # embedded in structs.
+  gl_WARN_ADD([-Wno-array-bounds])
+
   gl_WARN_ADD([-fdiagnostics-show-option])
 
   AC_SUBST([WARN_CFLAGS])
