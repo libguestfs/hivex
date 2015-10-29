@@ -272,7 +272,7 @@ hivex_open (const char *filename, int flags)
       seg_len = block_len (h, blkoff, &used);
       if (seg_len <= 4 || (seg_len & 3) != 0) {
         SET_ERRNO (ENOTSUP,
-                   "%s: block size %" PRIu32 " at 0x%zx, bad registry",
+                   "%s: block size %" PRIi32 " at 0x%zx, bad registry",
                    filename, le32toh (block->seg_len), blkoff);
         goto error;
       }
