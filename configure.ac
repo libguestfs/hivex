@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2014 Red Hat Inc.
+# Copyright (C) 2009-2015 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -187,10 +187,15 @@ AM_GNU_GETTEXT([external])
 AM_GNU_GETTEXT_VERSION([0.17])
 AM_ICONV
 
-dnl libxml2.
-PKG_CHECK_MODULES([LIBXML2], [libxml-2.0])
-AC_SUBST([LIBXML2_CFLAGS])
-AC_SUBST([LIBXML2_LIBS])
+dnl libxml2 (optional).
+PKG_CHECK_MODULES([LIBXML2], [libxml-2.0], [
+    AC_SUBST([LIBXML2_CFLAGS])
+    AC_SUBST([LIBXML2_LIBS])
+    have_libxml2=yes
+], [
+    have_libxml2=no
+])
+AM_CONDITIONAL([HAVE_LIBXML2],[test "x$have_libxml2" = "xyes"])
 
 dnl hivexsh depends on open_memstream, which is absent on OS X.
 AC_CHECK_FUNC([open_memstream])
