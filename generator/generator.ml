@@ -242,6 +242,12 @@ string C<\"\"> here.  The default key is often written C<\"@\">, but
 inside hives that has no meaning and won't give you the
 default key.";
 
+  "node_nr_values", (RSize, [AHive; ANode "node"]),
+    "return the number of values attached to a node",
+    "\
+Return the number of (key, value) pairs attached to this node
+as produced by C<hivex_node_values>.";
+
   "value_key_len", (RSize, [AHive; AValue "val"]),
     "return the length of a value's key",
     "\
