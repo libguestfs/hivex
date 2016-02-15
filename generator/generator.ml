@@ -210,7 +210,7 @@ Return the child of node with the name C<name>, if it exists.
 
 The name is matched case insensitively.";
 
-  "node_num_children", (RSize, [AHive; ANode "node"]),
+  "node_nr_children", (RSize, [AHive; ANode "node"]),
     "return the number of children of a node",
     "\
 Return the number of nodes as produced by C<hivex_node_children>.";
