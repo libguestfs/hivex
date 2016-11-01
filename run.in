@@ -1,6 +1,6 @@
 #!/bin/bash -
 # hivex 'run' programs locally script
-# Copyright (C) 2011-2013 Red Hat Inc.
+# Copyright (C) 2011-2016 Red Hat Inc.
 #
 # @configure_input@
 #
@@ -23,7 +23,7 @@
 # With this script you can run all the hivex tools without needing to
 # install them first.  You just have to do for example:
 #
-#   ./run ./regedit/hivexregedit [args ...]
+#   ./run hivexregedit [args ...]
 #
 # This works for any C program, hivex tool, and most non-C bindings.
 
@@ -33,6 +33,10 @@
 # directory).
 s="$(cd @abs_srcdir@ && pwd)"
 b="$(cd @abs_builddir@ && pwd)"
+
+# Set PATH to contain all local programs.
+PATH="$b/sh:$b/regedit:$b/xml:$PATH"
+export PATH
 
 # Set LD_LIBRARY_PATH to contain library.
 if [ -z "$LD_LIBRARY_PATH" ]; then
