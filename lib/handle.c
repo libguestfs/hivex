@@ -270,7 +270,11 @@ hivex_open (const char *filename, int flags)
       block = (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
       int used;
       seg_len = block_len (h, blkoff, &used);
+/* https://gcc.gnu.org/bugzilla/show_bug.cgi?id=78665 */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstrict-overflow"
       if (seg_len <= 4 || (seg_len & 3) != 0) {
+#pragma GCC diagnostic pop
         SET_ERRNO (ENOTSUP,
                    "%s: block size %" PRIi32 " at 0x%zx, bad registry",
                    filename, le32toh (block->seg_len), blkoff);
