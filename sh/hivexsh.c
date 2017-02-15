@@ -853,14 +853,14 @@ cmd_setval (char *nrvals_str)
   strtol_error xerr;
 
   /* Parse number of values. */
-  long nrvals;
-  xerr = xstrtol (nrvals_str, NULL, 0, &nrvals, "");
+  unsigned long nrvals;
+  xerr = xstrtoul (nrvals_str, NULL, 0, &nrvals, "");
   if (xerr != LONGINT_OK) {
     fprintf (stderr, _("%s: %s: invalid integer parameter (%s returned %u)\n"),
              "setval", "nrvals", "xstrtol", xerr);
     return -1;
   }
-  if (nrvals < 0 || nrvals > HIVEX_MAX_VALUES) {
+  if (nrvals > HIVEX_MAX_VALUES) {
     fprintf (stderr, _("%s: %s: integer out of range\n"),
              "setval", "nrvals");
     return -1;
@@ -878,7 +878,7 @@ cmd_setval (char *nrvals_str)
   /* Read nrvals * 2 lines of input, nrvals * (key, value) pairs, as
    * explained in the man page.
    */
-  int i, j;
+  size_t i, j;
   for (i = 0; i < nrvals; ++i) {
     /* Read key. */
     char *buf = rl_gets ("  key> ");
@@ -913,14 +913,14 @@ cmd_setval (char *nrvals_str)
     else if (STRPREFIX (buf, "string:")) {
       buf += 7;
       values[i].t = hive_t_string;
-      int nr_chars = strlen (buf);
+      size_t nr_chars = strlen (buf);
       values[i].len = 2 * (nr_chars + 1);
       values[i].value = malloc (values[i].len);
       if (!values[i].value) {
         perror ("malloc");
         exit (EXIT_FAILURE);
       }
-      for (j = 0; j <= /* sic */ nr_chars; ++j) {
+      for (j = 0; j < nr_chars + 1 /* sic */; ++j) {
         if (buf[j] & 0x80) {
           fprintf (stderr, _("hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"));
           goto error;
@@ -932,14 +932,14 @@ cmd_setval (char *nrvals_str)
     else if (STRPREFIX (buf, "expandstring:")) {
       buf += 13;
       values[i].t = hive_t_expand_string;
-      int nr_chars = strlen (buf);
+      size_t nr_chars = strlen (buf);
       values[i].len = 2 * (nr_chars + 1);
       values[i].value = malloc (values[i].len);
       if (!values[i].value) {
         perror ("malloc");
         exit (EXIT_FAILURE);
       }
-      for (j = 0; j <= /* sic */ nr_chars; ++j) {
+      for (j = 0; j < nr_chars + 1 /* sic */; ++j) {
         if (buf[j] & 0x80) {
           fprintf (stderr, _("hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"));
           goto error;
