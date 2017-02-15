@@ -108,6 +108,10 @@ if test "$gl_gcc_warnings" = yes; then
   # embedded in structs.
   gl_WARN_ADD([-Wno-array-bounds])
 
+  # This is a warning about GCC being unable to optimize a loop.  It
+  # is not a bug.
+  gl_WARN_ADD([-Wno-unsafe-loop-optimizations])
+
   gl_WARN_ADD([-fdiagnostics-show-option])
 
   AC_SUBST([WARN_CFLAGS])
