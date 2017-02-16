@@ -343,11 +343,18 @@ _hivex_get_children (hive_h *h, hive_node_h node,
    */
   size_t nr_children = _hivex_get_offset_list_length (&children);
   if (nr_subkeys_in_nk != nr_children) {
-    SET_ERRNO (ENOTSUP,
-               "nr_subkeys_in_nk = %zu "
-               "is not equal to number of children read %zu",
-               nr_subkeys_in_nk, nr_children);
-    goto error;
+    if (!h->unsafe) {
+      SET_ERRNO (ENOTSUP,
+                 "nr_subkeys_in_nk = %zu "
+                 "is not equal to number of childred read %zu",
+                 nr_subkeys_in_nk, nr_children);
+      goto error;
+    } else {
+      DEBUG (2,
+             "nr_subkeys_in_nk = %zu "
+             "is not equal to number of children read %zu",
+             nr_subkeys_in_nk, nr_children);
+    }
   }
 
  out:
@@ -407,8 +414,14 @@ _get_children (hive_h *h, hive_node_h blkoff,
     for (i = 0; i < nr_subkeys_in_lf; ++i) {
       hive_node_h subkey = le32toh (lf->keys[i].offset);
       subkey += 0x1000;
-      if (check_child_is_nk_block (h, subkey, flags) == -1)
-        return -1;
+      if (check_child_is_nk_block (h, subkey, flags) == -1) {
+        if (h->unsafe) {
+          DEBUG (2, "subkey at 0x%zx is not an NK block, skipping", subkey);
+          continue;
+        } else {
+          return -1;
+        }
+      }
       if (_hivex_add_to_offset_list (children, subkey) == -1)
         return -1;
     }
@@ -435,8 +448,14 @@ _get_children (hive_h *h, hive_node_h blkoff,
     for (i = 0; i < nr_offsets; ++i) {
       hive_node_h subkey = le32toh (ri->offset[i]);
       subkey += 0x1000;
-      if (check_child_is_nk_block (h, subkey, flags) == -1)
-        return -1;
+      if (check_child_is_nk_block (h, subkey, flags) == -1) {
+        if (h->unsafe) {
+          DEBUG (2, "subkey at 0x%zx is not an NK block, skipping", subkey);
+          continue;
+        } else {
+          return -1;
+        }
+      }
       if (_hivex_add_to_offset_list (children, subkey) == -1)
         return -1;
     }
@@ -458,8 +477,13 @@ _get_children (hive_h *h, hive_node_h blkoff,
       hive_node_h offset = le32toh (ri->offset[i]);
       offset += 0x1000;
       if (!IS_VALID_BLOCK (h, offset)) {
-        SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
-        return -1;
+        if (h->unsafe) {
+          DEBUG (2, "ri-offset is not a valid block (0x%zx), skipping", offset);
+          continue;
+        } else {
+          SET_ERRNO (EFAULT, "ri-offset is not a valid block (0x%zx)", offset);
+          return -1;
+        }
       }
 
       if (_get_children (h, offset, children, blocks, flags) == -1)
