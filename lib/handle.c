@@ -227,11 +227,42 @@ hivex_open (const char *filename, int flags)
         page->magic[1] != 'b' ||
         page->magic[2] != 'i' ||
         page->magic[3] != 'n') {
-      SET_ERRNO (ENOTSUP,
-                 "%s: trailing garbage at end of file "
-                 "(at 0x%zx, after %zu pages)",
-                 filename, off, pages);
-      goto error;
+
+      if (!h->unsafe) {
+        SET_ERRNO (ENOTSUP,
+                   "%s: trailing garbage at end of file "
+                   "(at 0x%zx, after %zu pages)",
+                   filename, off, pages);
+        goto error;
+      }
+
+      DEBUG (2,
+             "page not found at expected offset 0x%zx, "
+             "seeking until one is found or EOF is reached",
+             off);
+
+      int found = 0;
+      while (off < h->size) {
+        off += 0x1000;
+
+        if (off >= h->endpages)
+          break;
+
+        page = (struct ntreg_hbin_page *) ((char *) h->addr + off);
+        if (page->magic[0] == 'h' &&
+            page->magic[1] == 'b' &&
+            page->magic[2] == 'i' &&
+            page->magic[3] == 'n') {
+          DEBUG (2, "found next page by seeking at 0x%zx", off);
+          found = 1;
+          break;
+        }
+      }
+
+      if (!found) {
+        DEBUG (2, "page not found and end of pages section reached");
+        break;
+      }
     }
 
     size_t page_size = le32toh (page->page_size);
@@ -252,6 +283,16 @@ hivex_open (const char *filename, int flags)
       SET_ERRNO (ENOTSUP,
                  "%s: page size %zu at 0x%zx extends beyond end of file, bad registry",
                  filename, page_size, off);
+      goto error;
+    }
+
+    size_t page_offset = le32toh(page->offset_first) + 0x1000;
+
+    if (page_offset != off) {
+      SET_ERRNO (ENOTSUP,
+                 "%s: declared page offset (0x%zx) does not match computed "
+                 "offset (0x%zx), bad registry",
+                 filename, page_offset, off);
       goto error;
     }
 
