@@ -113,6 +113,7 @@ let open_flags = [
   1, "VERBOSE", "Verbose messages";
   2, "DEBUG", "Debug messages";
   4, "WRITE", "Enable writes to the hive";
+  8, "UNSAFE", "Enable heuristics to allow read/write of corrupted hives";
 ]
 
 (* The API calls. *)
@@ -144,6 +145,13 @@ is set to 1.
 Open the hive for writing.  If omitted, the hive is read-only.
 
 See L<hivex(3)/WRITING TO HIVE FILES>.
+
+=item HIVEX_OPEN_UNSAFE
+
+Open the hive in unsafe mode that enables heuristics to handle corrupted hives.
+
+This may allow to read or write registry keys/values that appear intact in an
+otherwise corrupted hive. Use at your own risk.
 
 =back";
 

@@ -41,6 +41,7 @@ struct hive_h {
   size_t size;
   int msglvl;                   /* 1 = verbose, 2 or 3 = debug */
   int writable;
+  int unsafe;
 
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
