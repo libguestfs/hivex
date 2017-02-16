@@ -67,7 +67,7 @@ package Win::Hivex::Regedit;
 use strict;
 use warnings;
 
-use Carp qw(croak confess);
+use Carp qw(croak carp confess);
 use Encode qw(encode decode);
 
 require Exporter;
@@ -528,19 +528,51 @@ sub reg_export_node
     print $fh "]\n";
 
     my $unsafe_printable_strings = $params{unsafe_printable_strings};
+    my $unsafe = $params{unsafe};
+
+    my @values;
+    my @safe_values;
 
     # Get the values.
-    my @values = $h->node_values ($node);
+    if ($unsafe) {
+        my $have_vals = 0;
+        eval {
+            @values = $h->node_values ($node);
+            $have_vals = 1;
+        };
+
+        if (!$have_vals) {
+            carp "Failed to read node values at $path";
+        }
+    } else {
+        @values = $h->node_values ($node);
+    }
 
     foreach (@values) {
         use bytes;
 
         my $key = $h->value_key ($_);
-        my ($type, $data) = $h->value_value ($_);
-        $_ = { key => $key, type => $type, data => $data }
+        my ($type, $data);
+
+        if ($unsafe) {
+            my $val_ok = 0;
+            eval {
+                ($type, $data) = $h->value_value ($_);
+                $val_ok = 1;
+            };
+
+            if (!$val_ok) {
+                carp "skipping unreadable value of key: $key in $path";
+                next;
+            }
+        } else {
+            ($type, $data) = $h->value_value ($_);
+        }
+
+        push @safe_values, { key => $key, type => $type, data => $data };
     }
 
-    @values = sort { $a->{key} cmp $b->{key} } @values;
+    @values = sort { $a->{key} cmp $b->{key} } @safe_values;
 
     # Print the values.
     foreach (@values) {
@@ -573,7 +605,22 @@ sub reg_export_node
     }
     print $fh "\n";
 
-    my @children = $h->node_children ($node);
+    my @children;
+
+    if ($unsafe) {
+        my $have_children = 0;
+        eval {
+            @children = $h->node_children ($node);
+            $have_children = 1;
+        };
+
+        if (!$have_children) {
+            carp "Could not get children of $path";
+        }
+    } else {
+        @children = $h->node_children ($node);
+    }
+
     @children = sort { $h->node_name ($a) cmp $h->node_name ($b) } @children;
     reg_export_node ($h, $_, $fh, @_) foreach @children;
 }

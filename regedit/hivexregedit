@@ -252,6 +252,17 @@ into another program or stored in another hive.
 
 =cut
 
+my $unsafe;
+
+=item B<--unsafe>
+
+Use heuristics to tolerate certain levels of corruption within hives.
+
+This is unsafe but may allow to export/merge valid keys/values in an
+othewise corrupted hive.
+
+=cut
+
 GetOptions ("help|?" => \$help,
             "debug" => \$debug,
             "merge|import" => \$merge,
@@ -259,6 +270,7 @@ GetOptions ("help|?" => \$help,
             "prefix=s" => \$prefix,
             "encoding=s" => \$encoding,
             "unsafe-printable-strings" => \$unsafe_printable_strings,
+            "unsafe" => \$unsafe,
     ) or pod2usage (2);
 pod2usage (1) if $help;
 
@@ -281,7 +293,8 @@ if ($merge) {                   # --merge (reg_import)
 
     my $hivefile = shift @ARGV;
 
-    my $h = Win::Hivex->open ($hivefile, write => 1, debug => $debug);
+    my $h = Win::Hivex->open ($hivefile, write => 1, debug => $debug,
+                              unsafe => $unsafe);
 
     # Read from stdin unless other files have been specified.
     unshift (@ARGV, '-') unless @ARGV;
@@ -312,13 +325,14 @@ if ($merge) {                   # --merge (reg_import)
     my $hivefile = shift @ARGV;
     my $key = shift @ARGV;
 
-    my $h = Win::Hivex->open ($hivefile, debug => $debug);
+    my $h = Win::Hivex->open ($hivefile, debug => $debug, unsafe => $unsafe);
 
     print "Windows Registry Editor Version 5.00\n\n";
 
     reg_export ($h, $key, \*STDOUT,
                 prefix => $prefix,
-                unsafe_printable_strings => $unsafe_printable_strings);
+                unsafe_printable_strings => $unsafe_printable_strings,
+                unsafe => $unsafe);
 }
 
 =head1 SEE ALSO
