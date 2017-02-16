@@ -83,6 +83,7 @@ hivex_open (const char *filename, int flags)
   DEBUG (2, "created handle %p", h);
 
   h->writable = !!(flags & HIVEX_OPEN_WRITE);
+  h->unsafe = !!(flags & HIVEX_OPEN_UNSAFE);
   h->filename = strdup (filename);
   if (h->filename == NULL)
     goto error;
