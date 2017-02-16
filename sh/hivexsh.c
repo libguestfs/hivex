@@ -67,6 +67,7 @@
 
 static int quit = 0;
 static int is_tty;
+static int unsafe = 0;
 static hive_h *h = NULL;
 static char *prompt_string = NULL; /* Normal prompt string. */
 static char *loaded = NULL;     /* Basename of loaded file, if any. */
@@ -97,7 +98,7 @@ static int cmd_setval (char *args);
 static void
 usage (void)
 {
-  fprintf (stderr, "hivexsh [-dfw] [hivefile]\n");
+  fprintf (stderr, "hivexsh [-dfwu] [hivefile]\n");
   exit (EXIT_FAILURE);
 }
 
@@ -115,7 +116,7 @@ main (int argc, char *argv[])
 
   set_prompt_string ();
 
-  while ((c = getopt (argc, argv, "df:w")) != EOF) {
+  while ((c = getopt (argc, argv, "df:wu")) != EOF) {
     switch (c) {
     case 'd':
       open_flags |= HIVEX_OPEN_DEBUG;
@@ -125,6 +126,10 @@ main (int argc, char *argv[])
       break;
     case 'w':
       open_flags |= HIVEX_OPEN_WRITE;
+      break;
+    case 'u':
+      open_flags |= HIVEX_OPEN_UNSAFE;
+      unsafe = 1;
       break;
     default:
       usage ();
@@ -775,6 +780,7 @@ cmd_lsval (char *key)
 
       hive_type t;
       size_t len;
+
       if (hivex_value_type (h, values[i], &t, &len) == -1)
         goto error;
 
@@ -783,8 +789,12 @@ cmd_lsval (char *key)
       case hive_t_expand_string:
       case hive_t_link: {
         char *str = hivex_value_string (h, values[i]);
-        if (!str)
-          goto error;
+        if (!str) {
+          if (unsafe)
+            continue;
+          else
+            goto error;
+        }
 
         if (t != hive_t_string)
           printf ("str(%u):", t);
@@ -817,8 +827,12 @@ cmd_lsval (char *key)
       default: {
         unsigned char *data =
           (unsigned char *) hivex_value_value (h, values[i], &t, &len);
-        if (!data)
-          goto error;
+        if (!data) {
+          if (unsafe)
+            continue;
+          else
+            goto error;
+        }
 
         printf ("hex(%u):", t);
         size_t j;
