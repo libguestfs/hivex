@@ -43,7 +43,7 @@ $(TESTS): src_deps all
 
 TESTS_ENVIRONMENT = ../run
 
-INSTALLDIRS = site
+INSTALLDIRS = vendor
 
 all: Makefile-pl src_deps
 	$(MAKE) -f Makefile-pl
