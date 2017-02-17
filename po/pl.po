@@ -7,18 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-10-30 15:18+0000\n"
+"POT-Creation-Date: 2017-02-17 09:45+0000\n"
 "PO-Revision-Date: 2015-08-27 04:13-0400\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <None>\n"
+"Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: pl\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2)\n"
 "X-Generator: Zanata 3.7.2\n"
 
-#: sh/hivexsh.c:156
+#: sh/hivexsh.c:161
 #, c-format
 msgid ""
 "\n"
@@ -37,35 +38,35 @@ msgstr ""
 "              „quit”, aby zakończyć powłokę\n"
 "\n"
 
-#: sh/hivexsh.c:270
+#: sh/hivexsh.c:275
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
 msgstr "hivexsh: błąd podczas uzyskiwania nadrzędnego węzła %zu\n"
 
-#: sh/hivexsh.c:280
+#: sh/hivexsh.c:285
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
 msgstr "hivexsh: błąd podczas uzyskiwania nazwy węzła %zx\n"
 
-#: sh/hivexsh.c:419
+#: sh/hivexsh.c:424
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
 "hivexsh: należy najpierw wczytać plik „hive” używając „load plik_hive”\n"
 
-#: sh/hivexsh.c:440
+#: sh/hivexsh.c:445
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
 "hivexsh: nieznane polecenie „%s”, należy użyć „help”, aby uzyskać "
 "podsumowanie pomocy\n"
 
-#: sh/hivexsh.c:450
+#: sh/hivexsh.c:455
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr "hivexsh: load: nie podano nazwy pliku „hive” do wczytania\n"
 
-#: sh/hivexsh.c:466
+#: sh/hivexsh.c:471
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -84,26 +85,26 @@ msgstr ""
 "plik „hive” do zgłoszenia błędu na https://bugzilla.redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
+#: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: polecenie „%s” nie przyjmuje parametrów\n"
 
-#: sh/hivexsh.c:541
+#: sh/hivexsh.c:546
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
-"%s: %s: znaki \\ w ścieżce są podwójne - czy parametr ścieżki jest poprawnie"
-" poprzedzony znakiem modyfikacji?\n"
+"%s: %s: znaki \\ w ścieżce są podwójne - czy parametr ścieżki jest poprawnie "
+"poprzedzony znakiem modyfikacji?\n"
 
-#: sh/hivexsh.c:579
+#: sh/hivexsh.c:584
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
 msgstr "hivexsh: cd: nie odnaleziono podklucza „%s”\n"
 
-#: sh/hivexsh.c:597
+#: sh/hivexsh.c:602
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
@@ -114,27 +115,27 @@ msgstr ""
 "zawierały system plików oraz „ls” do wyświetlania podkluczy bieżącego\n"
 "klucza. Pełna dokumentacja znajduje się na stronie podręcznika hivexsh(1).\n"
 
-#: sh/hivexsh.c:676
+#: sh/hivexsh.c:681
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: nie odnaleziono klucza\n"
 
-#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
-#, c-format
-msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
+#: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
+#, fuzzy, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
 msgstr "%s: %s: nieprawidłowy parametr liczby całkowitej (%s zwróciło %d)\n"
 
-#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
+#: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: liczba całkowita spoza zakresu\n"
 
-#: sh/hivexsh.c:886 sh/hivexsh.c:904
+#: sh/hivexsh.c:900 sh/hivexsh.c:918
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: nieoczekiwany koniec wejścia\n"
 
-#: sh/hivexsh.c:925 sh/hivexsh.c:944
+#: sh/hivexsh.c:939 sh/hivexsh.c:958
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
@@ -142,12 +143,12 @@ msgstr ""
 "hivexsh: string(utf16le): tylko 7 bitowe ciągi ASCII są obsługiwane dla "
 "wejścia\n"
 
-#: sh/hivexsh.c:1055
+#: sh/hivexsh.c:1069
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: uszkodzone wartości po ciągu ósemkowym\n"
 
-#: sh/hivexsh.c:1062
+#: sh/hivexsh.c:1076
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -156,7 +157,7 @@ msgstr ""
 "hivexsh: setval: nie można przetworzyć ciągu wartości. Proszę zobaczyć "
 "stronę podręcznika hivexsh(1), aby uzyskać pomoc: %s\n"
 
-#: sh/hivexsh.c:1091
+#: sh/hivexsh.c:1105
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: główny węzeł nie może zostać usunięty\n"
