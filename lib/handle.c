@@ -319,13 +319,13 @@ hivex_open (const char *filename, int flags)
 #pragma GCC diagnostic pop
         if (is_root || !h->unsafe) {
           SET_ERRNO (ENOTSUP,
-                     "%s, the block at 0x%zx has invalid size %" PRIi32
+                     "%s, the block at 0x%zx has invalid size %" PRIu32
                      ", bad registry",
                      filename, blkoff, le32toh (block->seg_len));
           goto error;
         } else {
           DEBUG (2,
-                 "%s: block at 0x%zx has invalid size %" PRIi32 ", skipping",
+                 "%s: block at 0x%zx has invalid size %" PRIu32 ", skipping",
                  filename, blkoff, le32toh (block->seg_len));
           break;
         }
