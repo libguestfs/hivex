@@ -61,6 +61,13 @@ script, use:
 
  #!/usr/bin/hivexsh -f
 
+=item B<-u>
+
+Use heuristics to tolerate certain levels of corruption within hives.
+
+This is unsafe but may allow to export/merge valid keys/values in an
+othewise corrupted hive.
+
 =item B<-w>
 
 If this option is given, then writes are allowed to the hive
