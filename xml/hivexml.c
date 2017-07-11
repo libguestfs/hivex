@@ -95,13 +95,16 @@ main (int argc, char *argv[])
   int open_flags = 0;
   int visit_flags = 0;
 
-  while ((c = getopt (argc, argv, "dk")) != EOF) {
+  while ((c = getopt (argc, argv, "dku")) != EOF) {
     switch (c) {
     case 'd':
       open_flags |= HIVEX_OPEN_DEBUG;
       break;
     case 'k':
       visit_flags |= HIVEX_VISIT_SKIP_BAD;
+      break;
+    case 'u':
+      open_flags |= HIVEX_OPEN_UNSAFE;
       break;
     default:
       fprintf (stderr, "hivexml [-dk] regfile > output.xml\n");

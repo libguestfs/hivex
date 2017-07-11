@@ -29,6 +29,13 @@ bug report.
 Keep going even if we find errors in the Registry file.  This
 skips over any parts of the Registry that we cannot read.
 
+=item B<-u>
+
+Use heuristics to tolerate certain levels of corruption within hives.
+
+This is unsafe but may allow to export/merge valid keys/values in an
+othewise corrupted hive.
+
 =back
 
 =head1 SEE ALSO
