@@ -248,8 +248,6 @@ You should only use this option for quick hacking and debugging of the
 hive contents, and I<never> use it if the output is going to be passed
 into another program or stored in another hive.
 
-=back
-
 =cut
 
 my $unsafe;
@@ -260,6 +258,8 @@ Use heuristics to tolerate certain levels of corruption within hives.
 
 This is unsafe but may allow to export/merge valid keys/values in an
 othewise corrupted hive.
+
+=back
 
 =cut
 
