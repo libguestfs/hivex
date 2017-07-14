@@ -61,7 +61,7 @@ hivex.3: hivex.pod
 	  -c "Windows Registry" \
 	  --name "hivex" \
 	  --release "$(PACKAGE_NAME)-$(PACKAGE_VERSION)" \
-	  $< > $@-t; mv $@-t $@
+	  $< > $@-t && mv $@-t $@
 
 noinst_DATA = \
 	$(top_builddir)/html/hivex.3.html

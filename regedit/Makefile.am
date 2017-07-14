@@ -28,7 +28,7 @@ hivexregedit.1: hivexregedit
 	  -c "Windows Registry" \
 	  --name "hivexregedit" \
 	  --release "$(PACKAGE_NAME)-$(PACKAGE_VERSION)" \
-	  $< > $@-t; mv $@-t $@
+	  $< > $@-t && mv $@-t $@
 
 noinst_DATA = \
 	$(top_builddir)/html/hivexregedit.1.html

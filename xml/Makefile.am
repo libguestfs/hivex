@@ -40,7 +40,7 @@ hivexml.1: hivexml.pod
 	  -c "Windows Registry" \
 	  --name "hivexml" \
 	  --release "$(PACKAGE_NAME)-$(PACKAGE_VERSION)" \
-	  $< > $@-t; mv $@-t $@
+	  $< > $@-t && mv $@-t $@
 
 noinst_DATA = \
 	$(top_builddir)/html/hivexml.1.html

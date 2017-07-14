@@ -51,7 +51,7 @@ hivexget.1: hivexget.pod
 	  -c "Windows Registry" \
 	  --name "hivexget" \
 	  --release "$(PACKAGE_NAME)-$(PACKAGE_VERSION)" \
-	  $< > $@-t; mv $@-t $@
+	  $< > $@-t && mv $@-t $@
 
 hivexsh.1: hivexsh.pod
 	$(POD2MAN) \
@@ -59,7 +59,7 @@ hivexsh.1: hivexsh.pod
 	  -c "Windows Registry" \
 	  --name "hivexsh" \
 	  --release "$(PACKAGE_NAME)-$(PACKAGE_VERSION)" \
-	  $< > $@-t; mv $@-t $@
+	  $< > $@-t && mv $@-t $@
 
 noinst_DATA = \
 	$(top_builddir)/html/hivexget.1.html \
