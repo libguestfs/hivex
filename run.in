@@ -62,7 +62,7 @@ export PERL_VALGRIND=1
 export PERL_DESTRUCT_LEVEL=2
 
 # For Python.
-export PYTHON=@PYTHON@
+export PYTHON="@PYTHON@"
 if [ -z "$PYTHONPATH" ]; then
     PYTHONPATH="$s/python:$b/python:$b/python/.libs"
 else
@@ -71,8 +71,8 @@ fi
 export PYTHONPATH
 
 # For Ruby.
-export RUBY=@RUBY@
-export RAKE=@RAKE@
+export RUBY="@RUBY@"
+export RAKE="@RAKE@"
 if [ -z "$RUBYLIB" ]; then
     RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex"
 else
