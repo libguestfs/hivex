@@ -55,14 +55,14 @@ let () =
   and utf16le_of_ascii str =
     let len = String.length str in
     let len' = len * 2 + 2 in
-    let str' = String.create len' in
+    let str' = Bytes.create len' in
     for i = 0 to len-1 do
       str'.[i*2] <- str.[i];
       str'.[i*2+1] <- '\000'
     done;
     str'.[len'-2] <- '\000';
     str'.[len'-1] <- '\000';
-    str'
+    Bytes.to_string str'
   in
   iter 0 0 (Hivex.root h);
 
