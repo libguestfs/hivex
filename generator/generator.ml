@@ -415,15 +415,15 @@ let failwithf fs = ksprintf failwith fs
 let unique = let i = ref 0 in fun () -> incr i; !i
 
 let replace_char s c1 c2 =
-  let s2 = String.copy s in
+  let s2 = Bytes.of_string s in
   let r = ref false in
-  for i = 0 to String.length s2 - 1 do
-    if String.unsafe_get s2 i = c1 then (
-      String.unsafe_set s2 i c2;
+  for i = 0 to String.length s - 1 do
+    if String.unsafe_get s i = c1 then (
+      Bytes.unsafe_set s2 i c2;
       r := true
     )
   done;
-  if not !r then s else s2
+  if not !r then s else Bytes.to_string s2
 
 let isspace c =
   c = ' '
