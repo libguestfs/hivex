@@ -259,6 +259,20 @@ Use heuristics to tolerate certain levels of corruption within hives.
 This is unsafe but may allow to export/merge valid keys/values in an
 othewise corrupted hive.
 
+=cut
+
+my $max_depth;
+
+=item B<--max-depth> depth
+
+Limits the recursion depth of the export. For example, an export
+with a max depth of 1 will only include values directly under the
+specified key/prefix. A max depth of 0 will return no values.
+
+Exports include all child keys by default (fully recursive),
+which may take a while if the registry hive is large / bloated.
+This behavior can also be achieved by providing a negative max depth.
+
 =back
 
 =cut
@@ -271,6 +285,7 @@ GetOptions ("help|?" => \$help,
             "encoding=s" => \$encoding,
             "unsafe-printable-strings" => \$unsafe_printable_strings,
             "unsafe" => \$unsafe,
+            "max-depth=i" => \$max_depth,
     ) or pod2usage (2);
 pod2usage (1) if $help;
 
@@ -332,7 +347,8 @@ if ($merge) {                   # --merge (reg_import)
     reg_export ($h, $key, \*STDOUT,
                 prefix => $prefix,
                 unsafe_printable_strings => $unsafe_printable_strings,
-                unsafe => $unsafe);
+                unsafe => $unsafe,
+                max_depth => $max_depth);
 }
 
 =head1 SEE ALSO

@@ -487,11 +487,12 @@ sub reg_export
 {
     my $h = shift;
     my $key = shift;
+    my $fh = shift;
 
     my $node = _node_lookup ($h, $key);
     croak "$key: path not found in this hive" unless $node;
 
-    reg_export_node ($h, $node, @_);
+    reg_export_node ($h, $node, $fh, 0, @_);
 }
 
 =head2 reg_export_node
@@ -510,7 +511,16 @@ sub reg_export_node
     my $h = shift;
     my $node = shift;
     my $fh = shift;
+    my $depth = shift;
     my %params = @_;
+
+    my $max_depth = $params{max_depth};
+    if (defined $max_depth && $max_depth >= 0) {
+        # Check if we've gone deep enough
+        if ($depth >= $max_depth) {
+            return;
+        }
+    }
 
     confess "reg_export_node: \$node parameter was undef" unless defined $node;
 
@@ -622,7 +632,7 @@ sub reg_export_node
     }
 
     @children = sort { $h->node_name ($a) cmp $h->node_name ($b) } @children;
-    reg_export_node ($h, $_, $fh, @_) foreach @children;
+    reg_export_node ($h, $_, $fh, $depth + 1, @_) foreach @children;
 }
 
 # Escape " and \ when printing keys.
