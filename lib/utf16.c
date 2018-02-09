@@ -30,24 +30,21 @@
 #include "hivex-internal.h"
 
 char *
-_hivex_recode (const char *input_encoding, const char *input, size_t input_len,
-               const char *output_encoding, size_t *output_len)
+_hivex_recode (hive_h *h, recode_type t,
+               const char *input, size_t input_len, size_t *output_len)
 {
-  iconv_t ic = iconv_open (output_encoding, input_encoding);
-  if (ic == (iconv_t) -1)
-    return NULL;
-
   /* iconv(3) has an insane interface ... */
 
   size_t outalloc = input_len;
 
+  iconv_t *ic = _hivex_get_iconv (h, t);
  again:;
   size_t inlen = input_len;
   size_t outlen = outalloc;
   char *out = malloc (outlen + 1);
   if (out == NULL) {
     int err = errno;
-    iconv_close (ic);
+    _hivex_release_iconv (h, t);
     errno = err;
     return NULL;
   }
@@ -56,18 +53,17 @@ _hivex_recode (const char *input_encoding, const char *input, size_t input_len,
 
   size_t r = iconv (ic, (ICONV_CONST char **) &inp, &inlen, &outp, &outlen);
   if (r == (size_t) -1) {
+    int err = errno;
     if (errno == E2BIG) {
-      int err = errno;
       /* Reset errno here because we don't want to accidentally
        * return E2BIG to a library caller.
        */
-      errno = 0;
       size_t prev = outalloc;
       /* Try again with a larger output buffer. */
       free (out);
       outalloc *= 2;
       if (outalloc < prev) {
-        iconv_close (ic);
+        _hivex_release_iconv (h, t);
         errno = err;
         return NULL;
       }
@@ -75,16 +71,15 @@ _hivex_recode (const char *input_encoding, const char *input, size_t input_len,
     }
     else {
       /* Else some conversion failure, eg. EILSEQ, EINVAL. */
-      int err = errno;
-      iconv_close (ic);
+      _hivex_release_iconv (h, t);
       free (out);
       errno = err;
       return NULL;
     }
   }
 
+  _hivex_release_iconv (h, t);
   *outp = '\0';
-  iconv_close (ic);
   if (output_len != NULL)
     *output_len = outp - out;
 
@@ -95,17 +90,17 @@ _hivex_recode (const char *input_encoding, const char *input, size_t input_len,
  * storing in the hive file, as needed.
  */
 char*
-_hivex_encode_string(const char *str, size_t *size, int *utf16)
+_hivex_encode_string (hive_h *h, const char *str, size_t *size, int *utf16)
 {
   char* outstr;
   *utf16 = 0;
-  outstr = _hivex_recode ("UTF-8", str, strlen(str),
-                          "LATIN1", size);
+  outstr = _hivex_recode (h, utf8_to_latin1,
+                          str, strlen(str), size);
   if (outstr != NULL)
     return outstr;
   *utf16 = 1;
-  outstr = _hivex_recode ("UTF-8", str, strlen(str),
-                          "UTF-16LE", size);
+  outstr = _hivex_recode (h, utf8_to_utf16le,
+                          str, strlen(str), size);
   return outstr;
 }
 
@@ -128,11 +123,11 @@ _hivex_utf16_string_len_in_bytes_max (const char *str, size_t len)
 }
 
 size_t
-_hivex_utf8_strlen (const char* str, size_t len, int utf16)
+_hivex_utf8_strlen (hive_h *h, const char* str, size_t len, int utf16)
 {
-  const char *encoding = utf16 ? "UTF-16LE" : "LATIN1";
+  recode_type t = utf16 ? utf16le_to_utf8 : latin1_to_utf8;
   size_t ret = 0;
-  char *buf = _hivex_recode(encoding, str, len, "UTF-8", &ret);
+  char *buf = _hivex_recode (h, t, str, len, &ret);
   free(buf);
   return ret;
 }

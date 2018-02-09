@@ -66,6 +66,7 @@ gnumakefile
 iconv
 ignore-value
 inttypes
+lock
 maintainer-makefile
 manywarnings
 progname

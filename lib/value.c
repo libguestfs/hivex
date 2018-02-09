@@ -209,7 +209,7 @@ hivex_value_key_len (hive_h *h, hive_value_h value)
     SET_ERRNO (EFAULT, "key length is too long (%zu, %zu)", len, seg_len);
     return 0;
   }
-  return _hivex_utf8_strlen (vk->name, len, ! (le16toh (vk->flags) & 0x01));
+  return _hivex_utf8_strlen (h, vk->name, len, ! (le16toh (vk->flags) & 0x01));
 }
 
 char *
@@ -232,9 +232,9 @@ hivex_value_key (hive_h *h, hive_value_h value)
     return NULL;
   }
   if (flags & 0x01) {
-    return _hivex_windows_latin1_to_utf8 (vk->name, len);
+    return _hivex_recode (h, latin1_to_utf8, vk->name, len, NULL);
   } else {
-    return _hivex_windows_utf16_to_utf8 (vk->name, len);
+    return _hivex_recode (h, utf16le_to_utf8, vk->name, len, NULL);
   }
 }
 
@@ -471,7 +471,7 @@ hivex_value_string (hive_h *h, hive_value_h value)
   if (slen < len)
     len = slen;
 
-  char *ret = _hivex_windows_utf16_to_utf8 (data, len);
+  char *ret = _hivex_recode (h, utf16le_to_utf8, data, len, NULL);
   free (data);
   if (ret == NULL)
     return NULL;
@@ -538,7 +538,7 @@ hivex_value_multiple_strings (hive_h *h, hive_value_h value)
     }
     ret = ret2;
 
-    ret[nr_strings-1] = _hivex_windows_utf16_to_utf8 (p, plen);
+    ret[nr_strings-1] = _hivex_recode (h, utf16le_to_utf8, p, plen, NULL);
     ret[nr_strings] = NULL;
     if (ret[nr_strings-1] == NULL) {
       _hivex_free_strings (ret);

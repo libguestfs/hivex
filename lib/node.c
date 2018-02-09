@@ -90,9 +90,9 @@ hivex_node_name (hive_h *h, hive_node_h node)
   }
   size_t flags = le16toh (nk->flags);
   if (flags & 0x20) {
-    return _hivex_windows_latin1_to_utf8 (nk->name, len);
+    return _hivex_recode (h, latin1_to_utf8, nk->name, len, NULL);
   } else {
-    return _hivex_windows_utf16_to_utf8 (nk->name, len);
+    return _hivex_recode (h, utf16le_to_utf8, nk->name, len, NULL);
   }
 }
 
@@ -116,7 +116,7 @@ hivex_node_name_len (hive_h *h, hive_node_h node)
     return 0;
   }
 
-  return _hivex_utf8_strlen (nk->name, len, ! (le16toh (nk->flags) & 0x20));
+  return _hivex_utf8_strlen (h, nk->name, len, ! (le16toh (nk->flags) & 0x20));
 }
 
 

@@ -610,7 +610,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   size_t recoded_name_len;
   int use_utf16 = 0;
   char *recoded_name =
-    _hivex_encode_string (name, &recoded_name_len, &use_utf16);
+    _hivex_encode_string (h, name, &recoded_name_len, &use_utf16);
   if (recoded_name == NULL) {
     SET_ERRNO (EINVAL, "malformed name");
     return 0;
@@ -959,7 +959,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
     static const char vk_id[2] = { 'v', 'k' };
     size_t recoded_name_len;
     int use_utf16;
-    char* recoded_name = _hivex_encode_string (values[i].key, &recoded_name_len,
+    char* recoded_name = _hivex_encode_string (h, values[i].key, &recoded_name_len,
                                                &use_utf16);
     seg_len = sizeof (struct ntreg_vk_record) + recoded_name_len;
     size_t vk_offs = allocate_block (h, seg_len, vk_id);

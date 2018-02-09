@@ -138,3 +138,5 @@
 /xalloc.m4
 /xsize.m4
 /xstrtol.m4
+/thread.m4
+/yield.m4

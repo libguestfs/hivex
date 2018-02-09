@@ -30,6 +30,8 @@
 #include <sys/stat.h>
 #include <errno.h>
 #include <assert.h>
+#include <iconv.h>
+#include <glthread/lock.h>
 
 #ifdef HAVE_MMAP
 #include <sys/mman.h>
@@ -61,6 +63,32 @@ header_checksum (const hive_h *h)
 }
 
 #define HIVEX_OPEN_MSGLVL_MASK (HIVEX_OPEN_VERBOSE|HIVEX_OPEN_DEBUG)
+
+iconv_t *
+_hivex_get_iconv (hive_h *h, recode_type t)
+{
+  gl_lock_lock (h->iconv_cache[t].mutex);
+  if (h->iconv_cache[t].handle == NULL) {
+    if (t == utf8_to_latin1)
+      h->iconv_cache[t].handle = iconv_open ("LATIN1", "UTF-8");
+    else if (t == latin1_to_utf8)
+      h->iconv_cache[t].handle = iconv_open ("UTF-8", "LATIN1");
+    else if (t == utf8_to_utf16le)
+      h->iconv_cache[t].handle = iconv_open ("UTF-16LE", "UTF-8");
+    else if (t == utf16le_to_utf8)
+      h->iconv_cache[t].handle = iconv_open ("UTF-8", "UTF-16LE");
+  } else {
+    /* reinitialize iconv context */
+    iconv (h->iconv_cache[t].handle, NULL, 0, NULL, 0);
+  }
+  return h->iconv_cache[t].handle;
+}
+
+void
+_hivex_release_iconv (hive_h *h, recode_type t)
+{
+  gl_lock_unlock (h->iconv_cache[t].mutex);
+}
 
 hive_h *
 hivex_open (const char *filename, int flags)
@@ -164,11 +192,17 @@ hivex_open (const char *filename, int flags)
     goto error;
   }
 
+  for (int t=0; t<nr_recode_types; t++) {
+    gl_lock_init (h->iconv_cache[t].mutex);
+    h->iconv_cache[t].handle = NULL;
+  }
+
   /* Last modified time. */
   h->last_modified = le64toh ((int64_t) h->hdr->last_modified);
 
   if (h->msglvl >= 2) {
-    char *name = _hivex_windows_utf16_to_utf8 (h->hdr->name, 64);
+    char *name = _hivex_recode (h, utf16le_to_utf8,
+                                h->hdr->name, 64, NULL);
 
     fprintf (stderr,
              "hivex_open: header fields:\n"
@@ -424,6 +458,12 @@ hivex_close (hive_h *h)
   else
     r = 0;
   free (h->filename);
+  for (int t=0; t<nr_recode_types; t++) {
+    if (h->iconv_cache[t].handle != NULL) {
+      iconv_close (h->iconv_cache[t].handle);
+      h->iconv_cache[t].handle = NULL;
+    }
+  }
   free (h);
 
   return r;

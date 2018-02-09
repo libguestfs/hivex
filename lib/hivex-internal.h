@@ -22,6 +22,8 @@
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
+#include <iconv.h>
+#include <glthread/lock.h>
 
 #include "byte_conversions.h"
 
@@ -34,6 +36,14 @@
 #define STRNEQLEN(a,b,n) (strncmp((a),(b),(n)) != 0)
 #define STRCASENEQLEN(a,b,n) (strncasecmp((a),(b),(n)) != 0)
 #define STRPREFIX(a,b) (strncmp((a),(b),strlen((b))) == 0)
+
+typedef enum {
+  utf8_to_latin1 = 0,
+  latin1_to_utf8,
+  utf8_to_utf16le,
+  utf16le_to_utf8,
+  nr_recode_types,
+} recode_type;
 
 struct hive_h {
   char *filename;
@@ -79,6 +89,11 @@ struct hive_h {
   /* Internal data for mmap replacement */
   void *p_winmap;
 #endif
+
+  struct {
+    gl_lock_t mutex;
+    iconv_t *handle;
+  } iconv_cache[nr_recode_types];
 };
 
 /* Format of registry blocks. NB. All fields are little endian. */
@@ -282,17 +297,16 @@ extern void _hivex_free_offset_list (offset_list *list);
 extern size_t * _hivex_return_offset_list (offset_list *list);
 extern void _hivex_print_offset_list (offset_list *list, FILE *fp);
 
+/* handle.c */
+extern iconv_t * _hivex_get_iconv (hive_h *h, recode_type r);
+extern void  _hivex_release_iconv (hive_h *h, recode_type r);
+
 /* utf16.c */
-extern char * _hivex_recode (const char *input_encoding,
-                             const char *input, size_t input_len,
-                             const char *output_encoding, size_t *output_len);
-#define _hivex_windows_utf16_to_utf8(_input, _len) \
-  _hivex_recode ("UTF-16LE", _input, _len, "UTF-8", NULL)
-#define _hivex_windows_latin1_to_utf8(_input, _len) \
-  _hivex_recode ("LATIN1", _input, _len, "UTF-8", NULL)
-extern char* _hivex_encode_string(const char *str, size_t *size, int *utf16);
+extern char * _hivex_recode (hive_h *h, recode_type r,
+                             const char *input, size_t input_len, size_t *output_len);
+extern char* _hivex_encode_string (hive_h *h, const char *str, size_t *size, int *utf16);
 extern size_t _hivex_utf16_string_len_in_bytes_max (const char *str, size_t len);
-extern size_t _hivex_utf8_strlen (const char* str, size_t len, int utf16);
+extern size_t _hivex_utf8_strlen (hive_h *h, const char* str, size_t len, int utf16);
 
 /* util.c */
 extern void _hivex_free_strings (char **argv);

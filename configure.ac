@@ -38,7 +38,9 @@ AC_DEFINE([PACKAGE_VERSION_RELEASE],[hivex_release],[Release number])
 AC_DEFINE([PACKAGE_VERSION_EXTRA],["hivex_extra"],[Extra version string])
 
 gl_EARLY
+gl_LOCK
 gl_INIT
+gl_MODULE_INDICATOR([lock])
 
 AM_PROG_LIBTOOL
 
