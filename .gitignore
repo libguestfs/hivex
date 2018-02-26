@@ -30,6 +30,7 @@ Makefile.in
 /build-aux
 /ChangeLog
 /compile
+/config.cache
 /config.guess
 /config.h
 /config.h.in
