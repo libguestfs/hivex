@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 09:45+0000\n"
+"POT-Creation-Date: 2018-02-26 10:55+0000\n"
 "PO-Revision-Date: 2011-03-26 11:06-0400\n"
 "Last-Translator: lovenemesis <lovenemesis@gmail.com>\n"
 "Language-Team: Chinese (China) <None>\n"
@@ -157,12 +157,12 @@ msgstr "hivexsh: del: 不能删除根节点\n"
 msgid "%s: failed to write XML document\n"
 msgstr "%s: 写入 XML 文档失败\n"
 
-#: xml/hivexml.c:113
+#: xml/hivexml.c:116
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: 缺少输入文件名\n"
 
-#: xml/hivexml.c:132
+#: xml/hivexml.c:135
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: 创建 XML 写入器失败\n"

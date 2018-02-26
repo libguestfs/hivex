@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-17 09:45+0000\n"
+"POT-Creation-Date: 2018-02-26 10:55+0000\n"
 "PO-Revision-Date: 2011-03-22 11:29-0400\n"
 "Last-Translator: rjones <rjones@redhat.com>\n"
 "Language-Team: Kannada <None>\n"
@@ -166,12 +166,12 @@ msgstr "hivexsh: del: ಮೂಲ ನೋಡ್ ಅನ್ನು ಅಳಿಸಲು 
 msgid "%s: failed to write XML document\n"
 msgstr "%s: XML ದಸ್ತಾವೇಜನ್ನು ಬರೆಯುವಲ್ಲಿ ವಿಫಲಗೊಂಡಿದೆ\n"
 
-#: xml/hivexml.c:113
+#: xml/hivexml.c:116
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: ಇನ್‌ಪುಟ್ ಕಡತದ ಹೆಸರು ಕಾಣಿಸುತ್ತಿಲ್ಲ\n"
 
-#: xml/hivexml.c:132
+#: xml/hivexml.c:135
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: XML ಬರಹಗಾರನನ್ನು ರಚಿಸಲು ವಿಫಲಗೊಂಡಿದೆ\n"
