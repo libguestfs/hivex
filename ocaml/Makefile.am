@@ -41,10 +41,14 @@ OBJS = hivex_c.o hivex.cmo
 XOBJS = $(OBJS:.cmo=.cmx)
 
 mlhivex.cma: $(OBJS)
-	$(OCAMLMKLIB) -o mlhivex $^ -L$(top_builddir)/lib/.libs -lhivex
+	$(OCAMLMKLIB) -o mlhivex $^ \
+	    -ldopt '$(LDFLAGS)' \
+	    -L$(top_builddir)/lib/.libs -lhivex
 
 mlhivex.cmxa: $(XOBJS)
-	$(OCAMLMKLIB) -o mlhivex $^ -L$(top_builddir)/lib/.libs -lhivex
+	$(OCAMLMKLIB) -o mlhivex $^ \
+	    -ldopt '$(LDFLAGS)' \
+	    -L$(top_builddir)/lib/.libs -lhivex
 
 hivex_c.o: hivex_c.c
 	$(CC) $(AM_CPPFLAGS) $(CFLAGS) -fPIC -Wall -c $<
