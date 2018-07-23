@@ -126,6 +126,102 @@ allocate_page (hive_h *h, size_t allocation_hint)
   return offset + sizeof (struct ntreg_hbin_page);
 }
 
+/* Get the first available unused block from free_blocks,
+ * using first-fit algorithm.
+ * NB: Attempted to use the best-fit algorithm.
+ * This does not work too well because allocating a block
+ * in the smallest possible available block causes fragmentation.
+ */
+static size_t
+get_unused_block(hive_h *h, size_t seglen)
+{
+  unallocated_block *before = NULL, *found = NULL;
+  for (unallocated_block *current = h->free_blocks;
+			 current != NULL;
+			 current = current->next) {
+    if (current->block_size >= seglen) {
+      found = current;
+      break;
+    }
+    before = current;
+  }
+  if (found) {
+    size_t offset = found->offset;
+    size_t unused = found->block_size - seglen;
+    if (unused > 0) {
+      // Need to write unused memory to hive (to preserve hive integrity)
+      struct ntreg_hbin_block *blockhdr =
+				(struct ntreg_hbin_block *) ((char *) h->addr + found->offset + seglen);
+      blockhdr->seg_len = htole32 ((int32_t) unused);
+      // Lets move and resize the found block
+      found->offset = found->offset+seglen;
+      found->block_size = unused;
+    } else {
+      // Full buffer was used
+      if (before) {
+        before->next = found->next;
+      } else {
+        h->free_blocks = found->next;
+      }
+      free (found);
+    }
+    return offset;
+  }
+	else return -1;
+}
+
+/* Add freed block to free_blocks.
+ * Block size is determined by size at the actual offset.
+ * This list is ordered by offset. If the free'd block is preceded or succeded
+ * by another free block, they are merged.
+ */
+static void
+set_unused_block(hive_h *h, size_t offset)
+{
+  size_t seg_len = block_len (h, offset, NULL);
+  unallocated_block *current = malloc(sizeof(unallocated_block));
+  current->offset = offset;
+  current->block_size = seg_len;
+  current->next = NULL;
+
+  unallocated_block *before = NULL, *after = NULL;
+  // There are no free blocks
+  if (h->free_blocks == NULL) {
+    h->free_blocks = current;
+    return;
+  }
+
+  // Find the first block _after_ this one
+  for (after = h->free_blocks; after != NULL; after = after->next) {
+    if (after->offset > current->offset) {
+      // Can we merge with the next block?
+      if (current->offset + current->block_size == after->offset) {
+        current->block_size += after->block_size;
+        current->next = after->next;
+        free(after);
+      } else {
+        current->next = after;
+      }
+      break;
+    }
+    before = after;
+  }
+  // This was the block before this one
+  if (before) {
+    // Can we merge with the previous block?
+    if (before->offset + before->block_size  == current->offset) {
+      before->block_size += current->block_size;
+      before->next = current->next;
+      free(current); //discard current block, lets reuse before block
+    } else {
+      before->next = current;
+    }
+  } else {
+    h->free_blocks = current;
+  }
+}
+
+
 /* Allocate a single block, first allocating an hbin (page) at the end
  * of the current file if necessary.  NB. To keep the implementation
  * simple and more likely to be correct, we do not reuse existing free
@@ -148,6 +244,9 @@ allocate_page (hive_h *h, size_t allocation_hint)
 static size_t
 allocate_block (hive_h *h, size_t seg_len, const char id[2])
 {
+  bool new_block = true;
+  size_t offset;
+
   CHECK_WRITABLE (0);
 
   if (seg_len < 4) {
@@ -170,17 +269,26 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
    */
   seg_len = (seg_len + 7) & ~7;
 
-  /* Allocate a new page if necessary. */
-  if (h->endblocks == 0 || h->endblocks + seg_len > h->endpages) {
-    size_t newendblocks = allocate_page (h, seg_len);
-    if (newendblocks == 0)
-      return 0;
-    h->endblocks = newendblocks;
+  // Attempt to find a free block before getting a new block
+  offset = get_unused_block(h, seg_len);
+  if (offset != -1) {
+    new_block = false;
+    DEBUG(2, "Re-use offset found at 0x%zx, size %zu", offset, seg_len);
   }
 
-  size_t offset = h->endblocks;
+  if (new_block) {
+  /* Allocate a new page if necessary. */
+    if (h->endblocks == 0 || h->endblocks + seg_len > h->endpages) {
+      if(h->endblocks != 0) set_unused_block(h, h->endblocks);
+      size_t newendblocks = allocate_page (h, seg_len);
+      if (newendblocks == 0)
+        return 0;
+      h->endblocks = newendblocks;
+    }
 
-  DEBUG (2, "new block at 0x%zx, size %zu", offset, seg_len);
+    offset = h->endblocks;
+    DEBUG (2, "new block at 0x%zx, size %zu", offset, seg_len);
+  }
 
   struct ntreg_hbin_block *blockhdr =
     (struct ntreg_hbin_block *) ((char *) h->addr + offset);
@@ -195,21 +303,23 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
 
   BITMAP_SET (h->bitmap, offset);
 
-  h->endblocks += seg_len;
+  if (new_block) {
+    h->endblocks += seg_len;
 
-  /* If there is space after the last block in the last page, then we
-   * have to put a dummy free block header here to mark the rest of
-   * the page as free.
-   */
-  ssize_t rem = h->endpages - h->endblocks;
-  if (rem > 0) {
-    DEBUG (2, "marking remainder of page free"
-           " starting at 0x%zx, size %zd", h->endblocks, rem);
+    /* If there is space after the last block in the last page, then we
+     * have to put a dummy free block header here to mark the rest of
+     * the page as free.
+     */
+    ssize_t rem = h->endpages - h->endblocks;
+    if (rem > 0) {
+      DEBUG (2, "marking remainder of page free"
+             " starting at 0x%zx, size %zd", h->endblocks, rem);
 
-    assert (rem >= 4);
+      assert (rem >= 4);
 
-    blockhdr = (struct ntreg_hbin_block *) ((char *) h->addr + h->endblocks);
-    blockhdr->seg_len = htole32 ((int32_t) rem);
+      blockhdr = (struct ntreg_hbin_block *) ((char *) h->addr + h->endblocks);
+      blockhdr->seg_len = htole32 ((int32_t) rem);
+    }
   }
 
   return offset;
@@ -236,6 +346,7 @@ mark_block_unused (hive_h *h, size_t offset)
   size_t seg_len = block_len (h, offset, NULL);
   blockhdr->seg_len = htole32 (seg_len);
 
+  set_unused_block(h, offset);
   BITMAP_CLR (h->bitmap, offset);
 }
 

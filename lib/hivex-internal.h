@@ -45,6 +45,13 @@ typedef enum {
   nr_recode_types,
 } recode_type;
 
+typedef struct unallocated_block {
+  size_t offset;
+  size_t block_size;
+  struct unallocated_block *next;
+} unallocated_block;
+
+
 struct hive_h {
   char *filename;
   int fd;
@@ -52,6 +59,7 @@ struct hive_h {
   int msglvl;                   /* 1 = verbose, 2 or 3 = debug */
   int writable;
   int unsafe;
+  unallocated_block *free_blocks;
 
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
@@ -341,6 +349,6 @@ extern int _hivex_get_values (hive_h *h, hive_node_h node, hive_value_h **values
 #define HIVEX_MAX_SUBKEYS       70000
 #define HIVEX_MAX_VALUES        55000
 #define HIVEX_MAX_VALUE_LEN   8000000
-#define HIVEX_MAX_ALLOCATION  1000000
+#define HIVEX_MAX_ALLOCATION  2000000
 
 #endif /* HIVEX_INTERNAL_H_ */
