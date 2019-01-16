@@ -2743,7 +2743,7 @@ DESTROY (h)
                name (String.concat ", " c_params);
              free_args ();
              pr "      if (r == 0 && errno)\n";
-             pr "        croak (\"%%s: \", \"%s\", strerror (errno));\n"
+             pr "        croak (\"%%s: %%s\", \"%s\", strerror (errno));\n"
                name;
              pr "      EXTEND (SP, 2);\n";
              pr "      PUSHs (sv_2mortal (newSViv (len)));\n";
