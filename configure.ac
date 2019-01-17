@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2009-2015 Red Hat Inc.
+# Copyright (C) 2009-2019 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 # major/minor/release must be numbers
 m4_define([hivex_major],   [1])
 m4_define([hivex_minor],   [3])
-m4_define([hivex_release], [15])
+m4_define([hivex_release], [16])
 # extra can be any string
 m4_define([hivex_extra],   [])
 
