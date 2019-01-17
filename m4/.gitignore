@@ -2,7 +2,6 @@
 /absolute-header.m4
 /alloca.m4
 /arpa_inet_h.m4
-/asm-underscore.m4
 /byteswap.m4
 /close.m4
 /closeout.m4
@@ -91,7 +90,6 @@
 /nls.m4
 /nocrash.m4
 /off_t.m4
-/onceonly.m4
 /open-cloexec.m4
 /open.m4
 /pathmax.m4
