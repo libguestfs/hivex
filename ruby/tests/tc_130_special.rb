@@ -13,17 +13,17 @@ class TestRLenValue < MiniTest::Unit::TestCase
 
     nodes = h.node_children (root)
     node = nodes.find { |n| h.node_name(n) == "abcd_äöüß" }
-    assert node != nil
+    refute_nil(node)
     value = h.node_values(node).find { |v| h.value_key(v) == "abcd_äöüß" }
-    assert value != nil
+    refute_nil(value)
     node = nodes.find { |n| h.node_name(n) == "zero\0key" }
-    assert node != nil
+    refute_nil(node)
     value = h.node_values(node).find { |v| h.value_key(v) == "zero\0val" }
-    assert value != nil
+    refute_nil(value)
     node = nodes.find { |n| h.node_name(n) == "weird™" }
-    assert node != nil
+    refute_nil(node)
     value = h.node_values(node).find { |v| h.value_key(v) == "symbols $£₤₧€" }
-    assert value != nil
+    refute_nil(value)
 
   end
 end

@@ -23,7 +23,7 @@ class TestSetValue < MiniTest::Unit::TestCase
     refute_nil (h)
 
     root = h.root()
-    assert (root)
+    refute_nil (root)
 
     h.node_add_child(root, "B")
     b = h.node_get_child(root, "B")
@@ -42,21 +42,21 @@ class TestSetValue < MiniTest::Unit::TestCase
 
     val = h.node_get_value(b, "Key1")
     hash = h.value_value(val)
-    assert (hash[:type] == 3)
-    assert (hash[:value] == "JKL")
-    assert (hash[:len] == 3)
+    assert_equal(3, hash[:type])
+    assert_equal("JKL", hash[:value])
+    assert_equal(3, hash[:len])
 
     val = h.node_get_value(b, "Key2")
     hash = h.value_value(val)
-    assert (hash[:type] == 2)
-    assert (hash[:value] == "DEF")
-    assert (hash[:len] == 3)
+    assert_equal(2, hash[:type])
+    assert_equal("DEF", hash[:value])
+    assert_equal(3, hash[:len])
 
     val = h.node_get_value(b, "Key3")
     hash = h.value_value(val)
-    assert (hash[:type] == 3)
-    assert (hash[:value] == "GHI")
-    assert (hash[:len] == 3)
+    assert_equal(3, hash[:type])
+    assert_equal("GHI", hash[:value])
+    assert_equal(3, hash[:len])
 
     # Don't actually commit here because that would overwrite
     # the original file.

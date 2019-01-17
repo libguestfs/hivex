@@ -23,12 +23,12 @@ class TestWrite < MiniTest::Unit::TestCase
     refute_nil (h)
 
     root = h.root()
-    assert (root)
+    refute_nil (root)
 
     h.node_add_child(root, "A")
     h.node_add_child(root, "B")
     b = h.node_get_child(root, "B")
-    assert (b)
+    refute_nil (b)
 
     values = [
               { :key => "Key1", :type => 3, :value => "ABC" },

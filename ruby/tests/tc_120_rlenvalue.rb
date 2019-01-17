@@ -37,7 +37,7 @@ class TestRLenValue < MiniTest::Unit::TestCase
     moderate_value_value = h.node_get_value(moderate_value_node, "33Bytes")
 
     r = h.value_data_cell_offset(moderate_value_value)
-    assert_equal(r[:len], 37)
-    assert_equal(r[:off], 8712)
+    assert_equal(37, r[:len])
+    assert_equal(8712, r[:off])
   end
 end
