@@ -341,6 +341,6 @@ extern int _hivex_get_values (hive_h *h, hive_node_h node, hive_value_h **values
 #define HIVEX_MAX_SUBKEYS       70000
 #define HIVEX_MAX_VALUES        55000
 #define HIVEX_MAX_VALUE_LEN   8000000
-#define HIVEX_MAX_ALLOCATION  1000000
+#define HIVEX_MAX_ALLOCATION  8000000
 
 #endif /* HIVEX_INTERNAL_H_ */
