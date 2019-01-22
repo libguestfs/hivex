@@ -58,6 +58,7 @@ _hivex_recode (hive_h *h, recode_type t,
       /* Reset errno here because we don't want to accidentally
        * return E2BIG to a library caller.
        */
+      errno = 0;
       size_t prev = outalloc;
       /* Try again with a larger output buffer. */
       free (out);
