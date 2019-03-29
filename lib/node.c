@@ -553,8 +553,31 @@ hivex_node_nr_children (hive_h *h, hive_node_h node)
   return nr_subkeys_in_nk;
 }
 
+hive_node_h
+_find_child_in_lh(hive_h *h, struct ntreg_lf_record *block, const char *nname)
+{
+  char hash[4];
+  calc_hash("lh", nname, &hash);
+  for (size_t i = 0; i < block->nr_keys ; ++i) {
+    if (strncmp (block->keys[i].hash, hash, 4) == 0) {
+      hive_node_h offset = block->keys[i].offset + 0x1000;
+      //ensure name in nk block matches nname (collision?)
+      char *name = hivex_node_name (h, offset);
+      if (!name) continue;
+      if (STRCASEEQ (name, nname)) {
+	return offset;
+      }
+    }
+  }
+  return 0;
+}
+
 /* Very inefficient, but at least having a separate API call
  * allows us to make it more efficient in future.
+ * Note:
+ *  LH lookups are optimized
+ * TODO:
+ *  LI, RI, LF lookup optimization
  */
 hive_node_h
 hivex_node_get_child (hive_h *h, hive_node_h node, const char *nname)
@@ -563,24 +586,46 @@ hivex_node_get_child (hive_h *h, hive_node_h node, const char *nname)
   char *name = NULL;
   hive_node_h ret = 0;
 
-  children = hivex_node_children (h, node);
-  if (!children) goto error;
-
-  size_t i;
-  for (i = 0; children[i] != 0; ++i) {
-    name = hivex_node_name (h, children[i]);
-    if (!name) goto error;
-    if (STRCASEEQ (name, nname)) {
-      ret = children[i];
-      break;
-    }
-    free (name); name = NULL;
+  //Check if subkey offset is LH block with subkeys in it
+  if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
+    SET_ERRNO (EINVAL, "invalid block or not an 'nk' block");
+    return 0;
   }
+  struct ntreg_nk_record *nk =
+    (struct ntreg_nk_record *) ((char *) h->addr + node);
+  size_t nr_subkeys_in_nk = le32toh (nk->nr_subkeys);
+  if (nr_subkeys_in_nk == 0) return 0;
+  size_t subkey_lf = le32toh (nk->subkey_lf) + 0x1000;
+  if (!IS_VALID_BLOCK (h, subkey_lf)) {
+    SET_ERRNO (EFAULT,
+               "subkey_lf is not a valid block (0x%zx)", subkey_lf);
+    return 0;
+  }
+  struct ntreg_hbin_block *block =
+    (struct ntreg_hbin_block *) ((char *) h->addr + subkey_lf);
+  if (strncmp(block->id, "lh", 2) == 0) {
+    return _find_child_in_lh(h, (struct ntreg_lf_record *)block, nname);
+  } else {
+    // Subkey list is either RI, LI or LF. Continue with brute force
+    children = hivex_node_children (h, node);
+    if (!children) goto error;
 
- error:
-  free (children);
-  free (name);
-  return ret;
+    size_t i;
+    for (i = 0; children[i] != 0; ++i) {
+      name = hivex_node_name (h, children[i]);
+      if (!name) goto error;
+      if (STRCASEEQ (name, nname)) {
+	ret = children[i];
+	break;
+      }
+      free (name); name = NULL;
+    }
+
+  error:
+    free (children);
+    free (name);
+    return ret;
+  }
 }
 
 hive_node_h
