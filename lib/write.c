@@ -398,7 +398,7 @@ delete_values (hive_h *h, hive_node_h node)
 
 /* Calculate the hash for a lf or lh record offset.
  */
-static void
+void
 calc_hash (const char *type, const char *name, void *ret)
 {
   size_t len = strlen (name);
