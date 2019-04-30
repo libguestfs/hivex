@@ -3042,7 +3042,7 @@ put_val_type (char *val, size_t len, hive_type t)
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
-        | RSize -> pr "  size_t r;\n"; "0"
+        | RSize -> pr "  size_t r;\n"; "-1"
         | RNode -> pr "  hive_node_h r;\n"; "0"
         | RNodeNotFound ->
             pr "  errno = 0;\n";

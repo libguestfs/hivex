@@ -542,7 +542,7 @@ hivex_node_nr_children (hive_h *h, hive_node_h node)
 {
   if (!IS_VALID_BLOCK (h, node) || !block_id_eq (h, node, "nk")) {
     SET_ERRNO( EINVAL, "invalid block or not an 'nk' block");
-    return 0;
+    return -1;
   }
 
   struct ntreg_nk_record *nk =
