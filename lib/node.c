@@ -563,10 +563,15 @@ _find_child_in_lh(hive_h *h, struct ntreg_lf_record *block, const char *nname)
       hive_node_h offset = block->keys[i].offset + 0x1000;
       //ensure name in nk block matches nname (collision?)
       char *name = hivex_node_name (h, offset);
-      if (!name) continue;
-      if (STRCASEEQ (name, nname)) {
-	return offset;
+      if (!name) {
+        free(name);
+        continue;
       }
+      if (STRCASEEQ (name, nname)) {
+        free(name);
+        return offset;
+      }
+      free(name);
     }
   }
   return 0;

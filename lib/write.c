@@ -279,7 +279,8 @@ allocate_block (hive_h *h, size_t seg_len, const char id[2])
   if (new_block) {
   /* Allocate a new page if necessary. */
     if (h->endblocks == 0 || h->endblocks + seg_len > h->endpages) {
-      if(h->endblocks != 0) set_unused_block(h, h->endblocks);
+      if(h->endblocks != 0 && h->endpages > h->endblocks+4)
+				set_unused_block(h, h->endblocks);
       size_t newendblocks = allocate_page (h, seg_len);
       if (newendblocks == 0)
         return 0;
