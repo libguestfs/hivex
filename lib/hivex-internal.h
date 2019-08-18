@@ -263,7 +263,7 @@ struct ntreg_db_record {
 
 struct ntreg_db_block {
   int32_t seg_len;
-  char data[1];
+  uint32_t data[1];
 } __attribute__((__packed__));
 
 static inline size_t
