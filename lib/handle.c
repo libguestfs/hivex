@@ -681,9 +681,11 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
   DEBUG(2, "Copy successful");
   return h_blkoff;
 }
-void
-hivex_defragment(hive_h *old)
+
+int
+hivex_defragment(hive_h *old, const char* name)
 {
+  int ret = -1;
   hive_h *h = NULL;
   size_t BASE_BLOCK_SIZE = 4*1024;
   size_t ROOT_PARENT = 0xffff; //this entry is meaningless
@@ -692,7 +694,7 @@ hivex_defragment(hive_h *old)
   if (h == NULL)
     goto error;
   h->msglvl = old->msglvl;
-  h->writable = old->writable;
+  h->writable = 1; // new hive must be writable
 
   DEBUG(2, "Attempting to defragment %s", old->filename);
   DEBUG (2, "created handle %p", h);
@@ -711,13 +713,11 @@ hivex_defragment(hive_h *old)
     DEBUG(2, "Recursively fixing root NK failed");
     goto error;
   }
-  //Todo: get from arg
-  hivex_commit(h, "defragmented.hiv", 0);
-  hivex_close(h);
-  return;
+  ret = hivex_commit(h, name, 0);
  error:
   free(h->addr);
   free(h);
+  return ret;
 }
 
 int
