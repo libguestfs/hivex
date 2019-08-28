@@ -60,7 +60,8 @@ struct hive_h {
   int writable;
   int unsafe;
   unallocated_block *free_blocks;
-
+  size_t free_bytes;
+  size_t used_bytes;
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
     void *addr;

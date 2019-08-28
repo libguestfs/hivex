@@ -90,6 +90,16 @@ _hivex_release_iconv (hive_h *h, recode_type t)
   gl_lock_unlock (h->iconv_cache[t].mutex);
 }
 
+size_t
+hivex_free_bytes (hive_h *h) {
+  return h->free_bytes;
+}
+
+size_t
+hivex_used_bytes (hive_h *h) {
+  return h->used_bytes;
+}
+
 hive_h *
 hivex_open (const char *filename, int flags)
 {
@@ -242,9 +252,7 @@ hivex_open (const char *filename, int flags)
   size_t blocks = 0;          /* Total number of blocks found. */
   size_t smallest_block = SIZE_MAX, largest_block = 0, blocks_bytes = 0;
   size_t used_blocks = 0;     /* Total number of used blocks found. */
-  size_t used_size = 0;       /* Total size (bytes) of used blocks. */
   size_t free_blocks = 0;     /* Total number of free blocks found. */
-  size_t free_size = 0;       /* Total size (bytes) of free blocks. */
 
   /* Read the pages and blocks.  The aim here is to be robust against
    * corrupt or malicious registries.  So we make sure the loops
@@ -391,7 +399,7 @@ hivex_open (const char *filename, int flags)
 
       if (used) {
         used_blocks++;
-        used_size += seg_len;
+        h->used_bytes += seg_len;
 
         /* Root block must be an nk-block. */
         if (is_root && (block->id[0] != 'n' || block->id[1] != 'k'))
@@ -401,7 +409,7 @@ hivex_open (const char *filename, int flags)
         BITMAP_SET (h->bitmap, blkoff);
       } else {
         free_blocks++;
-        free_size += seg_len;
+        h->free_bytes += seg_len;
       }
     }
   }
@@ -425,8 +433,7 @@ hivex_open (const char *filename, int flags)
          "  bytes free:     %zu",
          pages, smallest_page, largest_page,
          blocks, smallest_block, blocks_bytes / blocks, largest_block,
-         used_blocks, used_size, free_blocks, free_size);
-	hivex_defragment(h);
+         used_blocks, h->used_bytes, free_blocks, h->free_bytes);
   return h;
 
  error:;
