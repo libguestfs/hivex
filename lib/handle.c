@@ -90,6 +90,16 @@ _hivex_release_iconv (hive_h *h, recode_type t)
   gl_lock_unlock (h->iconv_cache[t].mutex);
 }
 
+size_t
+hivex_free_bytes (hive_h *h) {
+  return h->free_bytes;
+}
+
+size_t
+hivex_used_bytes (hive_h *h) {
+  return h->used_bytes;
+}
+
 hive_h *
 hivex_open (const char *filename, int flags)
 {
@@ -242,7 +252,7 @@ hivex_open (const char *filename, int flags)
   size_t blocks = 0;          /* Total number of blocks found. */
   size_t smallest_block = SIZE_MAX, largest_block = 0, blocks_bytes = 0;
   size_t used_blocks = 0;     /* Total number of used blocks found. */
-  size_t used_size = 0;       /* Total size (bytes) of used blocks. */
+  size_t free_blocks = 0;     /* Total number of free blocks found. */
 
   /* Read the pages and blocks.  The aim here is to be robust against
    * corrupt or malicious registries.  So we make sure the loops
@@ -389,7 +399,7 @@ hivex_open (const char *filename, int flags)
 
       if (used) {
         used_blocks++;
-        used_size += seg_len;
+        h->used_bytes += seg_len;
 
         /* Root block must be an nk-block. */
         if (is_root && (block->id[0] != 'n' || block->id[1] != 'k'))
@@ -397,6 +407,9 @@ hivex_open (const char *filename, int flags)
 
         /* Note this blkoff is a valid address. */
         BITMAP_SET (h->bitmap, blkoff);
+      } else {
+        free_blocks++;
+        h->free_bytes += seg_len;
       }
     }
   }
@@ -415,11 +428,12 @@ hivex_open (const char *filename, int flags)
          "  pages:          %zu [sml: %zu, lge: %zu]\n"
          "  blocks:         %zu [sml: %zu, avg: %zu, lge: %zu]\n"
          "  blocks used:    %zu\n"
-         "  bytes used:     %zu",
+         "  bytes used:     %zu\n"
+         "  blocks free:    %zu\n"
+         "  bytes free:     %zu",
          pages, smallest_page, largest_page,
          blocks, smallest_block, blocks_bytes / blocks, largest_block,
-         used_blocks, used_size);
-
+         used_blocks, h->used_bytes, free_blocks, h->free_bytes);
   return h;
 
  error:;
@@ -439,6 +453,271 @@ hivex_open (const char *filename, int flags)
   }
   errno = err;
   return NULL;
+}
+
+size_t copy_block(hive_h *old, hive_h *h, size_t blkoff);
+int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent);
+
+int fix_bl(hive_h *old, hive_h *h, size_t blkoff, size_t nr_blocks){
+  DEBUG(2, "fixing bl at 0x%zx", blkoff);
+  struct ntreg_db_block *db = (struct ntreg_db_block *) ((char *) h->addr+ blkoff);
+  for (int i = 0; i < nr_blocks; i++) {
+    DEBUG(2, "db data block 0x%x", 0x1000 + le32toh(db->data[i]));
+    size_t new_data_off = copy_block(old, h, 0x1000 + le32toh(db->data[i]));
+    //realloc may invalidate pointers
+    db = (struct ntreg_db_block *) ((char *) h->addr + blkoff);
+    if (new_data_off != 0) db->data[i] = htole32(new_data_off - 0x1000);
+    else return 1;
+  }
+  return 0;
+}
+
+int fix_db(hive_h *old, hive_h *h, size_t blkoff){
+  int ret = 0;
+  struct ntreg_db_record *db = (struct ntreg_db_record *) ((char *) h->addr+ blkoff);
+  size_t nr_blocks = le32toh(db->nr_blocks);
+  DEBUG(2,"Nr of big data blocks:%zu", nr_blocks);
+  size_t new_blocklist_offset = copy_block(old, h, 0x1000 + le32toh(db->blocklist_offset));
+  //realloc may invalidate pointers
+  db = (struct ntreg_db_record *) ((char *) h->addr+ blkoff);
+  if (new_blocklist_offset != 0) db->blocklist_offset = htole32(new_blocklist_offset - 0x1000);
+  else return 1;
+  return fix_bl(old, h, new_blocklist_offset, nr_blocks);
+}
+
+int fix_vk(hive_h *old, hive_h *h, size_t blkoff){
+  struct ntreg_vk_record *vk = (struct ntreg_vk_record *) ((char *) h->addr+ blkoff);
+  if (le32toh(vk->data_len) & 0x80000000) { //stored inline, do nothing
+    DEBUG(2,"inline data");
+  } else {
+    DEBUG(2, "data len %u", vk->data_len);
+    DEBUG(2, "data offset 0x%x", vk->data_offset);
+    size_t new_data_offset = copy_block(old, h, 0x1000 + le32toh(vk->data_offset));
+    //realloc may invalidate pointers
+    vk = (struct ntreg_vk_record *) ((char *) h->addr+ blkoff);
+    if (new_data_offset != 0) vk->data_offset = htole32(new_data_offset - 0x1000);
+    else return 1;
+  }
+  if ((le32toh(vk->data_len) & 0x7fffffff) > 16344) { //big data?
+    if(block_id_eq(h, 0x1000 + le32toh(vk->data_offset), "db")) {
+      DEBUG(2, "big data");
+      return fix_db(old, h, 0x1000 + le32toh(vk->data_offset));
+    }
+  }
+  return 0;
+}
+
+int fix_vl(hive_h *old, hive_h *h, size_t blkoff, size_t nr_values){
+  int ret = 0;
+  struct ntreg_value_list *vl;
+  for (int i = 0; i < nr_values; i++) {
+    //realloc may invalidate pointers
+    vl = (struct ntreg_value_list *) ((char *) h->addr + blkoff);
+    size_t new_vk_off = copy_block(old, h,  0x1000 + le32toh(vl->offset[i]));
+    //realloc may invalidate pointers
+    vl = (struct ntreg_value_list *) ((char *) h->addr + blkoff);
+    if (new_vk_off != 0) vl->offset[i] = htole32(new_vk_off - 0x1000);
+    else return 1;
+    ret = fix_vk(old, h, new_vk_off);
+    if (ret != 0) return ret;
+  }
+  return ret;
+}
+
+int fix_skl(hive_h *old, hive_h *h, size_t blkoff, size_t parent_off) {
+  int ret;
+  struct ntreg_hbin_block *block =
+    (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
+  if (strncmp(block->id, "lf", 2) == 0 || strncmp(block->id, "lh", 2) == 0) {
+    DEBUG(2, "skl is type lf/lh");
+    struct ntreg_lf_record *lf = (struct ntreg_lf_record *) block;
+    size_t nr_keys = le32toh(lf->nr_keys);
+    DEBUG(2, "nr_keys %zu", nr_keys);
+    for ( size_t i = 0; i < nr_keys; i++){
+      size_t new_nk_off = copy_block(old, h, 0x1000 + le32toh(lf->keys[i].offset));
+      //realloc may invalidate pointers
+      lf = (struct ntreg_lf_record *) ((char *) h->addr + blkoff);
+      if (new_nk_off != 0) lf->keys[i].offset = htole32(new_nk_off - 0x1000);
+      else return 1;
+      ret = fix_nk(old, h, new_nk_off, parent_off);
+      if (ret != 0) return ret;
+      //realloc may invalidate pointers
+      lf = (struct ntreg_lf_record *) ((char *) h->addr + blkoff);
+    }
+  } else if (strncmp(block->id, "li", 2) == 0) {
+    DEBUG(2, "skl is type li");
+    struct ntreg_ri_record *li = (struct ntreg_ri_record *) block;
+    size_t nr_keys = le32toh(li->nr_offsets);
+    for ( size_t i = 0; i < nr_keys; i++){
+      size_t new_nk_off = copy_block(old, h, 0x1000 + le32toh(li->offset[i]));
+      //realloc may invalidate pointers
+      li = (struct ntreg_ri_record *) ((char *) h->addr + blkoff);
+      if (new_nk_off != 0) li->offset[i] = htole32(new_nk_off - 0x1000);
+      else return 1;
+      ret = fix_nk(old, h, new_nk_off, parent_off);
+      if (ret != 0) return ret;
+      //realloc may invalidate pointers
+      li = (struct ntreg_ri_record *) ((char *) h->addr + blkoff);
+    }
+  } else if (strncmp(block->id, "ri", 2) == 0) {
+    DEBUG(2, "skl is type ri");
+    struct ntreg_ri_record *ri = (struct ntreg_ri_record *) block;
+    size_t nr_lists = le32toh(ri->nr_offsets);
+    DEBUG(2, "size of ri %zu",nr_lists);
+    for ( size_t i = 0 ; i < nr_lists; i++){
+      size_t new_list_off = copy_block(old, h, 0x1000 + le32toh(ri->offset[i]));
+      //realloc may invalidate pointers
+      ri = (struct ntreg_ri_record *) ((char *) h->addr + blkoff);
+      if (new_list_off != 0) ri->offset[i] = htole32(new_list_off- 0x1000);
+      else return 1;
+      ret = fix_skl(old, h, new_list_off, parent_off);
+      if (ret != 0) return ret;
+      //realloc may invalidate pointers
+      ri = (struct ntreg_ri_record *) ((char *) h->addr + blkoff);
+    }
+  }
+}
+
+struct known_sk_blkoff{
+  size_t old_blkoff;
+  size_t new_blkoff;
+};
+
+struct known_sk_blkoff sk_cache[1000];
+int cache_size = 0;
+
+void add_sk(size_t old_blkoff, size_t new_blkoff){
+  if (cache_size < 1000) {
+    struct known_sk_blkoff entry;
+    entry.old_blkoff = old_blkoff;
+    entry.new_blkoff = new_blkoff;
+    sk_cache[cache_size] = entry;
+    cache_size++;
+  }
+}
+
+size_t get_sk(size_t old_blkoff){
+  for (int i = 0;i<cache_size;i++){
+    if(sk_cache[i].old_blkoff == old_blkoff) return sk_cache[i].new_blkoff;
+  }
+  return 0;
+}
+
+int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
+  int ret = 0;
+  DEBUG(2, "fixing nk at blkoff 0x%zx", blkoff);
+  struct ntreg_nk_record *nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+  //1. Set parent
+  nk->parent = parent;
+  //2. Copy KV
+  size_t nr_values = le32toh (nk->nr_values);
+  DEBUG(2, "nr_values = %zu", nr_values);
+  if (nr_values > 0) {
+    size_t new_vl_off = copy_block(old, h, 0x1000 + le32toh(nk->vallist));
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+    if (new_vl_off != 0) nk->vallist = htole32(new_vl_off - 0x1000);
+    else return 1;
+    ret = fix_vl(old, h,  0x1000 + le32toh(nk->vallist), nr_values);
+    if (ret != 0) return ret;
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+  }
+  //3. Copy SK - cached because seems to repeat very often
+  size_t cached_blkoff = get_sk(nk->sk);
+  if (cached_blkoff != 0) {
+    nk->sk = cached_blkoff;
+  } else {
+    size_t new_sk_off = copy_block(old, h, 0x1000 + le32toh(nk->sk));
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+    add_sk(nk->sk, htole32(new_sk_off - 0x1000));
+    if (new_sk_off != 0) nk->sk = htole32(new_sk_off - 0x1000);
+    else return 1;
+  }
+  //4. Class-name offset
+  size_t classname_len = le32toh(nk->classname_len);
+  if (classname_len > 0) {
+    size_t new_cn_off = copy_block(old, h, 0x1000 + le32toh(nk->classname));
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+    if (new_cn_off != 0) nk->classname = htole32(new_cn_off - 0x1000);
+    else return 1;
+    }
+  //5. Subkey offset
+  size_t nr_subkeys = le32toh(nk->nr_subkeys);
+  DEBUG(2, "nr_subkeys: %zu", nr_subkeys);
+  if (nr_subkeys > 0) {
+    size_t new_subkey_list_off = copy_block(old, h, 0x1000 + le32toh(nk->subkey_lf));
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+    if (new_subkey_list_off != 0) nk->subkey_lf = htole32(new_subkey_list_off - 0x1000);
+    else return 1;
+    ret = fix_skl(old, h, new_subkey_list_off, htole32(blkoff-0x1000));
+    if (ret != 0) return ret;
+    //realloc may invalidate pointers
+    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+  }
+  return ret;
+}
+
+size_t
+copy_block(hive_h *old, hive_h *h, size_t blkoff)
+{
+  size_t h_blkoff = 0;
+  struct  ntreg_hbin_block *block = (struct ntreg_hbin_block *) ((char *) old->addr + blkoff);
+  int32_t len = le32toh (block->seg_len);
+  if (len < 0) {
+    len = -len;
+    DEBUG(2, "Attempting to copy block 0x%zx, size %d, id %c%c", blkoff, len, block->id[0], block->id[1]);
+    h_blkoff = allocate_block(h, len, block->id);
+    if (h_blkoff == 0) return 0;
+    DEBUG(2, "New block at 0x%zx, size %d, id %c%c", h_blkoff, len, block->id[0], block->id[1]);
+    memcpy(h->addr+ h_blkoff, old->addr + blkoff, len);
+  } else {
+    DEBUG(2, "Failed to copy block at 0x%zx", blkoff);
+    return 0;
+  }
+  DEBUG(2, "Copy successful");
+  return h_blkoff;
+}
+
+int
+hivex_defragment(hive_h *old, const char* name)
+{
+  int ret = -1;
+  hive_h *h = NULL;
+  size_t BASE_BLOCK_SIZE = 4*1024;
+  size_t ROOT_PARENT = 0xffff; //this entry is meaningless
+
+  h = calloc (1, sizeof *h);
+  if (h == NULL)
+    goto error;
+  h->msglvl = old->msglvl;
+  h->writable = 1; // new hive must be writable
+
+  DEBUG(2, "Attempting to defragment %s", old->filename);
+  DEBUG (2, "created handle %p", h);
+  h->addr = malloc(BASE_BLOCK_SIZE); // copy base block
+  if (h->addr == NULL)
+    goto error;
+  h->size = BASE_BLOCK_SIZE;
+  h->endblocks = BASE_BLOCK_SIZE;
+  h->endpages = BASE_BLOCK_SIZE;
+
+  memcpy(h->addr, old->addr, BASE_BLOCK_SIZE);
+  size_t new_root = copy_block(old, h, old->rootoffs);
+  if (fix_nk(old, h, new_root, ROOT_PARENT) == 0)
+    DEBUG(2, "Recursively fixing root NK successful");
+  else {
+    DEBUG(2, "Recursively fixing root NK failed");
+    goto error;
+  }
+  ret = hivex_commit(h, name, 0);
+ error:
+  free(h->addr);
+  free(h);
+  return ret;
 }
 
 int

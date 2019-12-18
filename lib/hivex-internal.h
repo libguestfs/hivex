@@ -60,7 +60,8 @@ struct hive_h {
   int writable;
   int unsafe;
   unallocated_block *free_blocks;
-
+  size_t free_bytes;
+  size_t used_bytes;
   /* Registry file, memory mapped if read-only, or malloc'd if writing. */
   union {
     void *addr;
@@ -263,7 +264,7 @@ struct ntreg_db_record {
 
 struct ntreg_db_block {
   int32_t seg_len;
-  char data[1];
+  uint32_t data[1];
 } __attribute__((__packed__));
 
 static inline size_t
@@ -346,8 +347,8 @@ extern int _hivex_get_values (hive_h *h, hive_node_h node, hive_value_h **values
   } while (0)
 
 /* These limits are in place to stop really stupid stuff and/or exploits. */
-#define HIVEX_MAX_SUBKEYS      200000
-#define HIVEX_MAX_VALUES       100000
+#define HIVEX_MAX_SUBKEYS      100000
+#define HIVEX_MAX_VALUES        55000
 #define HIVEX_MAX_VALUE_LEN   8000000
 #define HIVEX_MAX_ALLOCATION  2000000
 
