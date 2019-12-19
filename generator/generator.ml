@@ -74,6 +74,8 @@ and argt =                              (* Note, cannot be NULL/0 unless it
   | ASetValues                          (* See hivex_node_set_values. *)
   | ASetValue                           (* See hivex_node_set_value. *)
   | AVoid of string                     (* void* *)
+  | ASize of string                     (* size_t or 0. *)
+  | AChar of string                     (* char *)
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
@@ -400,10 +402,31 @@ new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.";
 
-  "calc_hash", (RVoid, [AString "apple"; AString "name"; AVoid "ret"]),
+  "calc_hash", (RVoid, [AString "ctype"; AString "name"; AVoid "ret"]),
     "calculate hash value",
     "\
 Calculate the hash for a lf or lh record offset.";
+
+  "allocate_block", (RSize, [AHive; ASize "seg_len"; AChar "id[2]"]),
+    "allocate a single block",
+    "\
+Allocate a single block.";
+
+  "hivex_free_bytes", (RSize, [AHive]),
+    "calculate free bytes",
+    "\
+Hivex free bytes.";
+
+  "hivex_used_bytes", (RSize, [AHive]),
+    "calculate hive used bytes",
+    "\
+Hivex used bytes.";
+
+  "hivex_defragment", (RInt64, [AHive; AString "name"]),
+    "defragment hives",
+    "\
+Allocate free bytes & defragment.";
+
 ]
 
 let f_len_exists n =
@@ -605,6 +628,8 @@ let name_of_argt = function
   | ASetValues -> "values"
   | ASetValue -> "val"
   | AVoid n -> n
+  | ASize n -> n
+  | AChar n -> n
 
 (* Check function names etc. for consistency. *)
 let check_functions () =
@@ -641,9 +666,6 @@ let check_functions () =
       let check_arg_ret_name n =
         if contains_uppercase n then
           failwithf "%s param/ret %s should not contain uppercase chars"
-            name n;
-        if String.contains n '-' || String.contains n '_' then
-          failwithf "%s param/ret %s should not contain '-' or '_'"
             name n;
         if n = "value" then
           failwithf "%s has a param/ret called 'value', which causes conflicts in the OCaml bindings, use something like 'val' or a more descriptive name" name;
@@ -965,6 +987,8 @@ and generate_c_prototype ?(extern = false) name style =
       | ASetValues -> pr "size_t nr_values, const hive_set_value *values"
       | ASetValue -> pr "const hive_set_value *val"
       | AVoid n -> pr "void *%s" n
+      | ASize n -> pr "size_t %s" n
+      | AChar n -> pr "const char %s" n
   ) (snd style);
   (match fst style with
    | RLenType | RLenTypeVal -> pr ", hive_type *t, size_t *len"
@@ -1677,6 +1701,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
     | ASetValues -> pr "set_value array -> "
     | ASetValue -> pr "set_value -> "
     | AVoid _ -> pr "unit -> "
+    | ASize _ -> pr "int64 -> "
   ) (snd style);
   (match fst style with
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
@@ -1816,6 +1841,8 @@ static void raise_closed (const char *) Noreturn;
             pr "  hive_value_h %s = Int_val (%sv);\n" n n
         | AVoid n -> 
             pr " const char *%s = String_val (%sv);\n" n n 
+        | ASize n ->
+            pr "  size_t %s = Int_val (%sv);\n" n n
         | AString n ->
             pr "  const char *%s = String_val (%sv);\n" n n
         | AStringNullable n ->
@@ -1897,7 +1924,7 @@ static void raise_closed (const char *) Noreturn;
 
       List.iter (
         function
-        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _
+        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | ASize _ 
         | AOpenFlags | AUnusedFlags -> ()
         | ASetValues ->
             pr "  free (values);\n";
@@ -2270,6 +2297,7 @@ sub open {
          | RErrDispose
          | RHive
          | RString
+         | RVoid
          | RStringList
          | RLenType
          | RLenValue
@@ -2340,6 +2368,7 @@ and generate_perl_prototype name style =
    | RHive -> pr "$h = "
    | RSize -> pr "$size = "
    | RNode
+   | RVoid -> pr "$unit = "
    | RNodeNotFound -> pr "$node = "
    | RNodeList -> pr "@nodes = "
    | RValue -> pr "$value = "
@@ -3601,6 +3630,8 @@ get_values (VALUE valuesv, size_t *nr_values)
           pr "  const char *%s = StringValueCStr (%sv);\n" n n;
         | AVoid n ->
           pr "  const char *%s = StringValueCStr (%sv);\n" n n;
+        | ASize n -> 
+          pr "  size_t %s = NUM2ULL (%sv);\n" n n;
         | AStringNullable n ->
           pr "  const char *%s =\n" n;
           pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
@@ -3699,6 +3730,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         | AValue _
         | AString _
         | AVoid _
+        | ASize _
         | AStringNullable _
         | AOpenFlags
         | AUnusedFlags -> ()

@@ -404,11 +404,11 @@ delete_values (hive_h *h, hive_node_h node)
 /* Calculate the hash for a lf or lh record offset.
  */
 void
-calc_hash (const char *type, const char *name, void *ret)
+calc_hash (const char *ctype, const char *name, void *ret)
 {
   size_t len = strlen (name);
 
-  if (STRPREFIX (type, "lf"))
+  if (STRPREFIX (ctype, "lf"))
     /* Old-style, not used in current registries. */
     memcpy (ret, name, len < 4 ? len : 4);
   else {
