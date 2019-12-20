@@ -412,17 +412,17 @@ Calculate the hash for a lf or lh record offset.";
     "\
 Allocate a single block.";
 
-  "hivex_free_bytes", (RSize, [AHive]),
+  "free_bytes", (RSize, [AHive]),
     "calculate free bytes",
     "\
 Hivex free bytes.";
 
-  "hivex_used_bytes", (RSize, [AHive]),
+  "used_bytes", (RSize, [AHive]),
     "calculate hive used bytes",
     "\
 Hivex used bytes.";
 
-  "hivex_defragment", (RInt64, [AHive; AString "name"]),
+  "defragment", (RInt64, [AHive; AString "name"]),
     "defragment hives",
     "\
 Allocate free bytes & defragment.";
@@ -713,7 +713,7 @@ let check_functions () =
   (* Check short descriptions. *)
   List.iter (
     fun (name, _, shortdesc, _) ->
-      if shortdesc.[0] <> Char.lowercase shortdesc.[0] then
+      if shortdesc.[0] <> Char.lowercase_ascii shortdesc.[0] then
         failwithf "short description of %s should begin with lowercase." name;
       let c = shortdesc.[String.length shortdesc-1] in
       if c = '\n' || c = '.' then
@@ -1702,6 +1702,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
     | ASetValue -> pr "set_value -> "
     | AVoid _ -> pr "unit -> "
     | ASize _ -> pr "int64 -> "
+    | AChar _ -> pr "string -> "
   ) (snd style);
   (match fst style with
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
@@ -1840,9 +1841,11 @@ static void raise_closed (const char *) Noreturn;
         | AValue n ->
             pr "  hive_value_h %s = Int_val (%sv);\n" n n
         | AVoid n -> 
-            pr " const char *%s = String_val (%sv);\n" n n 
+            pr " void *%s = Data_custom_val (%sv);\n" n n 
         | ASize n ->
             pr "  size_t %s = Int_val (%sv);\n" n n
+        | AChar n ->
+            pr " const char %s = String_val (%sv);\n" n n
         | AString n ->
             pr "  const char *%s = String_val (%sv);\n" n n
         | AStringNullable n ->
@@ -1924,7 +1927,7 @@ static void raise_closed (const char *) Noreturn;
 
       List.iter (
         function
-        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | ASize _ 
+        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | ASize _ | AChar _ 
         | AOpenFlags | AUnusedFlags -> ()
         | ASetValues ->
             pr "  free (values);\n";
@@ -2234,7 +2237,7 @@ XSLoader::load ('Win::Hivex');
 
   List.iter (
     fun (_, flag, _) ->
-      pr "\n                        [%s => 1,]" (String.lowercase flag)
+      pr "\n                        [%s => 1,]" (String.lowercase_ascii flag)
   ) open_flags;
 
   pr ")
@@ -2264,7 +2267,7 @@ sub open {
   List.iter (
     fun (n, flag, description) ->
       pr "  # %s\n" description;
-      pr "  $flags += %d if $flags{%s};\n" n (String.lowercase flag)
+      pr "  $flags += %d if $flags{%s};\n" n (String.lowercase_ascii flag)
   ) open_flags;
 
   pr "\
@@ -2398,6 +2401,9 @@ and generate_perl_prototype name style =
       | ANode n
       | AValue n
       | AString n -> pr "$%s" n
+      | AVoid n
+      | ASize n
+      | AChar n
       | AStringNullable n -> pr "[$%s|undef]" n
       | AOpenFlags -> pr "[flags]"
       | AUnusedFlags -> assert false
@@ -2601,6 +2607,7 @@ DESTROY (h)
          | RNodeNotFound
          | RValue
          | RString -> pr "SV *\n"
+         | RVoid
          | RNodeList
          | RValueList
          | RStringList
@@ -2634,6 +2641,12 @@ DESTROY (h)
                 pr "      int %s;\n" n
             | AString n ->
                 pr "      char *%s;\n" n
+            | AVoid n ->
+                pr "      void %s;\n" n
+            | ASize n -> 
+                pr "      size_t %s;\n" n
+            | AChar n ->
+                pr "      const char %s;\n" n
             | AStringNullable n ->
                 (* http://www.perlmonks.org/?node_id=554277 *)
                 pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
@@ -2653,7 +2666,7 @@ DESTROY (h)
                 pr "      free (values.values);\n"
             | ASetValue ->
                 pr "      free (val);\n"
-            | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
+            | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | AChar _ | ASize _
             | AOpenFlags | AUnusedFlags -> ()
           ) (snd style)
         in
@@ -2675,6 +2688,7 @@ DESTROY (h)
          | RHive -> assert false
 
          | RSize
+         | RVoid
          | RNode
          | RValue ->
              pr "PREINIT:\n";
@@ -3150,6 +3164,8 @@ put_val_type (char *val, size_t len, hive_type t)
             pr "  long %s;\n" n
         | AString n
         | AVoid n
+        | ASize n
+        | AChar n
         | AStringNullable n ->
             pr "  char *%s;\n" n
         | AOpenFlags ->
@@ -3177,6 +3193,8 @@ put_val_type (char *val, size_t len, hive_type t)
         | AString n ->
             pr "s"
         | AVoid n
+        | ASize n
+        | AChar n
         | AStringNullable n ->
             pr "z"
         | AOpenFlags ->
@@ -3198,6 +3216,8 @@ put_val_type (char *val, size_t len, hive_type t)
             pr ", &%s" n
         | AString n
         | AVoid n
+        | ASize n
+        | AChar n
         | AStringNullable n ->
             pr ", &%s" n
         | AOpenFlags ->
@@ -3222,6 +3242,8 @@ put_val_type (char *val, size_t len, hive_type t)
         | AString _
         | AStringNullable _
         | AVoid _
+        | ASize _
+        | AChar _
         | AOpenFlags
         | AUnusedFlags -> ()
         | ASetValues ->
@@ -3238,7 +3260,7 @@ put_val_type (char *val, size_t len, hive_type t)
       (* Free up arguments. *)
       List.iter (
         function
-        | AHive | ANode _ | AValue _ | AVoid _
+        | AHive | ANode _ | AValue _ | AVoid _ | AChar _ | ASize _
         | AString _ | AStringNullable _
         | AOpenFlags | AUnusedFlags -> ()
         | ASetValues ->
@@ -3393,7 +3415,7 @@ class Hivex(object):
     def __init__ (self, filename";
 
   List.iter (
-    fun (_, flag, _) -> pr ", %s = False" (String.lowercase flag)
+    fun (_, flag, _) -> pr ", %s = False" (String.lowercase_ascii flag)
   ) open_flags;
 
   pr "):
@@ -3404,7 +3426,7 @@ class Hivex(object):
   List.iter (
     fun (n, flag, description) ->
       pr "        # %s\n" description;
-      pr "        if %s: flags += %d\n" (String.lowercase flag) n
+      pr "        if %s: flags += %d\n" (String.lowercase_ascii flag) n
   ) open_flags;
 
   pr "        self._o = libhivexmod.open (filename, flags)
@@ -3434,6 +3456,7 @@ class Hivex(object):
             pr ", ";
             match arg with
             | AHive -> assert false
+            | AVoid n | ASize n | AChar n
             | ANode n | AValue n
             | AString n | AStringNullable n -> pr "%s" n
             | AOpenFlags
@@ -3629,9 +3652,11 @@ get_values (VALUE valuesv, size_t *nr_values)
         | AString n ->
           pr "  const char *%s = StringValueCStr (%sv);\n" n n;
         | AVoid n ->
-          pr "  const char *%s = StringValueCStr (%sv);\n" n n;
+          pr "  void *%s = Data_custom_val (%sv);\n" n n;
         | ASize n -> 
-          pr "  size_t %s = NUM2ULL (%sv);\n" n n;
+          pr "  size_t %s = Int64_val (%sv);\n" n n;
+        | AChar n -> 
+          pr "  const char %s = StringValueCStr (%sv);\n" n n;              
         | AStringNullable n ->
           pr "  const char *%s =\n" n;
           pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
@@ -3640,7 +3665,7 @@ get_values (VALUE valuesv, size_t *nr_values)
           List.iter (
             fun (n, flag, _) ->
               pr "  if (RTEST (rb_hash_lookup (flagsv, ID2SYM (rb_intern (\"%s\")))))\n"
-                (String.lowercase flag);
+                (String.lowercase_ascii flag);
               pr "    flags += %d;\n" n
           ) open_flags
         | AUnusedFlags -> ()
@@ -3730,6 +3755,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         | AValue _
         | AString _
         | AVoid _
+        | AChar _
         | ASize _
         | AStringNullable _
         | AOpenFlags
