@@ -683,31 +683,31 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
 }
 
 int
-hivex_defragment(hive_h *old, const char* name)
+hivex_defragment(hive_h *h, const char* name)
 {
   int ret = -1;
-  hive_h *h = NULL;
+  hive_h *hive = NULL;
   size_t BASE_BLOCK_SIZE = 4*1024;
   size_t ROOT_PARENT = 0xffff; //this entry is meaningless
 
-  h = calloc (1, sizeof *h);
-  if (h == NULL)
+  hive = calloc (1, sizeof *hive);
+  if (hive == NULL)
     goto error;
-  h->msglvl = old->msglvl;
-  h->writable = 1; // new hive must be writable
+  hive->msglvl = h->msglvl;
+  hive->writable = 1; // new hive must be writable
 
-  DEBUG(2, "Attempting to defragment %s", old->filename);
-  DEBUG (2, "created handle %p", h);
-  h->addr = malloc(BASE_BLOCK_SIZE); // copy base block
-  if (h->addr == NULL)
+  DEBUG(2, "Attempting to defragment %s", h->filename);
+  DEBUG (2, "created handle %p", hive);
+  hive->addr = malloc(BASE_BLOCK_SIZE); // copy base block
+  if (hive->addr == NULL)
     goto error;
-  h->size = BASE_BLOCK_SIZE;
-  h->endblocks = BASE_BLOCK_SIZE;
-  h->endpages = BASE_BLOCK_SIZE;
+  hive->size = BASE_BLOCK_SIZE;
+  hive->endblocks = BASE_BLOCK_SIZE;
+  hive->endpages = BASE_BLOCK_SIZE;
 
-  memcpy(h->addr, old->addr, BASE_BLOCK_SIZE);
-  size_t new_root = copy_block(old, h, old->rootoffs);
-  if (fix_nk(old, h, new_root, ROOT_PARENT) == 0)
+  memcpy(hive->addr, h->addr, BASE_BLOCK_SIZE);
+  size_t new_root = copy_block(h, hive, h->rootoffs);
+  if (fix_nk(h, hive, new_root, ROOT_PARENT) == 0)
     DEBUG(2, "Recursively fixing root NK successful");
   else {
     DEBUG(2, "Recursively fixing root NK failed");
@@ -715,8 +715,8 @@ hivex_defragment(hive_h *old, const char* name)
   }
   ret = hivex_commit(h, name, 0);
  error:
-  free(h->addr);
-  free(h);
+  free(hive->addr);
+  free(hive);
   return ret;
 }
 
@@ -739,7 +739,7 @@ hivex_close (hive_h *h)
   free (h->filename);
   for (int t=0; t<nr_recode_types; t++) {
     if (h->iconv_cache[t].handle != NULL) {
-      iconv_close (h->iconv_cache[t].handle);
+      iconv_close (hive->iconv_cache[t].handle);
       h->iconv_cache[t].handle = NULL;
     }
   }
