@@ -1867,7 +1867,7 @@ static void raise_closed (const char *) Noreturn;
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  int r;\n"; "-1"
+        | RVoid -> pr "  void r;\n"; "0"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3104,7 +3104,7 @@ put_val_type (char *val, size_t len, hive_type t)
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  int r;\n"; "-1"
+        | RVoid -> pr "  void r;\n"; "0"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "-1"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3683,7 +3683,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         match ret with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  int r;\n"; "-1"
+        | RVoid -> pr "  void r;\n"; "0"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
