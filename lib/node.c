@@ -557,7 +557,7 @@ hive_node_h
 _find_child_in_lh(hive_h *h, struct ntreg_lf_record *block, const char *nname)
 {
   char hash[4];
-  calc_hash("lh", nname, &hash);
+  hivex_calc_hash("lh", nname, &hash);
   for (size_t i = 0; i < block->nr_keys ; ++i) {
     if (strncmp (block->keys[i].hash, hash, 4) == 0) {
       hive_node_h offset = block->keys[i].offset + 0x1000;
