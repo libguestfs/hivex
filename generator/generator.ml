@@ -422,7 +422,7 @@ Hivex free bytes.";
     "\
 Hivex used bytes.";
 
-  "defragment", (RInt64, [AHive; AString "name"]),
+  "defragment", (RInt32, [AHive; AString "name"]),
     "defragment hives",
     "\
 Allocate free bytes & defragment.";

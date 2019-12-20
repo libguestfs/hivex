@@ -670,7 +670,7 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
   if (len < 0) {
     len = -len;
     DEBUG(2, "Attempting to copy block 0x%zx, size %d, id %c%c", blkoff, len, block->id[0], block->id[1]);
-    h_blkoff = allocate_block(h, len, block->id);
+    h_blkoff = hivex_allocate_block(h, len, block->id);
     if (h_blkoff == 0) return 0;
     DEBUG(2, "New block at 0x%zx, size %d, id %c%c", h_blkoff, len, block->id[0], block->id[1]);
     memcpy(h->addr+ h_blkoff, old->addr + blkoff, len);
@@ -682,10 +682,10 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
   return h_blkoff;
 }
 
-int
+int32_t
 hivex_defragment(hive_h *h, const char* name)
 {
-  int ret = -1;
+  int32_t ret = -1;
   hive_h *hive = NULL;
   size_t BASE_BLOCK_SIZE = 4*1024;
   size_t ROOT_PARENT = 0xffff; //this entry is meaningless
@@ -739,7 +739,7 @@ hivex_close (hive_h *h)
   free (h->filename);
   for (int t=0; t<nr_recode_types; t++) {
     if (h->iconv_cache[t].handle != NULL) {
-      iconv_close (hive->iconv_cache[t].handle);
+      iconv_close (h->iconv_cache[t].handle);
       h->iconv_cache[t].handle = NULL;
     }
   }
