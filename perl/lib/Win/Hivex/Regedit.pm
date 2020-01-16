@@ -153,8 +153,8 @@ sub reg_import
         #print STDERR "reg_import: parsing <<<$_>>>\n";
 
         if ($state eq "outer") {
-            # Ignore blank lines, headers.
-            next if /^\s*$/;
+            # Ignore blank lines, headers, comments.
+            next if /^\s*(;.*)?$/;
 
             # .* is needed before Windows Registry Editor Version.. in
             # order to eat a possible Unicode BOM which regedit writes
@@ -193,7 +193,7 @@ sub reg_import
                 my $value = _parse_value ("", $1, $encoding);
                 croak (_parse_error ($_, $lineno)) unless defined $value;
                 push @newvalues, $value;
-            } elsif (/^\s*$/) { # blank line after values
+            } elsif (/^\s*(;.*)?$/) { # blank line after values
                 _merge_node ($hmap, \%params, $newnode, \@newvalues, \@delvalues);
                 $state = "outer";
             } else {
