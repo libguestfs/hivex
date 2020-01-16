@@ -144,6 +144,7 @@ sub reg_import
         # this is fairly common in pasted regedit files.
         $lineno++;
         chomp;
+        s/\r$//;
         if (s/\\\s*$//) {
             $_ .= <$fh>;
             redo unless eof ($fh);
