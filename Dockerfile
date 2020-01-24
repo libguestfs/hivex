@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y \
     python \
     python3-dev \
     perl \
-    libperl-dev \
+    libperl-dev
 
 RUN rm /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 
