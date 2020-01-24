@@ -46,7 +46,7 @@ RUN rm /usr/bin/python && ln -s /usr/bin/python3 /usr/bin/python
 # build hivex
 RUN cpan install Test::More ExtUtils::MakeMaker IO::Stringy
 RUN git clone https://github.com/rapid7/hivex.git /root/hivex
-WORKDIR "root/hivex"
+WORKDIR "/root/hivex"
 RUN ./autogen.sh
 RUN sed -i 's/extern int hivex_node_set_value (hive_h \*h, hive_node_h node, const hive_set_value \*val, int flags);/extern int hivex_set_value (hive_h *h, hive_node_h node, const hive_set_value *val, int flags);extern void calc_hash (const char *type, const char *name, void *ret);/g' /root/hivex/lib/hivex.h
 RUN make
