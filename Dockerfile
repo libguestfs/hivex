@@ -26,13 +26,13 @@ RUN apt-get update && apt-get install -y \
     bison \
     libpcre3-dev \
     libaugeas0 \
-    libaugeas0-dev \
+    libaugeas-dev \
     libmagic1 \
     libmagic-dev \
     libjansson4 \
     libjansson-dev \
     systemd-journal-remote \
-    libstk-dev \
+    libtsk-dev \
     libyara-dev \
     supermin \
     qemu \
