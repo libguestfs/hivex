@@ -402,11 +402,6 @@ new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.";
 
-  "calc_hash", (RVoid, [AString "ctype"; AString "name"; AVoid "ret"]),
-    "calculate hash value",
-    "\
-Calculate the hash for a lf or lh record offset.";
-
   "allocate_block", (RSize, [AHive; ASize "seg_len"; AChar "id[2]"]),
     "allocate a single block",
     "\
@@ -728,7 +723,7 @@ let check_functions () =
   ) functions
 
 (* 'pr' prints to the current output file. *)
-let chan = ref Pervasives.stdout
+let chan = ref Stdlib.stdout
 let lines = ref 0
 let pr fs =
   ksprintf
@@ -1187,8 +1182,8 @@ The string must be freed by the caller when it is no longer needed.
 On error this returns NULL and sets errno.\n\n"
        | RVoid -> 
            pr "\
-Returns 0 on success.
-On error this returns -1 and sets errno.\n\n"
+Returns NULL on success.
+On error this returns NULL and sets errno.\n\n"
        | RStringList ->
            pr "\
 Returns a NULL-terminated array of C strings.
@@ -1721,7 +1716,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
    | RLenTypeVal -> pr "hive_type * string"
    | RInt32 -> pr "int32"
    | RInt64 -> pr "int64"
-   | RVoid -> pr "unit"
+   | RVoid -> pr "NULL"
   );
   if is_external then
     pr " = \"ocaml_hivex_%s\"" name;
@@ -1867,7 +1862,7 @@ static void raise_closed (const char *) Noreturn;
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "0"
+        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -1945,7 +1940,7 @@ static void raise_closed (const char *) Noreturn;
       (match fst style with
        | RErr -> pr "  rv = Val_unit;\n"
        | RErrDispose -> pr "  rv = Val_unit;\n"
-       | RVoid -> pr "  rv = Val_unit;\n"
+       | RVoid -> pr "  rv = Val_NULL;\n"
        | RHive -> pr "  rv = Val_hiveh (r);\n"
        | RSize -> pr "  rv = caml_copy_int64 (r);\n"
        | RNode -> pr "  rv = Val_int (r);\n"
@@ -2371,7 +2366,7 @@ and generate_perl_prototype name style =
    | RHive -> pr "$h = "
    | RSize -> pr "$size = "
    | RNode
-   | RVoid -> pr "$unit = "
+   | RVoid -> pr "$NULL = "
    | RNodeNotFound -> pr "$node = "
    | RNodeList -> pr "@nodes = "
    | RValue -> pr "$value = "
@@ -3104,7 +3099,7 @@ put_val_type (char *val, size_t len, hive_type t)
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "0"
+        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "-1"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3683,7 +3678,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         match ret with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "0"
+        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3884,7 +3879,7 @@ let output_to filename k =
   chan := open_out filename_new;
   k ();
   close_out !chan;
-  chan := Pervasives.stdout;
+  chan := Stdlib.stdout;
 
   (* Is the new file different from the current file? *)
   if Sys.file_exists filename && files_equal filename filename_new then
