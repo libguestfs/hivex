@@ -75,7 +75,7 @@ and argt =                              (* Note, cannot be NULL/0 unless it
   | ASetValue                           (* See hivex_node_set_value. *)
   | AVoid of string                     (* void* *)
   | ASize of string                     (* size_t or 0. *)
-  | AChar of string                     (* char *)
+  | AChar of string                     (* char* *)
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
@@ -983,7 +983,7 @@ and generate_c_prototype ?(extern = false) name style =
       | ASetValue -> pr "const hive_set_value *val"
       | AVoid n -> pr "void *%s" n
       | ASize n -> pr "size_t %s" n
-      | AChar n -> pr "const char %s" n
+      | AChar n -> pr "const char *%s" n
   ) (snd style);
   (match fst style with
    | RLenType | RLenTypeVal -> pr ", hive_type *t, size_t *len"
@@ -1840,7 +1840,7 @@ static void raise_closed (const char *) Noreturn;
         | ASize n ->
             pr "  size_t %s = Int_val (%sv);\n" n n
         | AChar n ->
-            pr " const char %s = String_val (%sv);\n" n n
+            pr " const char *%s = String_val (%sv);\n" n n
         | AString n ->
             pr "  const char *%s = String_val (%sv);\n" n n
         | AStringNullable n ->
@@ -2641,7 +2641,7 @@ DESTROY (h)
             | ASize n -> 
                 pr "      size_t %s;\n" n
             | AChar n ->
-                pr "      const char %s;\n" n
+                pr "      const char *%s;\n" n
             | AStringNullable n ->
                 (* http://www.perlmonks.org/?node_id=554277 *)
                 pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
@@ -3651,7 +3651,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         | ASize n -> 
           pr "  size_t %s = Int64_val (%sv);\n" n n;
         | AChar n -> 
-          pr "  const char %s = StringValueCStr (%sv);\n" n n;              
+          pr "  const char *%s = StringValueCStr (%sv);\n" n n;              
         | AStringNullable n ->
           pr "  const char *%s =\n" n;
           pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
