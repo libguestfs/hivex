@@ -402,7 +402,7 @@ new key is added.  Key matching is case insensitive.
 
 C<node> is the node to modify.";
 
-  "allocate_block", (RSize, [AHive; ASize "seg_len"; AChar "id[2]"]),
+  "allocate_block", (RSize, [AHive; ASize "seg_len"; AChar "id"]),
     "allocate a single block",
     "\
 Allocate a single block.";
