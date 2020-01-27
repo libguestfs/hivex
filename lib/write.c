@@ -242,7 +242,7 @@ set_unused_block(hive_h *h, size_t offset)
  * 0   : error (errno set)
  */
 size_t
-allocate_block (hive_h *h, size_t seg_len, const char id[2])
+hivex_allocate_block (hive_h *h, size_t seg_len, const char id[2])
 {
   bool new_block = true;
   size_t offset;
@@ -430,7 +430,7 @@ new_lh_record (hive_h *h, const char *name, hive_node_h node)
 {
   static const char id[2] = { 'l', 'h' };
   size_t seg_len = sizeof (struct ntreg_lf_record);
-  size_t offset = allocate_block (h, seg_len, id);
+  size_t offset = hivex_allocate_block (h, seg_len, id);
   if (offset == 0)
     return 0;
 
@@ -476,7 +476,7 @@ insert_lf_record (hive_h *h, size_t old_offs, size_t posn,
   char id[2];
   memcpy (id, old_lf->id, sizeof id);
 
-  size_t new_offs = allocate_block (h, seg_len, id);
+  size_t new_offs = hivex_allocate_block (h, seg_len, id);
   if (new_offs == 0)
     return 0;
 
@@ -534,7 +534,7 @@ insert_li_record (hive_h *h, size_t old_offs, size_t posn,
   char id[2];
   memcpy (id, old_li->id, sizeof id);
 
-  size_t new_offs = allocate_block (h, seg_len, id);
+  size_t new_offs = hivex_allocate_block (h, seg_len, id);
   if (new_offs == 0)
     return 0;
 
@@ -735,7 +735,7 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
   /* Create the new nk-record. */
   static const char nk_id[2] = { 'n', 'k' };
   size_t seg_len = sizeof (struct ntreg_nk_record) + recoded_name_len;
-  hive_node_h nkoffset = allocate_block (h, seg_len, nk_id);
+  hive_node_h nkoffset = hivex_allocate_block (h, seg_len, nk_id);
   if (nkoffset == 0) {
     free (recoded_name);
     return 0;
@@ -1059,7 +1059,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
   static const char nul_id[2] = { 0, 0 };
   size_t seg_len =
     sizeof (struct ntreg_value_list) + (nr_values - 1) * sizeof (uint32_t);
-  size_t vallist_offs = allocate_block (h, seg_len, nul_id);
+  size_t vallist_offs = hivex_allocate_block (h, seg_len, nul_id);
   if (vallist_offs == 0)
     return -1;
 
@@ -1078,7 +1078,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
     char* recoded_name = _hivex_encode_string (h, values[i].key, &recoded_name_len,
                                                &use_utf16);
     seg_len = sizeof (struct ntreg_vk_record) + recoded_name_len;
-    size_t vk_offs = allocate_block (h, seg_len, vk_id);
+    size_t vk_offs = hivex_allocate_block (h, seg_len, vk_id);
     if (vk_offs == 0)
       return -1;
 
@@ -1109,7 +1109,7 @@ hivex_node_set_values (hive_h *h, hive_node_h node,
     if (values[i].len <= 4)     /* store it inline */
       memcpy (&vk->data_offset, values[i].value, values[i].len);
     else {
-      size_t offs = allocate_block (h, values[i].len + 4, nul_id);
+      size_t offs = hivex_allocate_block (h, values[i].len + 4, nul_id);
       if (offs == 0)
         return -1;
 
