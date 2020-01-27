@@ -49,7 +49,7 @@ RUN git clone https://github.com/rapid7/hivex.git /root/hivex
 WORKDIR "/root/hivex"
 RUN git checkout DCA-18117
 RUN ./autogen.sh
-RUN sed -i 's/extern int hivex_node_set_value (hive_h \*h, hive_node_h node, const hive_set_value \*val, int flags);/extern int hivex_node_set_value (hive_h *h, hive_node_h node, const hive_set_value *val, int flags);extern void calc_hash (const char *type, const char *name, void *ret);/g' /root/hivex/lib/hivex.h
+RUN sed -i 's/extern int hivex_node_set_value (hive_h \*h, hive_node_h node, const hive_set_value \*val, int flags);/extern int hivex_node_set_value (hive_h *h, hive_node_h node, const hive_set_value *val, int flags);extern void calc_hash (const char *type, const char *name, void *ret);extern size_t allocate_block (hive_h *h, size_t seg_len, const char id[2]);/g' /root/hivex/lib/hivex.h
 RUN make
 RUN make install
 

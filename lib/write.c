@@ -242,7 +242,7 @@ set_unused_block(hive_h *h, size_t offset)
  * 0   : error (errno set)
  */
 size_t
-hivex_allocate_block (hive_h *h, size_t seg_len, const char *id)
+hivex_allocate_block (hive_h *h, size_t seg_len, const char id[2])
 {
   bool new_block = true;
   size_t offset;
