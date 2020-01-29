@@ -691,16 +691,20 @@ hivex_defragment(hive_h *h, const char* name)
   size_t ROOT_PARENT = 0xffff; //this entry is meaningless
 
   hive = calloc (1, sizeof *hive);
-  if (hive == NULL)
+  if (hive == NULL) {
+    SET_ERRNO (ENOENT,"Hive file not found, returned NULL.");
     goto error;
+  }  
   hive->msglvl = h->msglvl;
   hive->writable = 1; // new hive must be writable
 
   DEBUG(2, "Attempting to defragment %s", h->filename);
   DEBUG (2, "created handle %p", hive);
   hive->addr = malloc(BASE_BLOCK_SIZE); // copy base block
-  if (hive->addr == NULL)
+  if (hive == NULL) {
+    SET_ERRNO (ENOENT,"Hive file not found, returned NULL.");
     goto error;
+  }  
   hive->size = BASE_BLOCK_SIZE;
   hive->endblocks = BASE_BLOCK_SIZE;
   hive->endpages = BASE_BLOCK_SIZE;
@@ -711,6 +715,7 @@ hivex_defragment(hive_h *h, const char* name)
     DEBUG(2, "Recursively fixing root NK successful");
   else {
     DEBUG(2, "Recursively fixing root NK failed");
+    SET_ERRNO (ENOTSUP,"Failed to fix root NK");
     goto error;
   }
   ret = hivex_commit(h, name, 0);
