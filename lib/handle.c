@@ -670,7 +670,7 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
   if (len < 0) {
     len = -len;
     DEBUG(2, "Attempting to copy block 0x%zx, size %d, id %c%c", blkoff, len, block->id[0], block->id[1]);
-    h_blkoff = hivex_allocate_block(h, len, block->id);
+    h_blkoff = allocate_block(h, len, block->id);
     if (h_blkoff == 0) return 0;
     DEBUG(2, "New block at 0x%zx, size %d, id %c%c", h_blkoff, len, block->id[0], block->id[1]);
     memcpy(h->addr+ h_blkoff, old->addr + blkoff, len);
