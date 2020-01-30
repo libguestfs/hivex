@@ -686,42 +686,42 @@ int32_t
 hivex_defragment(hive_h *h, const char* name)
 {
   int32_t ret = -1;
-  hive_h *hive = NULL;
+  hive_h *new_h = NULL;
   size_t BASE_BLOCK_SIZE = 4*1024;
   size_t ROOT_PARENT = 0xffff; //this entry is meaningless
 
-  hive = calloc (1, sizeof *hive);
-  if (hive == NULL) {
+  new_h = calloc (1, sizeof *new_h);
+  if (new_h == NULL) {
     SET_ERRNO (ENOENT,"Hive file not found, returned NULL.");
     goto error;
   }  
-  hive->msglvl = h->msglvl;
-  hive->writable = 1; // new hive must be writable
+  new_h->msglvl = h->msglvl;
+  new_h->writable = 1; // new hive must be writable
 
   DEBUG(2, "Attempting to defragment %s", h->filename);
-  DEBUG (2, "created handle %p", hive);
-  hive->addr = malloc(BASE_BLOCK_SIZE); // copy base block
-  if (hive == NULL) {
+  DEBUG (2, "created handle %p", new_h);
+  new_h->addr = malloc(BASE_BLOCK_SIZE); // copy base block
+  if (new_h->addr == NULL) {
     SET_ERRNO (ENOENT,"Hive file not found, returned NULL.");
     goto error;
   }  
-  hive->size = BASE_BLOCK_SIZE;
-  hive->endblocks = BASE_BLOCK_SIZE;
-  hive->endpages = BASE_BLOCK_SIZE;
+  new_h->size = BASE_BLOCK_SIZE;
+  new_h->endblocks = BASE_BLOCK_SIZE;
+  new_h->endpages = BASE_BLOCK_SIZE;
 
-  memcpy(hive->addr, h->addr, BASE_BLOCK_SIZE);
-  size_t new_root = copy_block(h, hive, h->rootoffs);
-  if (fix_nk(h, hive, new_root, ROOT_PARENT) == 0)
+  memcpy(new_h->addr, h->addr, BASE_BLOCK_SIZE);
+  size_t new_root = copy_block(h, new_h, h->rootoffs);
+  if (fix_nk(h, new_h, new_root, ROOT_PARENT) == 0)
     DEBUG(2, "Recursively fixing root NK successful");
   else {
     DEBUG(2, "Recursively fixing root NK failed");
     SET_ERRNO (ENOTSUP,"Failed to fix root NK");
     goto error;
   }
-  ret = hivex_commit(h, name, 0);
+  ret = hivex_commit(new_h, name, 0);
  error:
-  free(hive->addr);
-  free(hive);
+  free(new_h->addr);
+  free(new_h);
   return ret;
 }
 
