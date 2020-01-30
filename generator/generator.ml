@@ -1729,6 +1729,19 @@ caml_raise_with_args (value tag, int nargs, value args[])
 }
 #endif
 
+/* Replacement if caml_alloc_initialized_string is missing, added
+ * to OCaml runtime in 2017.
+ */
+#ifndef HAVE_CAML_ALLOC_INITIALIZED_STRING
+static inline value
+caml_alloc_initialized_string (mlsize_t len, const char *p)
+{
+  value sv = caml_alloc_string (len);
+  memcpy ((char *) String_val (sv), p, len);
+  return sv;
+}
+#endif
+
 #include <hivex.h>
 
 #define Hiveh_val(v) (*((hive_h **)Data_custom_val(v)))
@@ -1915,8 +1928,7 @@ static void raise_closed (const char *) Noreturn;
            if f_len_exists name then (
              pr "  size_t sz;\n  sz = hivex_%s_len (%s);\n"
                name (String.concat ", " c_params);
-             pr "  rv = caml_alloc_string (sz);\n";
-             pr "  memcpy (String_val (rv), r, sz);\n"
+             pr "  rv = caml_alloc_initialized_string (sz, r);\n"
            ) else
              pr "  rv = caml_copy_string (r);\n";
            pr "  free (r);\n"
@@ -2071,8 +2083,7 @@ copy_type_value (const char *r, size_t len, hive_type t)
   rv = caml_alloc (2, 0);
   v = Val_hive_type (t);
   Store_field (rv, 0, v);
-  v = caml_alloc_string (len);
-  memcpy (String_val (v), r, len);
+  v = caml_alloc_initialized_string (len, r);
   caml_modify (&Field (rv, 1), v);
   CAMLreturn (rv);
 }
