@@ -683,7 +683,7 @@ copy_block(hive_h *old, hive_h *h, size_t blkoff)
 }
 
 int32_t
-hivex_defragment(hive_h *h, const char* name)
+hivex_defragment_save_copy(hive_h *h, const char* name)
 {
   int32_t ret = -1;
   hive_h *new_h = NULL;
