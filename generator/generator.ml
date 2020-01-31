@@ -58,7 +58,6 @@ and ret =
   | RLenTypeVal                         (* See hivex_value_value. *)
   | RInt32                              (* Returns int32. *)
   | RInt64                              (* Returns int64. *)
-  | RVoid                               (* Returns void. *)
 
 and args = argt list                    (* List of parameters. *)
 
@@ -73,9 +72,6 @@ and argt =                              (* Note, cannot be NULL/0 unless it
   | AUnusedFlags                        (* Flags arg that is always 0 *)
   | ASetValues                          (* See hivex_node_set_values. *)
   | ASetValue                           (* See hivex_node_set_value. *)
-  | AVoid of string                     (* void* *)
-  | ASize of string                     (* size_t or 0. *)
-  | AChar of string                     (* char* *)
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
@@ -617,9 +613,6 @@ let name_of_argt = function
   | AOpenFlags | AUnusedFlags -> "flags"
   | ASetValues -> "values"
   | ASetValue -> "val"
-  | AVoid n -> n
-  | ASize n -> n
-  | AChar n -> n
 
 (* Check function names etc. for consistency. *)
 let check_functions () =
@@ -961,7 +954,6 @@ and generate_c_prototype ?(extern = false) name style =
    | RLenTypeVal -> pr "char *"
    | RInt32 -> pr "int32_t "
    | RInt64 -> pr "int64_t "
-   | RVoid -> pr "void "
   );
   pr "%s (" name;
   let comma = ref false in
@@ -976,9 +968,6 @@ and generate_c_prototype ?(extern = false) name style =
       | AOpenFlags | AUnusedFlags -> pr "int flags"
       | ASetValues -> pr "size_t nr_values, const hive_set_value *values"
       | ASetValue -> pr "const hive_set_value *val"
-      | AVoid n -> pr "void *%s" n
-      | ASize n -> pr "size_t %s" n
-      | AChar n -> pr "const char *%s" n
   ) (snd style);
   (match fst style with
    | RLenType | RLenTypeVal -> pr ", hive_type *t, size_t *len"
@@ -1174,10 +1163,6 @@ On error this returns NULL and sets errno.\n\n"
            pr "\
 Returns a string.
 The string must be freed by the caller when it is no longer needed.
-On error this returns NULL and sets errno.\n\n"
-       | RVoid -> 
-           pr "\
-Returns NULL on success.
 On error this returns NULL and sets errno.\n\n"
        | RStringList ->
            pr "\
@@ -1690,9 +1675,6 @@ and generate_ocaml_prototype ?(is_external = false) name style =
     | AUnusedFlags -> ()
     | ASetValues -> pr "set_value array -> "
     | ASetValue -> pr "set_value -> "
-    | AVoid _ -> pr "unit -> "
-    | ASize _ -> pr "int64 -> "
-    | AChar _ -> pr "string -> "
   ) (snd style);
   (match fst style with
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
@@ -1711,7 +1693,6 @@ and generate_ocaml_prototype ?(is_external = false) name style =
    | RLenTypeVal -> pr "hive_type * string"
    | RInt32 -> pr "int32"
    | RInt64 -> pr "int64"
-   | RVoid -> pr "NULL"
   );
   if is_external then
     pr " = \"ocaml_hivex_%s\"" name;
@@ -1830,12 +1811,6 @@ static void raise_closed (const char *) Noreturn;
             pr "  hive_node_h %s = Int_val (%sv);\n" n n
         | AValue n ->
             pr "  hive_value_h %s = Int_val (%sv);\n" n n
-        | AVoid n -> 
-            pr " void *%s = Data_custom_val (%sv);\n" n n 
-        | ASize n ->
-            pr "  size_t %s = Int_val (%sv);\n" n n
-        | AChar n ->
-            pr " const char *%s = String_val (%sv);\n" n n
         | AString n ->
             pr "  const char *%s = String_val (%sv);\n" n n
         | AStringNullable n ->
@@ -1857,7 +1832,6 @@ static void raise_closed (const char *) Noreturn;
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -1917,7 +1891,7 @@ static void raise_closed (const char *) Noreturn;
 
       List.iter (
         function
-        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | ASize _ | AChar _ 
+        | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
         | AOpenFlags | AUnusedFlags -> ()
         | ASetValues ->
             pr "  free (values);\n";
@@ -1935,7 +1909,6 @@ static void raise_closed (const char *) Noreturn;
       (match fst style with
        | RErr -> pr "  rv = Val_unit;\n"
        | RErrDispose -> pr "  rv = Val_unit;\n"
-       | RVoid -> pr "  rv = Val_NULL;\n"
        | RHive -> pr "  rv = Val_hiveh (r);\n"
        | RSize -> pr "  rv = caml_copy_int64 (r);\n"
        | RNode -> pr "  rv = Val_int (r);\n"
@@ -2290,7 +2263,6 @@ sub open {
          | RErrDispose
          | RHive
          | RString
-         | RVoid
          | RStringList
          | RLenType
          | RLenValue
@@ -2361,7 +2333,6 @@ and generate_perl_prototype name style =
    | RHive -> pr "$h = "
    | RSize -> pr "$size = "
    | RNode
-   | RVoid -> pr "$NULL = "
    | RNodeNotFound -> pr "$node = "
    | RNodeList -> pr "@nodes = "
    | RValue -> pr "$value = "
@@ -2391,9 +2362,6 @@ and generate_perl_prototype name style =
       | ANode n
       | AValue n
       | AString n -> pr "$%s" n
-      | AVoid n
-      | ASize n
-      | AChar n
       | AStringNullable n -> pr "[$%s|undef]" n
       | AOpenFlags -> pr "[flags]"
       | AUnusedFlags -> assert false
@@ -2597,7 +2565,6 @@ DESTROY (h)
          | RNodeNotFound
          | RValue
          | RString -> pr "SV *\n"
-         | RVoid
          | RNodeList
          | RValueList
          | RStringList
@@ -2631,12 +2598,6 @@ DESTROY (h)
                 pr "      int %s;\n" n
             | AString n ->
                 pr "      char *%s;\n" n
-            | AVoid n ->
-                pr "      void %s;\n" n
-            | ASize n -> 
-                pr "      size_t %s;\n" n
-            | AChar n ->
-                pr "      const char *%s;\n" n
             | AStringNullable n ->
                 (* http://www.perlmonks.org/?node_id=554277 *)
                 pr "      char *%s = SvOK(ST(%d)) ? SvPV_nolen(ST(%d)) : NULL;\n" n i i
@@ -2656,7 +2617,7 @@ DESTROY (h)
                 pr "      free (values.values);\n"
             | ASetValue ->
                 pr "      free (val);\n"
-            | AHive | ANode _ | AValue _ | AString _ | AStringNullable _ | AVoid _ | AChar _ | ASize _
+            | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
             | AOpenFlags | AUnusedFlags -> ()
           ) (snd style)
         in
@@ -2678,7 +2639,6 @@ DESTROY (h)
          | RHive -> assert false
 
          | RSize
-         | RVoid
          | RNode
          | RValue ->
              pr "PREINIT:\n";
@@ -3094,7 +3054,6 @@ put_val_type (char *val, size_t len, hive_type t)
         match fst style with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "-1"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3153,9 +3112,6 @@ put_val_type (char *val, size_t len, hive_type t)
         | AValue n ->
             pr "  long %s;\n" n
         | AString n
-        | AVoid n
-        | ASize n
-        | AChar n
         | AStringNullable n ->
             pr "  char *%s;\n" n
         | AOpenFlags ->
@@ -3182,9 +3138,6 @@ put_val_type (char *val, size_t len, hive_type t)
             pr "l"
         | AString n ->
             pr "s"
-        | AVoid n
-        | ASize n
-        | AChar n
         | AStringNullable n ->
             pr "z"
         | AOpenFlags ->
@@ -3205,9 +3158,6 @@ put_val_type (char *val, size_t len, hive_type t)
         | AValue n ->
             pr ", &%s" n
         | AString n
-        | AVoid n
-        | ASize n
-        | AChar n
         | AStringNullable n ->
             pr ", &%s" n
         | AOpenFlags ->
@@ -3231,9 +3181,6 @@ put_val_type (char *val, size_t len, hive_type t)
         | AValue _
         | AString _
         | AStringNullable _
-        | AVoid _
-        | ASize _
-        | AChar _
         | AOpenFlags
         | AUnusedFlags -> ()
         | ASetValues ->
@@ -3250,7 +3197,7 @@ put_val_type (char *val, size_t len, hive_type t)
       (* Free up arguments. *)
       List.iter (
         function
-        | AHive | ANode _ | AValue _ | AVoid _ | AChar _ | ASize _
+        | AHive | ANode _ | AValue _
         | AString _ | AStringNullable _
         | AOpenFlags | AUnusedFlags -> ()
         | ASetValues ->
@@ -3272,7 +3219,6 @@ put_val_type (char *val, size_t len, hive_type t)
        | RErrDispose ->
            pr "  Py_INCREF (Py_None);\n";
            pr "  py_r = Py_None;\n"
-       | RVoid
        | RHive ->
            pr "  py_r = put_handle (r);\n"
        | RSize
@@ -3446,7 +3392,6 @@ class Hivex(object):
             pr ", ";
             match arg with
             | AHive -> assert false
-            | AVoid n | ASize n | AChar n
             | ANode n | AValue n
             | AString n | AStringNullable n -> pr "%s" n
             | AOpenFlags
@@ -3576,7 +3521,6 @@ get_values (VALUE valuesv, size_t *nr_values)
         let ret =
           match ret with
           | RErr | RErrDispose -> "nil"
-          | RVoid -> "nil"
           | RHive -> "Hivex::Hivex"
           | RSize | RNode | RNodeNotFound -> "integer"
           | RNodeList -> "list"
@@ -3641,12 +3585,6 @@ get_values (VALUE valuesv, size_t *nr_values)
           pr "  hive_value_h %s = NUM2ULL (%sv);\n" n n
         | AString n ->
           pr "  const char *%s = StringValueCStr (%sv);\n" n n;
-        | AVoid n ->
-          pr "  void *%s = Data_custom_val (%sv);\n" n n;
-        | ASize n -> 
-          pr "  size_t %s = Int64_val (%sv);\n" n n;
-        | AChar n -> 
-          pr "  const char *%s = StringValueCStr (%sv);\n" n n;              
         | AStringNullable n ->
           pr "  const char *%s =\n" n;
           pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
@@ -3673,7 +3611,6 @@ get_values (VALUE valuesv, size_t *nr_values)
         match ret with
         | RErr -> pr "  int r;\n"; "-1"
         | RErrDispose -> pr "  int r;\n"; "-1"
-        | RVoid -> pr "  void r;\n"; "NULL"
         | RHive -> pr "  hive_h *r;\n"; "NULL"
         | RSize -> pr "  size_t r;\n"; "0"
         | RNode -> pr "  hive_node_h r;\n"; "0"
@@ -3744,9 +3681,6 @@ get_values (VALUE valuesv, size_t *nr_values)
         | ANode _
         | AValue _
         | AString _
-        | AVoid _
-        | AChar _
-        | ASize _
         | AStringNullable _
         | AOpenFlags
         | AUnusedFlags -> ()
@@ -3762,8 +3696,6 @@ get_values (VALUE valuesv, size_t *nr_values)
 
       (match ret with
       | RErr | RErrDispose ->
-        pr "  return Qnil;\n"
-      | RVoid ->
         pr "  return Qnil;\n"
       | RHive ->
         pr "  return Data_Wrap_Struct (c_hivex, NULL, ruby_hivex_free, r);\n"
