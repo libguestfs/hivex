@@ -342,7 +342,6 @@ mark_block_unused (hive_h *h, size_t offset)
     //Duplicated vks found in nk, ignore double deletion request
     return;
   }
-  
   DEBUG (2, "marking 0x%zx unused", offset);
 
   struct ntreg_hbin_block *blockhdr =
