@@ -650,6 +650,9 @@ let check_functions () =
         if contains_uppercase n then
           failwithf "%s param/ret %s should not contain uppercase chars"
             name n;
+        if String.contains n '-' || String.contains n '_' then	
+          failwithf "%s param/ret %s should not contain '-' or '_'"	
+            name n;            
         if n = "value" then
           failwithf "%s has a param/ret called 'value', which causes conflicts in the OCaml bindings, use something like 'val' or a more descriptive name" name;
         if n = "int" || n = "char" || n = "short" || n = "long" then
