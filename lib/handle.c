@@ -501,7 +501,8 @@ int fix_vk(hive_h *old, hive_h *h, size_t blkoff){
   if ((le32toh(vk->data_len) & 0x7fffffff) > 16344) { //big data?
     if(block_id_eq(h, 0x1000 + le32toh(vk->data_offset), "db")) {
       DEBUG(2, "big data");
-      return fix_db(old, h, 0x1000 + le32toh(vk->data_offset));
+      //Removing big data chunks from registry since they are unused
+      return 0; //fix_db(old, h, 0x1000 + le32toh(vk->data_offset));
     }
   }
   return 0;
@@ -630,10 +631,13 @@ int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
   } else {
     size_t new_sk_off = copy_block(old, h, 0x1000 + le32toh(nk->sk));
     //realloc may invalidate pointers
-    nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
-    add_sk(nk->sk, htole32(new_sk_off - 0x1000));
-    if (new_sk_off != 0) nk->sk = htole32(new_sk_off - 0x1000);
-    else return 1;
+    if (new_sk_off == 0){
+      //seeing a lot of security and hardware hives w/ bad SK blocks
+    } else {
+      nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+      add_sk(nk->sk, htole32(new_sk_off - 0x1000));
+      nk->sk = htole32(new_sk_off - 0x1000);
+    }
   }
   //4. Class-name offset
   size_t classname_len = le32toh(nk->classname_len);
