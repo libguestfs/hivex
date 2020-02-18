@@ -579,31 +579,6 @@ int fix_skl(hive_h *old, hive_h *h, size_t blkoff, size_t parent_off) {
   }
 }
 
-struct known_sk_blkoff{
-  size_t old_blkoff;
-  size_t new_blkoff;
-};
-
-struct known_sk_blkoff sk_cache[1000];
-int cache_size = 0;
-
-void add_sk(size_t old_blkoff, size_t new_blkoff){
-  if (cache_size < 1000) {
-    struct known_sk_blkoff entry;
-    entry.old_blkoff = old_blkoff;
-    entry.new_blkoff = new_blkoff;
-    sk_cache[cache_size] = entry;
-    cache_size++;
-  }
-}
-
-size_t get_sk(size_t old_blkoff){
-  for (int i = 0;i<cache_size;i++){
-    if(sk_cache[i].old_blkoff == old_blkoff) return sk_cache[i].new_blkoff;
-  }
-  return 0;
-}
-
 int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
   int ret = 0;
   DEBUG(2, "fixing nk at blkoff 0x%zx", blkoff);
@@ -624,21 +599,9 @@ int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
     //realloc may invalidate pointers
     nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
   }
-  //3. Copy SK - cached because seems to repeat very often
-  size_t cached_blkoff = get_sk(nk->sk);
-  if (cached_blkoff != 0) {
-    nk->sk = cached_blkoff;
-  } else {
-    size_t new_sk_off = copy_block(old, h, 0x1000 + le32toh(nk->sk));
-    //realloc may invalidate pointers
-    if (new_sk_off == 0){
-      //seeing a lot of security and hardware hives w/ bad SK blocks
-    } else {
-      nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
-      add_sk(nk->sk, htole32(new_sk_off - 0x1000));
-      nk->sk = htole32(new_sk_off - 0x1000);
-    }
-  }
+  //3. Skip SK - duplicating increases size, caching requried
+  nk->sk = 0;
+
   //4. Class-name offset
   size_t classname_len = le32toh(nk->classname_len);
   if (classname_len > 0) {
