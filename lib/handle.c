@@ -501,7 +501,8 @@ int fix_vk(hive_h *old, hive_h *h, size_t blkoff){
   if ((le32toh(vk->data_len) & 0x7fffffff) > 16344) { //big data?
     if(block_id_eq(h, 0x1000 + le32toh(vk->data_offset), "db")) {
       DEBUG(2, "big data");
-      return fix_db(old, h, 0x1000 + le32toh(vk->data_offset));
+      //Removing big data chunks from registry since they are unused
+      return 0; //fix_db(old, h, 0x1000 + le32toh(vk->data_offset));
     }
   }
   return 0;
