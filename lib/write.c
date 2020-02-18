@@ -762,16 +762,15 @@ hivex_node_add_child (hive_h *h, hive_node_h parent, const char *name)
     (struct ntreg_nk_record *) ((char *) h->addr + parent);
   size_t parent_sk_offset = le32toh (parent_nk->sk);
   parent_sk_offset += 0x1000;
-  if (!IS_VALID_BLOCK (h, parent_sk_offset) ||
-      !block_id_eq (h, parent_sk_offset, "sk")) {
-    SET_ERRNO (EFAULT,
-               "parent sk is not a valid block (%zu)", parent_sk_offset);
-    return 0;
+  if (IS_VALID_BLOCK (h, parent_sk_offset) &&
+      block_id_eq (h, parent_sk_offset, "sk")) {
+    struct ntreg_sk_record *sk =
+      (struct ntreg_sk_record *) ((char *) h->addr + parent_sk_offset);
+    sk->refcount = htole32 (le32toh (sk->refcount) + 1);
+    nk->sk = htole32 (parent_sk_offset - 0x1000);
+  } else {
+    nk->sk = 0;
   }
-  struct ntreg_sk_record *sk =
-    (struct ntreg_sk_record *) ((char *) h->addr + parent_sk_offset);
-  sk->refcount = htole32 (le32toh (sk->refcount) + 1);
-  nk->sk = htole32 (parent_sk_offset - 0x1000);
 
   /* Inherit parent timestamp. */
   nk->timestamp = parent_nk->timestamp;
