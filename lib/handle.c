@@ -526,7 +526,7 @@ int fix_vl(hive_h *old, hive_h *h, size_t blkoff, size_t nr_values){
 }
 
 int fix_skl(hive_h *old, hive_h *h, size_t blkoff, size_t parent_off) {
-  int ret;
+  int ret = 0;
   struct ntreg_hbin_block *block =
     (struct ntreg_hbin_block *) ((char *) h->addr + blkoff);
   if (strncmp(block->id, "lf", 2) == 0 || strncmp(block->id, "lh", 2) == 0) {
@@ -577,6 +577,7 @@ int fix_skl(hive_h *old, hive_h *h, size_t blkoff, size_t parent_off) {
       ri = (struct ntreg_ri_record *) ((char *) h->addr + blkoff);
     }
   }
+  return ret;
 }
 
 int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
@@ -621,7 +622,11 @@ int fix_nk(hive_h *old, hive_h *h, size_t blkoff, size_t parent){
     if (new_subkey_list_off != 0) nk->subkey_lf = htole32(new_subkey_list_off - 0x1000);
     else return 1;
     ret = fix_skl(old, h, new_subkey_list_off, htole32(blkoff-0x1000));
-    if (ret != 0) return ret;
+    if (ret != 0) {
+      nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
+      DEBUG(2, "Failed to fix skl for nk: %s", nk->name);
+      return ret;
+    }
     //realloc may invalidate pointers
     nk = (struct ntreg_nk_record *)((char *) h->addr + blkoff);
   }
