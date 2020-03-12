@@ -8,4 +8,4 @@ Version: @VERSION@
 Description: Read and write Windows Registry Hive files.
 Requires:
 Cflags:
-Libs: -lhivex @LIBS@
+Libs: -lhivex
