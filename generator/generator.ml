@@ -1973,10 +1973,10 @@ HiveSetValue_val (value v)
 {
   hive_set_value *val = malloc (sizeof (hive_set_value));
 
-  val->key = String_val (Field (v, 0));
+  val->key = (char *) String_val (Field (v, 0));
   val->t = HiveType_val (Field (v, 1));
   val->len = caml_string_length (Field (v, 2));
-  val->value = String_val (Field (v, 2));
+  val->value = (char *) String_val (Field (v, 2));
 
   return val;
 }
@@ -1991,10 +1991,10 @@ HiveSetValues_val (value v)
 
   for (i = 0; i < nr_values; ++i) {
     v2 = Field (v, i);
-    values[i].key = String_val (Field (v2, 0));
+    values[i].key = (char *) String_val (Field (v2, 0));
     values[i].t = HiveType_val (Field (v2, 1));
     values[i].len = caml_string_length (Field (v2, 2));
-    values[i].value = String_val (Field (v2, 2));
+    values[i].value = (char *) String_val (Field (v2, 2));
   }
 
   return values;
