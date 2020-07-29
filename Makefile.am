@@ -80,6 +80,6 @@ website: $(HTMLFILES)
 # Tag HEAD with current version (only for maintainer).
 
 maintainer-tag:
-	git tag -a $(VERSION) -m "Version $(VERSION)" -f
+	git tag -a v$(VERSION) -m "Version $(VERSION)" -f
 
 CLEANFILES = $(HTMLFILES) pod2*.tmp *~
