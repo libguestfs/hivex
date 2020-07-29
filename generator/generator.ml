@@ -1973,6 +1973,8 @@ HiveSetValue_val (value v)
 {
   hive_set_value *val = malloc (sizeof (hive_set_value));
 
+  if (val == NULL) caml_raise_out_of_memory ();
+
   val->key = (char *) String_val (Field (v, 0));
   val->t = HiveType_val (Field (v, 1));
   val->len = caml_string_length (Field (v, 2));
@@ -1988,6 +1990,8 @@ HiveSetValues_val (value v)
   hive_set_value *values = malloc (nr_values * sizeof (hive_set_value));
   size_t i;
   value v2;
+
+  if (values == NULL) caml_raise_out_of_memory ();
 
   for (i = 0; i < nr_values; ++i) {
     v2 = Field (v, i);
