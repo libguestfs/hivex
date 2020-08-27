@@ -6,18 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-29 11:16+0100\n"
-"PO-Revision-Date: 2011-03-26 11:06-0400\n"
-"Last-Translator: lovenemesis <lovenemesis@gmail.com>\n"
+"POT-Creation-Date: 2014-10-30 15:18+0000\n"
+"PO-Revision-Date: 2015-02-21 07:29-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
 "Language-Team: Chinese (China) <None>\n"
-"Language: zh-CN\n"
+"Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0\n"
-"X-Generator: Zanata 3.7.2\n"
+"X-Generator: Zanata 4.6.2\n"
 
-#: sh/hivexsh.c:161
+#: sh/hivexsh.c:156
 #, c-format
 msgid ""
 "\n"
@@ -36,32 +36,32 @@ msgstr ""
 "      'quit' 来退出命令行\n"
 "\n"
 
-#: sh/hivexsh.c:275
+#: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
 msgstr "hivexsh：获取父节点 %zu 错误\n"
 
-#: sh/hivexsh.c:285
+#: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
 msgstr "hivexsh：获取节点 %zx 名称错误\n"
 
-#: sh/hivexsh.c:424
+#: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr "hivexsh: 您必须首先使用 'load hivefile' 来载入一个 hive 文件\n"
 
-#: sh/hivexsh.c:445
+#: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr "hivexsh: 未知的命令 '%s'，使用 'help' 来获得简略帮助\n"
 
-#: sh/hivexsh.c:455
+#: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr "hivexsh: 载入： 指定的 hive 文件不存在\n"
 
-#: sh/hivexsh.c:471
+#: sh/hivexsh.c:466
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -80,24 +80,24 @@ msgstr ""
 "的附件，提交至 https://bugzilla.redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: '%s' 命令不应该包含任何参数\n"
 
-#: sh/hivexsh.c:546
+#: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr "%s: %s: \\ 字符在路径中出现两次 - 您正确换码了路径参数吗？\n"
 
-#: sh/hivexsh.c:584
+#: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
 msgstr "hivexsh: cd: 子键 '%s' 未找到\n"
 
-#: sh/hivexsh.c:602
+#: sh/hivexsh.c:597
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
@@ -108,46 +108,45 @@ msgstr ""
 "包含了文件系统一样，并使用 'ls' 来列出当前键之下的子键。\n"
 "  完整的说明位于 hivexsh(1) 手册中。\n"
 
-#: sh/hivexsh.c:681
+#: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: 键未找到\n"
 
-#: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
-msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
+#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: 非法的整数参数 (%s 返回 %d)\n"
 
-#: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
+#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: 超出范围的整数\n"
 
-#: sh/hivexsh.c:900 sh/hivexsh.c:918
+#: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: 输入意外结束\n"
 
-#: sh/hivexsh.c:939 sh/hivexsh.c:958
+#: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr "hivexsh: string(utf16le): 仅支持输入 7 bit ASCII 字符串\n"
 
-#: sh/hivexsh.c:1069
+#: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr "hivexsh: setval: 十六进制字符串后包含无用的结尾\n"
 
-#: sh/hivexsh.c:1076
+#: sh/hivexsh.c:1062
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
-msgstr ""
-"hivexsh: setval: 不能解析值域字符串，请参阅手册页 hivexsh(1) 以获得帮助：%s\n"
+msgstr "hivexsh: setval: 不能解析值域字符串，请参阅手册页 hivexsh(1) 以获得帮助：%s\n"
 
-#: sh/hivexsh.c:1105
+#: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: 不能删除根节点\n"
@@ -157,12 +156,12 @@ msgstr "hivexsh: del: 不能删除根节点\n"
 msgid "%s: failed to write XML document\n"
 msgstr "%s: 写入 XML 文档失败\n"
 
-#: xml/hivexml.c:116
+#: xml/hivexml.c:113
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: 缺少输入文件名\n"
 
-#: xml/hivexml.c:135
+#: xml/hivexml.c:132
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: 创建 XML 写入器失败\n"

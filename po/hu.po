@@ -4,23 +4,23 @@
 #
 # Translators:
 # Máté Gelei <geleimate@fedoraproject.org>, 2011
+# Meskó Balázs <meskobalazs@gmail.com>, 2018. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-29 11:16+0100\n"
-"PO-Revision-Date: 2013-11-20 05:59-0500\n"
-"Last-Translator: Zoltan Hoppár <zoltanh721@fedoraproject.org>\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/hivex/language/"
-"hu/)\n"
+"POT-Creation-Date: 2014-10-30 15:18+0000\n"
+"PO-Revision-Date: 2018-12-06 06:58-0500\n"
+"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
+"Language-Team: Hungarian (http://www.transifex.com/projects/p/hivex/language/hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Zanata 3.7.2\n"
+"X-Generator: Zanata 4.6.2\n"
 
-#: sh/hivexsh.c:161
+#: sh/hivexsh.c:156
 #, c-format
 msgid ""
 "\n"
@@ -32,43 +32,43 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Üdvözli Önt a hivexsh, a Windows registry bináris fájljait ellenőrző\n"
-"interaktív hivex parancssor.\n"
+"Üdvözli Önt a hivexsh, a Windows rendszerleíró adatbázis bináris\n"
+"fájljait ellenőrző interaktív hivex parancssor.\n"
 "\n"
-"Írja be a 'help' segítségkéréshez, vagy a\n"
-"      'quit' szót a kilépéshez\n"
+"Írja be: „help” a súgó megjelenítése\n"
+"      „quit” kilépés\n"
 "\n"
 
-#: sh/hivexsh.c:275
+#: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr "hivexsh: hiba a(z) %zu csomópont szülőjének lekérdezésében\n"
+msgstr "hivexsh: hiba a(z) %zu csomópont szülőjének lekérdezésekor\n"
 
-#: sh/hivexsh.c:285
+#: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr "hivexsh: hiba a(z) %zx csomópont nevének lekérdezésében\n"
+msgstr "hivexsh: hiba a(z) %zx csomópont nevének lekérdezésekor\n"
 
-#: sh/hivexsh.c:424
+#: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
-"hivexsh: először be kell tölteni egy hive fájlt a 'load hivefile' "
+"hivexsh: először be kell tölteni egy hive fájlt a „load hivefile” "
 "utasítással\n"
 
-#: sh/hivexsh.c:445
+#: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
-"hivexsh: '%s' egy ismeretlen parancs, használja a 'help' parancsot a "
-"segítségkéréshez\n"
+"hivexsh: a(z) „%s” egy ismeretlen parancs, használja a „help” parancsot a "
+"súgó eléréséhez\n"
 
-#: sh/hivexsh.c:455
+#: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr "hivexsh: load: nem adott meg betöltendő fájlt\n"
 
-#: sh/hivexsh.c:471
+#: sh/hivexsh.c:466
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -79,86 +79,86 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
-"hivexsh: %s fájl megnyitása során hiba történt: %m\n"
+"hivexsh: hiba történt a(z) %s fájl megnyitásakor: %m\n"
 "\n"
-"Ha ez mégis egy érvényes bináris registry fájl (_nem_\n"
-"a regedit által készített *.reg fájl) adja ki újra a parancsot a\n"
-"'-d' kapcsolóval és a teljes kimenetet (a fájllal együtt)\n"
-"küldje el a https://bugzilla.redhat.com/ weboldalon.\n"
+"Ha ez mégis egy érvényes bináris rendszerleíró fájl (_nem_\n"
+"egy a regedit által készített *.reg fájl), akkor újra adja ki a parancsot\n"
+" a „-d” kapcsolóval, és mellékelje a teljes hibás kimenetet _és_ a hive fájlt \n"
+"a https://bugzilla.redhat.com/ weboldalon beküldött hibajelentéshez.\n"
 "\n"
 
-#: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
-msgstr "hivexsh: '%s' parancs nem fogad el paramétereket\n"
+msgstr "hivexsh: a(z) „%s” parancs nem fogad argumentumokat\n"
 
-#: sh/hivexsh.c:546
+#: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
 "parameter correctly?\n"
 msgstr ""
-"%s: %s: a \\ karaketerek duplán szerepelnek az útvonalban - biztosan jól "
-"használja az escape-karaketereket?\n"
+"%s: %s: a \\ karaketerek duplán szerepelnek az útvonalban – biztosan jól "
+"használja a feloldójeleket?\n"
 
-#: sh/hivexsh.c:584
+#: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
-msgstr "hivexsh: cd: a(z) '%s' alkulcs nem található\n"
+msgstr "hivexsh: cd: a(z) „%s” alkulcs nem található\n"
 
-#: sh/hivexsh.c:602
+#: sh/hivexsh.c:597
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
 "contained a filesystem, and use 'ls' to list the subkeys of the\n"
 "current key.  Full documentation is in the hivexsh(1) manual page.\n"
 msgstr ""
-"A hive kulcsain a 'cd' parancsal navigálhat, mintha\n"
-"egy tényleges fájlrendszerben mozogna. Az 'ls' parancsot használhatja\n"
-"a listázáshoz.  Teljes dokumentáció a hivexsh(1) man-oldalon érhető el.\n"
+"A hive kulcsain a „cd” paranccsal navigálhat, mintha egy tényleges fájlrendszerben\n"
+"mozogna, és a listázáshoz használhatja az „ls” parancsot. A teljes dokumentáció\n"
+"a hivexsh(1) leírási oldalon érhető el.\n"
 
-#: sh/hivexsh.c:681
+#: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
-msgstr "%s: %s: a kulcs nincs meg\n"
+msgstr "%s: %s: a kulcs nem található\n"
 
-#: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
-msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
+#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: érvénytelen egész szám paraméter (%s visszatérési értéke %d)\n"
 
-#: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
+#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: az egész szám nincs a határokon belül\n"
 
-#: sh/hivexsh.c:900 sh/hivexsh.c:918
+#: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: a bemenet váratlanul ért véget\n"
 
-#: sh/hivexsh.c:939 sh/hivexsh.c:958
+#: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
 msgstr ""
 "hivexsh: string(utf16le): csak 7 bites ASCII karakterláncok írhatók be\n"
 
-#: sh/hivexsh.c:1069
+#: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
-msgstr "hivexsh: setval: trailing garbage after hex string\n"
+msgstr "hivexsh: setval: szemét szerepel a hex karakterlánc után\n"
 
-#: sh/hivexsh.c:1076
+#: sh/hivexsh.c:1062
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
 "hivexsh(1) for help: %s\n"
 msgstr ""
-"hivexsh: setval: a karakterlánc-érték nem adható át, segítségért nézze meg a "
-"hivexsh(1) man-oldalt: %s\n"
+"hivexsh: setval: az érték karakterlánc nem dolgozható fel, segítségért nézze"
+" meg a hivexsh(1) man oldalt: %s\n"
 
-#: sh/hivexsh.c:1105
+#: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: a gyökércsomópont nem törölhető\n"
@@ -168,12 +168,12 @@ msgstr "hivexsh: del: a gyökércsomópont nem törölhető\n"
 msgid "%s: failed to write XML document\n"
 msgstr "%s: hiba az XML dokumentum írása során\n"
 
-#: xml/hivexml.c:116
+#: xml/hivexml.c:113
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: hiányzik a bemeneti fájl neve\n"
 
-#: xml/hivexml.c:135
+#: xml/hivexml.c:132
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr "xmlNewTextWriterFilename: hiba az XML író létrehozása során\n"

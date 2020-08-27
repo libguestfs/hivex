@@ -1,20 +1,21 @@
 # Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2015. #zanata
+# Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>, 2017. #zanata
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-29 11:16+0100\n"
-"PO-Revision-Date: 2015-09-24 09:23-0400\n"
+"POT-Creation-Date: 2014-10-30 15:18+0000\n"
+"PO-Revision-Date: 2017-08-22 08:16-0400\n"
 "Last-Translator: Robert Antoni Buj Gelonch <rbuj@fedoraproject.org>\n"
 "Language-Team: Catalan\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Zanata 3.7.2\n"
 "Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"X-Generator: Zanata 4.6.2\n"
 
-#: sh/hivexsh.c:161
+#: sh/hivexsh.c:156
 #, c-format
 msgid ""
 "\n"
@@ -33,33 +34,33 @@ msgstr ""
 "          «quit» per sortir del shell\n"
 "\n"
 
-#: sh/hivexsh.c:275
+#: sh/hivexsh.c:270
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
 msgstr "hivexsh: error en l'obtenció del pare del node %zu\n"
 
-#: sh/hivexsh.c:285
+#: sh/hivexsh.c:280
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
 msgstr "hivexsh: error en l'obtenció del nom de node del node %zx\n"
 
-#: sh/hivexsh.c:424
+#: sh/hivexsh.c:419
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr "hivexsh: primer heu de carregar un fitxer hive amb «load hivefile»\n"
 
-#: sh/hivexsh.c:445
+#: sh/hivexsh.c:440
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
 "hivexsh: ordre desconeguda «%s», utilitzeu «help» per al resum de l'ajuda\n"
 
-#: sh/hivexsh.c:455
+#: sh/hivexsh.c:450
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
 msgstr "hivexsh: load: no s'ha proporcionat cap fitxer hive per carregar\n"
 
-#: sh/hivexsh.c:471
+#: sh/hivexsh.c:466
 #, c-format
 msgid ""
 "hivexsh: failed to open hive file: %s: %m\n"
@@ -72,19 +73,18 @@ msgid ""
 msgstr ""
 "hivexsh: ha fallat l'obertura del fitxer hive: %s: %m\n"
 "\n"
-"Si creieu que aquest fitxer hive és un fitxer binari hive de Windows i "
-"(_no_\n"
+"Si creieu que aquest fitxer hive és un fitxer binari hive de Windows i (_no_\n"
 "un fitxer regedit *.reg) aleshores torneu a executar aquesta ordre amb\n"
 "l'opció «-d» de l'hivexsh, adjunteu tota la sortida _i_ el fitxer hive que\n"
 "falla a l'informe d'error a https://bugzilla.redhat.com/\n"
 "\n"
 
-#: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
+#: sh/hivexsh.c:499 sh/hivexsh.c:608 sh/hivexsh.c:1085
 #, c-format
 msgid "hivexsh: '%s' command should not be given arguments\n"
 msgstr "hivexsh: l'ordre «%s» no ha de proporcionar arguments\n"
 
-#: sh/hivexsh.c:546
+#: sh/hivexsh.c:541
 #, c-format
 msgid ""
 "%s: %s: \\ characters in path are doubled - are you escaping the path "
@@ -93,12 +93,12 @@ msgstr ""
 "%s: %s: hi ha caràcters \\ duplicats en el camí - esteu escapant "
 "correctament el paràmetre del camí?\n"
 
-#: sh/hivexsh.c:584
+#: sh/hivexsh.c:579
 #, c-format
 msgid "hivexsh: cd: subkey '%s' not found\n"
 msgstr "hivexsh: cd: no s'ha trobat la subclau «%s»\n"
 
-#: sh/hivexsh.c:602
+#: sh/hivexsh.c:597
 #, c-format
 msgid ""
 "Navigate through the hive's keys using the 'cd' command, as if it\n"
@@ -110,27 +110,27 @@ msgstr ""
 "les subclaus de la clau actual.  La documentació completa està en\n"
 "la pàgina del manual hivexsh(1).\n"
 
-#: sh/hivexsh.c:681
+#: sh/hivexsh.c:676
 #, c-format
 msgid "%s: %s: key not found\n"
 msgstr "%s: %s: clau no trobada\n"
 
-#: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
-msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
+#: sh/hivexsh.c:859 sh/hivexsh.c:963 sh/hivexsh.c:989 sh/hivexsh.c:1018
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgstr "%s: %s: paràmetre enter no vàlid (%s va retornar %d)\n"
 
-#: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
+#: sh/hivexsh.c:864 sh/hivexsh.c:969 sh/hivexsh.c:995 sh/hivexsh.c:1024
 #, c-format
 msgid "%s: %s: integer out of range\n"
 msgstr "%s: %s: enter fora de l'interval\n"
 
-#: sh/hivexsh.c:900 sh/hivexsh.c:918
+#: sh/hivexsh.c:886 sh/hivexsh.c:904
 #, c-format
 msgid "hivexsh: setval: unexpected end of input\n"
 msgstr "hivexsh: setval: final inesperat de l'entrada\n"
 
-#: sh/hivexsh.c:939 sh/hivexsh.c:958
+#: sh/hivexsh.c:925 sh/hivexsh.c:944
 #, c-format
 msgid ""
 "hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
@@ -138,14 +138,14 @@ msgstr ""
 "hivexsh: string(utf16le): per a l'entrada únicament són compatibles les "
 "cadenes de text ASCII de 7 bits\n"
 
-#: sh/hivexsh.c:1069
+#: sh/hivexsh.c:1055
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
 msgstr ""
 "hivexsh: setval: arrossega a les escombraries el que hi hagi darrere de la "
 "cadena hexadecimal\n"
 
-#: sh/hivexsh.c:1076
+#: sh/hivexsh.c:1062
 #, c-format
 msgid ""
 "hivexsh: setval: cannot parse value string, please refer to the man page "
@@ -154,7 +154,7 @@ msgstr ""
 "hivexsh: setval: no es pot analitzar sintàcticament la cadena de text, "
 "consulteu la pàgina man hivexsh(1) per a més ajuda: %s\n"
 
-#: sh/hivexsh.c:1105
+#: sh/hivexsh.c:1091
 #, c-format
 msgid "hivexsh: del: the root node cannot be deleted\n"
 msgstr "hivexsh: del: el node arrel no es pot eliminar\n"
@@ -164,13 +164,13 @@ msgstr "hivexsh: del: el node arrel no es pot eliminar\n"
 msgid "%s: failed to write XML document\n"
 msgstr "%s: ha fallat l'escriptura del document XML\n"
 
-#: xml/hivexml.c:116
+#: xml/hivexml.c:113
 #, c-format
 msgid "hivexml: missing name of input file\n"
 msgstr "hivexml: falta el nom del fitxer d'entrada\n"
 
-#: xml/hivexml.c:135
+#: xml/hivexml.c:132
 #, c-format
 msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
 msgstr ""
-"xmlNewTextWriterFilename: ha fallat la creació de l'escriptor del XML\n"
+"xmlNewTextWriterFilename: ha fallat la creació de l'escriptor de l'XML\n"
