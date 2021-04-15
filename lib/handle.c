@@ -315,8 +315,8 @@ hivex_open (const char *filename, int flags)
       if (seg_len <= 4 || (seg_len & 3) != 0) {
         if (is_root || !h->unsafe) {
           SET_ERRNO (ENOTSUP,
-                     "%s, the block at 0x%zx has invalid size %" PRIi32
-                     ", bad registry",
+                     "%s, the block at 0x%zx size %" PRIi32
+                     " <= 4 or not a multiple of 4, bad registry",
                      filename, blkoff, le32toh (block->seg_len));
           goto error;
         } else {
@@ -325,6 +325,14 @@ hivex_open (const char *filename, int flags)
                  filename, blkoff, le32toh (block->seg_len));
           break;
         }
+      }
+
+      if (blkoff + seg_len > off + page_size) {
+        SET_ERRNO (ENOTSUP,
+                   "%s, the block at 0x%zx size %" PRIi32
+                   " extends beyond the current page, bad registry",
+                   filename, blkoff, le32toh (block->seg_len));
+        goto error;
       }
 
       if (h->msglvl >= 2) {
