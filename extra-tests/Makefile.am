@@ -1,5 +1,5 @@
 # hivex
-# Copyright (C) 2013 Red Hat Inc.
+# Copyright (C) 2013-2021 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-EXTRA_DIST = README check-regedit.sh insert-keys.pl fuzz.pl
+EXTRA_DIST = README check-regedit.sh insert-keys.pl
 
 # User should normally override this.
 HIVEX_TEST_DATA ?= $(top_srcdir)/../hivex-test-data
@@ -32,6 +32,6 @@ check_DATA = $(test_hives)
 	mv $@-t $@
 
 TESTS_ENVIRONMENT = ../run
-TESTS = check-regedit.sh insert-keys.pl fuzz.pl
+TESTS = check-regedit.sh insert-keys.pl
 
 CLEANFILES = *~ *.hive
