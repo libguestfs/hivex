@@ -27,6 +27,7 @@
 /float_h.m4
 /fpending.m4
 /fpieee.m4
+/free.m4
 /fstat.m4
 /ftruncate.m4
 /getcwd.m4
@@ -100,6 +101,7 @@
 /open-slash.m4
 /pathmax.m4
 /perror.m4
+/pid_t.m4
 /pipe.m4
 /po.m4
 /printf.m4
@@ -117,6 +119,7 @@
 /safe-read.m4
 /safe-write.m4
 /sched_h.m4
+/sched_yield.m4
 /select.m4
 /semaphore.m4
 /setenv.m4
