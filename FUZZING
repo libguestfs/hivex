@@ -1,0 +1,29 @@
+To report security bugs, see SECURITY in the top source directory.
+
+
+Fuzzing hivex using the American Fuzzy Lop (afl) fuzzer
+=======================================================
+
+You will need to recompile hivex with afl instrumentation:
+
+  ./autogen.sh CC=/usr/bin/afl-gcc CXX=/usr/bin/afl-g++
+  make clean
+  make
+
+images/minimal and images/special may be used as initial test cases:
+
+  mkdir -p testcase_dir sync_dir
+  cp images/minimal images/special testcase_dir/
+
+Run multiple copies of afl-fuzz.  Usually you should run 1 master (-M)
+and as many slaves (-S) as you can:
+
+Master:
+
+  mkdir -p sync_dir
+  afl-fuzz -i testcase_dir -o sync_dir -m 256 -M fuzz01 xml/.libs/hivexml -k @@
+
+Slaves:
+
+  # replace fuzzNN with fuzz02, fuzz03, etc.
+  afl-fuzz -i testcase_dir -o sync_dir -m 256 -S fuzzNN xml/.libs/hivexml -k @@

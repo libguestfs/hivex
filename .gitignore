@@ -129,5 +129,7 @@ Makefile.in
 /sh/*.1
 /sh/hivexsh
 /stamp-h1
+/sync_dir
+/testcase_dir
 /xml/*.1
 /xml/hivexml
