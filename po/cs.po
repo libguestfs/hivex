@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-29 11:16+0100\n"
+"POT-Creation-Date: 2021-05-03 11:14+0100\n"
 "PO-Revision-Date: 2017-03-29 09:29-0400\n"
 "Last-Translator: Zdenek <chmelarz@gmail.com>\n"
 "Language-Team: Czech\n"
@@ -117,7 +117,6 @@ msgstr "%s: %s: klíč nenalezen\n"
 
 #: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
 #, fuzzy, c-format
-#| msgid "%s: %s: invalid integer parameter (%s returned %d)\n"
 msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
 msgstr "%s: %s: neplatný parametr celého čísla (%s vrátil %d)\n"
 

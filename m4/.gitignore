@@ -58,6 +58,7 @@
 /intmax_t.m4
 /inttypes_h.m4
 /inttypes.m4
+/inttypes-pri.m4
 /ioctl.m4
 /isblank.m4
 /langinfo_h.m4
@@ -76,6 +77,7 @@
 /locale-tr.m4
 /locale-zh.m4
 /lock.m4
+/longlong.m4
 /lstat.m4
 /malloca.m4
 /malloc.m4
