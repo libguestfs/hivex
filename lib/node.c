@@ -203,7 +203,7 @@ hivex_node_classname (hive_h *h, hive_node_h node)
 
 static int _get_children (hive_h *h, hive_node_h blkoff,
                           offset_list *children, offset_list *blocks,
-                          int flags);
+                          int flags, unsigned depth);
 static int check_child_is_nk_block (hive_h *h, hive_node_h child, int flags);
 
 /* Iterate over children (ie. subkeys of a node), returning child
@@ -335,7 +335,7 @@ _hivex_get_children (hive_h *h, hive_node_h node,
     goto error;
   }
 
-  if (_get_children (h, subkey_lf, &children, &blocks, flags) == -1)
+  if (_get_children (h, subkey_lf, &children, &blocks, flags, 0) == -1)
     goto error;
 
   /* Check the number of children we ended up reading matches
@@ -383,7 +383,7 @@ _hivex_get_children (hive_h *h, hive_node_h node,
 static int
 _get_children (hive_h *h, hive_node_h blkoff,
                offset_list *children, offset_list *blocks,
-               int flags)
+               int flags, unsigned depth)
 {
   /* Add this intermediate block. */
   if (_hivex_add_to_offset_list (blocks, blkoff) == -1)
@@ -486,7 +486,17 @@ _get_children (hive_h *h, hive_node_h blkoff,
         }
       }
 
-      if (_get_children (h, offset, children, blocks, flags) == -1)
+      /* Although in theory hive ri records might be nested to any
+       * depth, in practice this is unlikely.  Recursing here caused
+       * CVE-2021-3622.  Thus limit the depth we will recurse to
+       * something small.
+       */
+      if (depth >= 32) {
+        SET_ERRNO (EINVAL, "ri-record nested to depth >= %u", depth);
+        return -1;
+      }
+
+      if (_get_children (h, offset, children, blocks, flags, depth+1) == -1)
         return -1;
     }
   }
