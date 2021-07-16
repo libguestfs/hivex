@@ -346,7 +346,7 @@ _hivex_get_children (hive_h *h, hive_node_h node,
     if (!h->unsafe) {
       SET_ERRNO (ENOTSUP,
                  "nr_subkeys_in_nk = %zu "
-                 "is not equal to number of childred read %zu",
+                 "is not equal to number of children read %zu",
                  nr_subkeys_in_nk, nr_children);
       goto error;
     } else {
