@@ -58,6 +58,7 @@ Makefile.in
 /lib/hivex.pc
 /lib/hivex.pod
 /lib/hivex.syms
+/lib/local/hivex.pc
 /lib/test-just-header
 /lib/tools/*.opt
 /libtool

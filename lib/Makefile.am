@@ -20,7 +20,8 @@ SUBDIRS = tools
 EXTRA_DIST = \
 	hivex.pc.in \
 	hivex.pod \
-	hivex.syms
+	hivex.syms \
+	local/hivex.pc.in
 
 lib_LTLIBRARIES = libhivex.la
 

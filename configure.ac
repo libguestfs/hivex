@@ -574,6 +574,7 @@ AC_CONFIG_FILES([Makefile
                  include/Makefile
                  lib/Makefile
                  lib/hivex.pc
+                 lib/local/hivex.pc
                  lib/tools/Makefile
                  ocaml/Makefile ocaml/META
                  perl/Makefile perl/Makefile.PL
