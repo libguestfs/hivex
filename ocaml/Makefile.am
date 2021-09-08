@@ -112,7 +112,24 @@ install-data-hook:
 
 CLEANFILES += $(noinst_DATA)
 
-endif
+# This "tricks" ocamlfind into allowing us to compile other OCaml
+# programs against a locally compiled copy of the hivex sources.
+# ocamlfind needs to see a directory called ‘hivex’ which contains
+# ‘META’.  The current directory is called ‘ocaml’, but if we make
+# this symlink then we can create the required directory structure.
+#
+# Note if you just want to use this, make sure you use
+# ‘../hivex/run make’ in your other program and everything should
+# just work.
+CLEANFILES += hivex
+
+all-local: hivex
+
+hivex:
+	rm -f $@
+	$(LN_S) . $@
+
+endif HAVE_OCAML
 
 # Tell version 3.79 and up of GNU make to not build goals in this
 # directory in parallel.  (See RHBZ#502309).
