@@ -29,29 +29,31 @@
 
 #----------------------------------------------------------------------
 
+# Function to intelligently prepend a path to an environment variable.
+# See http://stackoverflow.com/a/9631350
+prepend()
+{
+    eval $1="$2\${$1:+:\$$1}"
+}
+
 # Source and build directories (absolute paths so this works from any
 # directory).
 s="$(cd @abs_srcdir@ && pwd)"
 b="$(cd @abs_builddir@ && pwd)"
 
 # Set PATH to contain all local programs.
-PATH="$b/sh:$b/regedit:$b/xml:$PATH"
+prepend PATH "$b/xml"
+prepend PATH "$b/regedit"
+prepend PATH "$b/sh"
 export PATH
 
 # Set LD_LIBRARY_PATH to contain library.
-if [ -z "$LD_LIBRARY_PATH" ]; then
-    LD_LIBRARY_PATH="$b/lib/.libs"
-else
-    LD_LIBRARY_PATH="$b/lib/.libs:$LD_LIBRARY_PATH"
-fi
+prepend LD_LIBRARY_PATH "$b/lib/.libs"
 export LD_LIBRARY_PATH
 
 # For Perl.
-if [ -z "$PERL5LIB" ]; then
-    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch"
-else
-    PERL5LIB="$b/perl/blib/lib:$b/perl/blib/arch:$PERL5LIB"
-fi
+prepend PERL5LIB "$b/perl/blib/arch"
+prepend PERL5LIB "$b/perl/blib/lib"
 export PERL5LIB
 
 # Enable Perl valgrinding.
@@ -63,30 +65,21 @@ export PERL_DESTRUCT_LEVEL=2
 
 # For Python.
 export PYTHON="@PYTHON@"
-if [ -z "$PYTHONPATH" ]; then
-    PYTHONPATH="$s/python:$b/python:$b/python/.libs"
-else
-    PYTHONPATH="$s/python:$b/python:$b/python/.libs:$PYTHONPATH"
-fi
+prepend PYTHONPATH "$b/python/.libs"
+prepend PYTHONPATH "$b/python"
+prepend PYTHONPATH "$s/python"
 export PYTHONPATH
 
 # For Ruby.
 export RUBY="@RUBY@"
 export RAKE="@RAKE@"
-if [ -z "$RUBYLIB" ]; then
-    RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex"
-else
-    RUBYLIB="$s/ruby/lib:$b/ruby/ext/hivex:$RUBYLIB"
-fi
+prepend RUBYLIB "$b/ruby/ext/hivex"
+prepend RUBYLIB "$s/ruby/lib"
 export RUBYLIB
-export LD_LIBRARY_PATH="$b/ruby/ext/hivex:$LD_LIBRARY_PATH"
+prepend LD_LIBRARY_PATH "$b/ruby/ext/hivex"
 
 # For OCaml.
-if [ -z "$CAML_LD_LIBRARY_PATH" ]; then
-    CAML_LD_LIBRARY_PATH="$b/ocaml"
-else
-    CAML_LD_LIBRARY_PATH="$b/ocaml:$CAML_LD_LIBRARY_PATH"
-fi
+prepend CAML_LD_LIBRARY_PATH "$b/ocaml"
 export CAML_LD_LIBRARY_PATH
 
 # This is a cheap way to find some use-after-free and uninitialized
