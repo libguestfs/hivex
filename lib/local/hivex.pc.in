@@ -32,4 +32,8 @@ Version: @VERSION@
 Description: Read and write Windows Registry Hive files.
 Requires:
 Cflags: -I${includedir}
-Libs: -L${libdir} -lhivex
+# The colon notation forces an exact filename search when linking; here
+# effectively disabling shared library lookup. (Refer to "--library" in ld(1).)
+# Statically linking hivex matters mainly for "guestfsd", which runs in the
+# appliance.
+Libs: -L${libdir} -l:libhivex.a
