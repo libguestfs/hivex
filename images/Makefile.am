@@ -26,7 +26,7 @@ EXTRA_DIST = minimal rlenvalue_test_hive special mkzero/Makefile mkzero/mkzero.c
 noinst_PROGRAMS = mklarge
 mklarge_SOURCES = mklarge.c
 mklarge_CFLAGS = \
-	-I$(srcdir)/../lib \
+	-I$(srcdir)/../include \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
 mklarge_LDADD = ../lib/libhivex.la
 

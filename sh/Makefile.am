@@ -32,7 +32,7 @@ noinst_SCRIPTS = example1 example2 example3 example4 example5 example6
 
 hivexsh_SOURCES = \
   hivexsh.c \
-  ../lib/hivex.h \
+  ../include/hivex.h \
   ../lib/byte_conversions.h
 
 hivexsh_LDADD = ../lib/libhivex.la ../gnulib/lib/libgnu.la $(LIBREADLINE)
@@ -40,6 +40,7 @@ hivexsh_CFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
   -I$(top_builddir)/gnulib/lib \
   -I$(top_srcdir)/lib \
+  -I$(top_srcdir)/include \
   -DLOCALEBASEDIR=\""$(datadir)/locale"\" \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
 

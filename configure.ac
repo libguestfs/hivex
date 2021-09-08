@@ -572,6 +572,7 @@ AC_CONFIG_FILES([Makefile
                  gnulib/tests/Makefile
                  hivex.pc
                  images/Makefile
+                 include/Makefile
                  lib/Makefile
                  lib/tools/Makefile
                  ocaml/Makefile ocaml/META

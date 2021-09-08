@@ -27,7 +27,7 @@ libhivex_la_SOURCES = \
 	byte_conversions.h \
 	gettext.h \
 	handle.c \
-	hivex.h \
+	../include/hivex.h \
 	hivex-internal.h \
 	mmap.h \
 	node.c \
@@ -48,10 +48,9 @@ libhivex_la_LDFLAGS = \
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 libhivex_la_CPPFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
+  -I$(top_srcdir)/include \
   -I$(top_builddir)/gnulib/lib \
   -I$(srcdir)
-
-include_HEADERS = hivex.h
 
 man_MANS = hivex.3
 
@@ -84,7 +83,7 @@ TESTS = test-just-header
 
 test_just_header_SOURCES = test-just-header.c
 test_just_header_CFLAGS = \
-	-I$(top_srcdir)/lib \
+	-I$(top_srcdir)/include \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
 test_just_header_LDADD = \
 	$(top_builddir)/lib/libhivex.la

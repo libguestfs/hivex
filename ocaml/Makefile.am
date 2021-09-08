@@ -26,7 +26,7 @@ CLEANFILES += t/*.cmi t/*.cmo t/*.cmx t/*.o t/*.a t/*.so
 
 AM_CPPFLAGS = \
   -I$(top_builddir) -I$(OCAMLLIB) -I$(top_srcdir)/ocaml \
-  -I$(top_srcdir)/lib \
+  -I$(top_srcdir)/include \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
 
 if HAVE_OCAML

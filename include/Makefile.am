@@ -1,5 +1,5 @@
-# hivex Perl bindings
-# Copyright (C) 2009-2010 Red Hat Inc.
+# hivex
+# Copyright (C) 2009-2021 Red Hat Inc.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,17 +15,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-use Config;
-use ExtUtils::MakeMaker;
+EXTRA_DIST = hivex.h
 
-WriteMakefile (
-    FIRST_MAKEFILE => 'Makefile-pl',
-
-    NAME => 'Win::Hivex',
-    VERSION => '@PACKAGE_VERSION@',
-
-    LIBS => '-L@top_builddir@/lib/.libs -lhivex',
-    INC => '-I@top_srcdir@/include',
-    TYPEMAPS => [ '@srcdir@/typemap' ],
-    CCFLAGS => $Config{ccflags} . ' @CFLAGS@',
-    );
+include_HEADERS = hivex.h

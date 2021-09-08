@@ -53,9 +53,9 @@ Makefile.in
 /html/hivexsh.1.html
 /images/large
 /images/mklarge
+/include/hivex.h
 /install-sh
 /lib/*.3
-/lib/hivex.h
 /lib/hivex.pod
 /lib/hivex.syms
 /lib/test-just-header

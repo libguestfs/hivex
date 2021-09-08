@@ -29,6 +29,7 @@ hivexml_CFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
   -I$(top_builddir)/gnulib/lib \
   -I$(top_srcdir)/lib \
+  -I$(top_srcdir)/include \
   $(LIBXML2_CFLAGS) \
   $(WARN_CFLAGS) $(WERROR_CFLAGS)
 

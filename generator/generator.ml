@@ -3855,7 +3855,7 @@ Run it from the top source directory using the command
 
   check_functions ();
 
-  output_to "lib/hivex.h" generate_c_header;
+  output_to "include/hivex.h" generate_c_header;
   output_to "lib/hivex.pod" generate_c_pod;
 
   output_to "lib/hivex.syms" generate_linker_script;
