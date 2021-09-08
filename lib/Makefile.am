@@ -18,6 +18,7 @@
 SUBDIRS = tools
 
 EXTRA_DIST = \
+	hivex.pc.in \
 	hivex.pod \
 	hivex.syms
 
@@ -51,6 +52,13 @@ libhivex_la_CPPFLAGS = \
   -I$(top_srcdir)/include \
   -I$(top_builddir)/gnulib/lib \
   -I$(srcdir)
+
+# Pkgconfig.
+
+pkgconfigdir = $(libdir)/pkgconfig
+pkgconfig_DATA = hivex.pc
+
+# Manual page.
 
 man_MANS = hivex.3
 

@@ -570,10 +570,10 @@ AC_CONFIG_FILES([Makefile
                  generator/Makefile
                  gnulib/lib/Makefile
                  gnulib/tests/Makefile
-                 hivex.pc
                  images/Makefile
                  include/Makefile
                  lib/Makefile
+                 lib/hivex.pc
                  lib/tools/Makefile
                  ocaml/Makefile ocaml/META
                  perl/Makefile perl/Makefile.PL

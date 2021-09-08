@@ -52,17 +52,13 @@ if ALWAYS_FALSE
 SUBDIRS += extra-tests
 endif
 
-EXTRA_DIST = hivex.pc.in LICENSE README run.in \
+EXTRA_DIST = LICENSE README run.in \
 	po/zanata-pull.sh po/zanata.xml
 
 # Generate the ChangeLog automatically from the gitlog.
 dist-hook:
 	$(top_srcdir)/build-aux/gitlog-to-changelog > ChangeLog
 	cp ChangeLog $(distdir)/ChangeLog
-
-# Pkgconfig.
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = hivex.pc
 
 # Maintainer website update.
 HTMLFILES = \

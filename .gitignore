@@ -44,7 +44,6 @@ Makefile.in
 /generator/stamp-generator
 /GNUmakefile
 /gnulib
-/hivex.pc
 /hivex-*.tar.gz
 /html/hivex.3.html
 /html/hivexget.1.html
@@ -56,6 +55,7 @@ Makefile.in
 /include/hivex.h
 /install-sh
 /lib/*.3
+/lib/hivex.pc
 /lib/hivex.pod
 /lib/hivex.syms
 /lib/test-just-header
