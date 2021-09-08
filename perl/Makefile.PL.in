@@ -25,7 +25,7 @@ WriteMakefile (
     VERSION => '@PACKAGE_VERSION@',
 
     LIBS => '-L@top_builddir@/lib/.libs -lhivex',
-    INC => '-I@top_builddir@/lib -I@top_srcdir@/lib',
+    INC => '-I@top_srcdir@/lib',
     TYPEMAPS => [ '@srcdir@/typemap' ],
     CCFLAGS => $Config{ccflags} . ' @CFLAGS@',
     );

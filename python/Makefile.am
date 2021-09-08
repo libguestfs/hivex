@@ -38,7 +38,7 @@ python_LTLIBRARIES = libhivexmod.la
 
 libhivexmod_la_SOURCES = hivex-py.c
 libhivexmod_la_CFLAGS = -Wall $(PYTHON_CFLAGS) \
-		        -I$(top_srcdir)/lib -I$(top_builddir)/lib
+		        -I$(top_srcdir)/lib
 libhivexmod_la_LIBADD = $(top_builddir)/lib/libhivex.la
 libhivexmod_la_LDFLAGS = -avoid-version -shared -module -shrext $(PYTHON_EXT_SUFFIX)
 

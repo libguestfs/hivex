@@ -84,7 +84,7 @@ TESTS = test-just-header
 
 test_just_header_SOURCES = test-just-header.c
 test_just_header_CFLAGS = \
-	-I$(top_srcdir)/lib -I$(top_builddir)/lib \
+	-I$(top_srcdir)/lib \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
 test_just_header_LDADD = \
 	$(top_builddir)/lib/libhivex.la
