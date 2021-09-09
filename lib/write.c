@@ -462,7 +462,37 @@ compare_name_with_nk_name (hive_h *h, const char *name, hive_node_h nk_offs)
     return 0;
   }
 
-  int r = strcasecmp (name, nname);
+  /* Perform a limited case-insensitive comparison. ASCII letters will be
+   * *upper-cased*. Multibyte sequences will produce nonsensical orderings.
+   */
+  int r = 0;
+  const char *s1 = name;
+  const char *s2 = nname;
+
+  for (;;) {
+    unsigned char c1 = *(s1++);
+    unsigned char c2 = *(s2++);
+
+    if (c1 >= 'a' && c1 <= 'z')
+      c1 = 'A' + (c1 - 'a');
+    if (c2 >= 'a' && c2 <= 'z')
+      c2 = 'A' + (c2 - 'a');
+    if (c1 < c2) {
+      /* Also covers the case when "name" is a prefix of "nname". */
+      r = -1;
+      break;
+    }
+    if (c1 > c2) {
+      /* Also covers the case when "nname" is a prefix of "name". */
+      r = 1;
+      break;
+    }
+    if (c1 == '\0') {
+      /* Both strings end. */
+      break;
+    }
+  }
+
   free (nname);
 
   return r;
