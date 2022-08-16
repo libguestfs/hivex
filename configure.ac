@@ -597,17 +597,17 @@ echo "Thank you for downloading $PACKAGE_STRING"
 echo
 echo "This is how we have configured the optional components for you today:"
 echo
-echo -n "OCaml bindings ...................... "
+AS_ECHO_N(["OCaml bindings ...................... "])
 if test "x$HAVE_OCAML_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Perl bindings ....................... "
+AS_ECHO_N(["Perl bindings ....................... "])
 if test "x$HAVE_PERL_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Python bindings ..................... "
+AS_ECHO_N(["Python bindings ..................... "])
 if test "x$HAVE_PYTHON_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-echo -n "Ruby bindings ....................... "
+AS_ECHO_N(["Ruby bindings ....................... "])
 if test "x$HAVE_RUBY_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-dnl echo -n "Java bindings ....................... "
+dnl AS_ECHO_N(["Java bindings ....................... "])
 dnl if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
-dnl echo -n "Haskell bindings .................... "
+dnl AS_ECHO_N(["Haskell bindings .................... "])
 dnl if test "x$HAVE_HASKELL" = "x"; then echo "yes"; else echo "no"; fi
 echo
 echo "If any optional component is configured 'no' when you expected 'yes'"
