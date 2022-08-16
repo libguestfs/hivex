@@ -50,6 +50,8 @@ export PATH
 # Set LD_LIBRARY_PATH to contain library.
 prepend LD_LIBRARY_PATH "$b/lib/.libs"
 export LD_LIBRARY_PATH
+prepend DYLD_LIBRARY_PATH "$b/lib/.libs"
+export DYLD_LIBRARY_PATH
 
 # For Perl.
 prepend PERL5LIB "$b/perl/blib/arch"
@@ -77,6 +79,7 @@ prepend RUBYLIB "$b/ruby/ext/hivex"
 prepend RUBYLIB "$s/ruby/lib"
 export RUBYLIB
 prepend LD_LIBRARY_PATH "$b/ruby/ext/hivex"
+prepend DYLD_LIBRARY_PATH "$b/ruby/ext/hivex"
 
 # For OCaml.
 prepend CAML_LD_LIBRARY_PATH "$b/ocaml"
