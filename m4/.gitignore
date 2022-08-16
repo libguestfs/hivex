@@ -7,7 +7,7 @@
 /closeout.m4
 /close-stream.m4
 /codeset.m4
-/ctype.m4
+/ctype_h.m4
 /dos.m4
 /double-slash-root.m4
 /dup2.m4
@@ -109,6 +109,7 @@
 /printf.m4
 /printf-posix.m4
 /progtest.m4
+/pselect.m4
 /pthread_h.m4
 /pthread_rwlock_rdlock.m4
 /pthread_sigmask.m4
@@ -127,7 +128,6 @@
 /setenv.m4
 /setlocale.m4
 /setlocale_null.m4
-/sigaction.m4
 /signalblocking.m4
 /signal_h.m4
 /size_max.m4
@@ -171,6 +171,7 @@
 /uintmax_t.m4
 /unistd_h.m4
 /usleep.m4
+/vararrays.m4
 /vasnprintf.m4
 /vasprintf.m4
 /visibility.m4
@@ -186,5 +187,6 @@
 /xalloc.m4
 /xsize.m4
 /xstrtol.m4
+/year2038.m4
 /yield.m4
 /zzgnulib.m4
