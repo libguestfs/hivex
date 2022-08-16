@@ -2836,35 +2836,19 @@ typedef int Py_ssize_t;
 
 #include \"hivex.h\"
 
-#ifndef HAVE_PYCAPSULE_NEW
-typedef struct {
-  PyObject_HEAD
-  hive_h *h;
-} Pyhivex_Object;
-#endif
-
 static hive_h *
 get_handle (PyObject *obj)
 {
   assert (obj);
   assert (obj != Py_None);
-#ifndef HAVE_PYCAPSULE_NEW
-  return ((Pyhivex_Object *) obj)->h;
-#else
   return (hive_h *) PyCapsule_GetPointer(obj, \"hive_h\");
-#endif
 }
 
 static PyObject *
 put_handle (hive_h *h)
 {
   assert (h);
-#ifndef HAVE_PYCAPSULE_NEW
-  return
-    PyCObject_FromVoidPtrAndDesc ((void *) h, (char *) \"hive_h\", NULL);
-#else
   return PyCapsule_New ((void *) h, \"hive_h\", NULL);
-#endif
 }
 
 /* This returns pointers into the Python objects, which should
