@@ -23,7 +23,7 @@
 #include <stddef.h>
 #include <string.h>
 #include <iconv.h>
-#include <glthread/lock.h>
+#include <pthread.h>
 
 #include "byte_conversions.h"
 
@@ -91,7 +91,7 @@ struct hive_h {
 #endif
 
   struct {
-    gl_lock_t mutex;
+    pthread_mutex_t mutex;
     iconv_t *handle;
   } iconv_cache[nr_recode_types];
 };

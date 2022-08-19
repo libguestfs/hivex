@@ -37,12 +37,7 @@ AC_DEFINE([PACKAGE_VERSION_MINOR],[hivex_minor],[Minor version number])
 AC_DEFINE([PACKAGE_VERSION_RELEASE],[hivex_release],[Release number])
 AC_DEFINE([PACKAGE_VERSION_EXTRA],["hivex_extra"],[Extra version string])
 
-gl_EARLY
-gl_LOCK
-gl_INIT
-gl_MODULE_INDICATOR([lock])
-
-AM_PROG_LIBTOOL
+LT_INIT
 
 dnl Define $(SED).
 m4_ifdef([AC_PROG_SED],[
@@ -53,81 +48,31 @@ m4_ifdef([AC_PROG_SED],[
 ])
 
 dnl Check for basic C environment.
-AC_PROG_CC_STDC
+AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_CPP
-
-AC_ARG_ENABLE([gcc-warnings],
-  [AS_HELP_STRING([--enable-gcc-warnings],
-                  [turn on lots of GCC warnings (for developers)])],
-  [case $enableval in
-     yes|no) ;;
-     *)      AC_MSG_ERROR([bad value $enableval for gcc-warnings option]) ;;
-   esac
-   gl_gcc_warnings=$enableval],
-  [gl_gcc_warnings=no]
-)
-
-if test "$gl_gcc_warnings" = yes; then
-  gl_WARN_ADD([-Werror], [WERROR_CFLAGS])
-  AC_SUBST([WERROR_CFLAGS])
-
-  nw=
-  # This, $nw, is the list of warnings we disable.
-  nw="$nw -Wdeclaration-after-statement" # too useful to forbid
-  nw="$nw -Waggregate-return"       # anachronistic
-  nw="$nw -Wc++-compat"             # We don't care about C++ compilers
-  nw="$nw -Wundef"                  # Warns on '#if GNULIB_FOO' etc in gnulib
-  nw="$nw -Wtraditional"            # Warns on #elif which we use often
-  nw="$nw -Wsystem-headers"         # Don't let system headers trigger warnings
-  nw="$nw -Wpadded"                 # Our structs are not padded
-  nw="$nw -Wvla"                    # Allow variable length arrays.
-  nw="$nw -Wpacked"                 # Allow attribute((packed)) on structs
-  nw="$nw -Wlong-long"              # Allow long long since it's required
-                                    # by xstrtoll.
-  nw="$nw -Wsuggest-attribute=pure" # Don't suggest pure functions.
-#  nw="$nw -Wsuggest-attribute=const" # Don't suggest const functions.
-#  nw="$nw -Wunsuffixed-float-constants" # Don't care about these.
-  nw="$nw -Wjump-misses-init"       # Be nice to enable this in future.
-
-  gl_MANYWARN_ALL_GCC([ws])
-  gl_MANYWARN_COMPLEMENT([ws], [$ws], [$nw])
-  for w in $ws; do
-    gl_WARN_ADD([$w])
-  done
-
-  # Unused parameters are not a bug in C.
-  gl_WARN_ADD([-Wno-unused-parameter])
-
-  # Missing field initializers is not a bug in C.
-  gl_WARN_ADD([-Wno-missing-field-initializers])
-
-  # In spite of excluding -Wlogical-op above, it is enabled, as of
-  # gcc 4.5.0 20090517, and it provokes warnings in cat.c, dd.c, truncate.c
-  gl_WARN_ADD([-Wno-logical-op])
-
-  # False positives about our use of [1] for arbitrary length arrays
-  # embedded in structs.
-  gl_WARN_ADD([-Wno-array-bounds])
-
-  # This is a warning about GCC being unable to optimize a loop.  It
-  # is not a bug.
-  gl_WARN_ADD([-Wno-unsafe-loop-optimizations])
-
-  gl_WARN_ADD([-fdiagnostics-show-option])
-
-  AC_SUBST([WARN_CFLAGS])
-
-  AC_DEFINE([lint], [1], [Define to 1 if the compiler is checking for lint.])
-  AC_DEFINE([_FORTIFY_SOURCE], [2],
-    [enable compile-time and run-time bounds-checking, and some warnings])
-  AC_DEFINE([GNULIB_PORTCHECK], [1], [enable some gnulib portability checks])
-fi
 
 AC_C_PROTOTYPES
 test "x$U" != "x" && AC_MSG_ERROR([Compiler not ANSI compliant])
 
 AM_PROG_CC_C_O
+
+AC_ARG_ENABLE([werror],
+    [AS_HELP_STRING([--enable-werror],
+                    [turn on lots of GCC warnings (for developers)])],
+     [case $enableval in
+      yes|no) ;;
+      *)      AC_MSG_ERROR([bad value $enableval for werror option]) ;;
+      esac
+      gcc_warnings=$enableval],
+      [gcc_warnings=no]
+)
+WARN_CFLAGS="-Wall"
+AC_SUBST([WARN_CFLAGS])
+if test "x$gcc_warnings" = "xyes"; then
+    WERROR_CFLAGS="-Werror"
+fi
+AC_SUBST([WERROR_CFLAGS])
 
 dnl Work out how to specify the linker script to the linker.
 VERSION_SCRIPT_FLAGS=-Wl,--version-script=
@@ -180,7 +125,7 @@ AS_IF([test "x$with_readline" != xno],
 
 dnl For i18n.
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.17])
+AM_GNU_GETTEXT_VERSION([0.21])
 AM_ICONV
 
 dnl libxml2 (optional).
@@ -557,7 +502,6 @@ AC_CONFIG_FILES([Makefile
                  extra-tests/Makefile
                  generator/Makefile
                  gnulib/lib/Makefile
-                 gnulib/tests/Makefile
                  images/Makefile
                  include/Makefile
                  lib/Makefile

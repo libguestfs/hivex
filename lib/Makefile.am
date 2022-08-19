@@ -42,12 +42,13 @@ libhivex_la_SOURCES = \
 
 libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
+	-pthread \
 	-version-info 0:0:0 \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
 	$(LTLIBICONV) \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
-libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS) -pthread
 libhivex_la_CPPFLAGS = \
   -I$(top_srcdir)/gnulib/lib \
   -I$(top_srcdir)/include \

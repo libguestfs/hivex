@@ -6,7 +6,7 @@ Fuzzing hivex using the American Fuzzy Lop (afl) fuzzer
 
 You will need to recompile hivex with afl instrumentation:
 
-  ./autogen.sh CC=/usr/bin/afl-gcc CXX=/usr/bin/afl-g++
+  ./configure CC=/usr/bin/afl-gcc CXX=/usr/bin/afl-g++
   make clean
   make
 

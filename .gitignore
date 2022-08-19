@@ -43,7 +43,6 @@ Makefile.in
 /generator/.pod2text.data.version.2
 /generator/stamp-generator
 /GNUmakefile
-/gnulib
 /hivex-*.tar.gz
 /html/hivex.3.html
 /html/hivexget.1.html
@@ -63,7 +62,6 @@ Makefile.in
 /lib/tools/*.opt
 /libtool
 /ltmain.sh
-/m4/gnulib-cache.m4
 /m4/intmax.m4
 /m4/libtool.m4
 /m4/lt~obsolete.m4
@@ -98,14 +96,12 @@ Makefile.in
 /perl/MYMETA.yml
 /perl/pm_to_blib
 /po/*.gmo
-/po/Makevars.template
 /po/POTFILES
 /po/remove-potcdate.sed
 /po/stamp-it
 /po/stamp-po
 /po/LINGUAS
 /po/Makefile.in.in
-/po/Makevars
 /po/Rules-quot
 /po/boldquot.sed
 /po/en@boldquot.header

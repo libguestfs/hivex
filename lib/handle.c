@@ -31,13 +31,17 @@
 #include <errno.h>
 #include <assert.h>
 #include <iconv.h>
-#include <glthread/lock.h>
+#include <pthread.h>
 
 #ifdef HAVE_MMAP
 #include <sys/mman.h>
 #else
 /* On systems without mmap (and munmap), use a replacement function. */
 #include "mmap.h"
+#endif
+
+#ifndef O_BINARY
+#define O_BINARY 0
 #endif
 
 #include "full-read.h"
@@ -67,7 +71,7 @@ header_checksum (const hive_h *h)
 iconv_t *
 _hivex_get_iconv (hive_h *h, recode_type t)
 {
-  gl_lock_lock (h->iconv_cache[t].mutex);
+  pthread_mutex_lock (&h->iconv_cache[t].mutex);
   if (h->iconv_cache[t].handle == NULL) {
     if (t == utf8_to_latin1)
       h->iconv_cache[t].handle = iconv_open ("LATIN1", "UTF-8");
@@ -87,7 +91,7 @@ _hivex_get_iconv (hive_h *h, recode_type t)
 void
 _hivex_release_iconv (hive_h *h, recode_type t)
 {
-  gl_lock_unlock (h->iconv_cache[t].mutex);
+  pthread_mutex_unlock (&h->iconv_cache[t].mutex);
 }
 
 hive_h *
@@ -192,8 +196,8 @@ hivex_open (const char *filename, int flags)
     goto error;
   }
 
-  for (int t=0; t<nr_recode_types; t++) {
-    gl_lock_init (h->iconv_cache[t].mutex);
+  for (int t = 0; t < nr_recode_types; t++) {
+    pthread_mutex_init (&h->iconv_cache[t].mutex, NULL);
     h->iconv_cache[t].handle = NULL;
   }
 
