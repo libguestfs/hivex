@@ -9,6 +9,7 @@
 *.cmo
 *.cmx
 *.cmxa
+*.exe
 *.la
 *.lo
 *.log
