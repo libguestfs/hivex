@@ -23,6 +23,12 @@ EXTRA_DIST = \
 	hivex.syms \
 	local/hivex.pc.in
 
+AM_CPPFLAGS = \
+	-I$(top_srcdir)/gnulib/lib \
+	-I$(top_srcdir)/include \
+	-I$(top_builddir)/gnulib/lib \
+	-I$(srcdir)
+
 lib_LTLIBRARIES = libhivex.la
 
 libhivex_la_SOURCES = \
@@ -49,11 +55,6 @@ libhivex_la_LDFLAGS = \
 	$(LTLIBINTL) \
 	$(LTLIBTHREAD)
 libhivex_la_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS) -pthread
-libhivex_la_CPPFLAGS = \
-  -I$(top_srcdir)/gnulib/lib \
-  -I$(top_srcdir)/include \
-  -I$(top_builddir)/gnulib/lib \
-  -I$(srcdir)
 
 # Pkgconfig.
 
