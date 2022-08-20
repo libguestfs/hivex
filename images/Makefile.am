@@ -30,9 +30,12 @@ EXTRA_DIST = \
 # binary blob.
 noinst_PROGRAMS = mklarge
 mklarge_SOURCES = mklarge.c
-mklarge_CFLAGS = \
-	-I$(srcdir)/../include \
-	$(WARN_CFLAGS) $(WERROR_CFLAGS)
+mklarge_CPPFLAGS = \
+	-I$(top_srcdir)/gnulib/lib \
+	-I$(top_srcdir)/include \
+	-I$(top_builddir)/gnulib/lib \
+	-I$(srcdir)
+mklarge_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 mklarge_LDADD = ../lib/libhivex.la
 
 noinst_DATA = large
