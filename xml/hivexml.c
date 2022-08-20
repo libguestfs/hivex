@@ -205,7 +205,7 @@ filetime_to_8601 (int64_t windows_ticks)
     exit (EXIT_FAILURE);
   }
 
-  if (strftime (ret, TIMESTAMP_BUF_LEN, "%FT%TZ", tm) == 0) {
+  if (strftime (ret, TIMESTAMP_BUF_LEN, "%Y-%m-%dT%H:%M:%SZ", tm) == 0) {
     perror ("strftime");
     exit (EXIT_FAILURE);
   }
