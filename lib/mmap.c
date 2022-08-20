@@ -13,6 +13,8 @@
  * Lesser General Public License for more details.
  */
 
+#include <config.h>
+
 #include "hivex.h"
 #include "hivex-internal.h"
 #include "mmap.h"
