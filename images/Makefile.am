@@ -18,7 +18,12 @@
 # Old RHEL 5 autoconf doesn't have builddir.
 builddir ?= $(top_builddir)/images
 
-EXTRA_DIST = minimal rlenvalue_test_hive special mkzero/Makefile mkzero/mkzero.c
+EXTRA_DIST = \
+	minimal \
+	rlenvalue_test_hive \
+	special \
+	mkzero/Makefile \
+	mkzero/mkzero.c
 
 # 'large' is a large hive used for testing purposes.  It is generated
 # by the mklarge C program, to avoid having to distribute this large

@@ -32,10 +32,10 @@ AM_CPPFLAGS = \
 lib_LTLIBRARIES = libhivex.la
 
 libhivex_la_SOURCES = \
+	../include/hivex.h \
 	byte_conversions.h \
 	gettext.h \
 	handle.c \
-	../include/hivex.h \
 	hivex-internal.h \
 	mmap.h \
 	node.c \
@@ -46,7 +46,7 @@ libhivex_la_SOURCES = \
 	visit.c \
 	write.c
 
-libhivex_la_LIBADD =  ../gnulib/lib/libgnu.la $(LTLIBOBJS)
+libhivex_la_LIBADD = ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-pthread \
 	-version-info 0:0:0 \
