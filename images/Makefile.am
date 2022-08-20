@@ -45,9 +45,9 @@ endif
 
 noinst_DATA = large
 
-large: minimal mklarge
+large: mklarge$(EXEEXT)
 	cmp -s $(srcdir)/minimal $(builddir)/minimal || \
 	    cp $(srcdir)/minimal $(builddir)/minimal
-	./mklarge $(builddir)/minimal $(builddir)/large
+	./mklarge$(EXEEXT) $(builddir)/minimal $(builddir)/large
 
 CLEANFILES = $(noinst_DATA)
