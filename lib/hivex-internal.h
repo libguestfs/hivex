@@ -19,6 +19,7 @@
 #ifndef HIVEX_INTERNAL_H_
 #define HIVEX_INTERNAL_H_
 
+#include <stdio.h>
 #include <stdarg.h>
 #include <stddef.h>
 #include <string.h>
