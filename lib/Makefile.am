@@ -50,6 +50,7 @@ libhivex_la_LIBADD = ../gnulib/lib/libgnu.la $(LTLIBOBJS)
 libhivex_la_LDFLAGS = \
 	-pthread \
 	-version-info 0:0:0 \
+	-no-undefined \
 	$(VERSION_SCRIPT_FLAGS)$(srcdir)/hivex.syms \
 	$(LTLIBICONV) \
 	$(LTLIBINTL) \
