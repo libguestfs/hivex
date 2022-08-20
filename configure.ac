@@ -95,6 +95,17 @@ AC_REPLACE_FUNCS([mmap])
 dnl Functions.
 AC_CHECK_FUNCS([bindtextdomain])
 
+dnl Is this Windows (or mingw cross-compilation)?
+AC_MSG_CHECKING([if the target is Windows])
+AS_CASE([$host_os],
+    [mingw*|msys*], [
+        is_windows=yes
+    ],
+    [is_windows=no]
+)
+AC_MSG_RESULT([$is_windows])
+AM_CONDITIONAL([IS_WINDOWS], [test "x$is_windows" = "xyes"])
+
 dnl Check for pod2man and pod2text.
 AC_CHECK_PROG([POD2MAN],[pod2man],[pod2man],[no])
 test "x$POD2MAN" = "xno" &&

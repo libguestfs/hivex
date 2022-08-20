@@ -21,9 +21,7 @@ builddir ?= $(top_builddir)/images
 EXTRA_DIST = \
 	minimal \
 	rlenvalue_test_hive \
-	special \
-	mkzero/Makefile \
-	mkzero/mkzero.c
+	special
 
 # 'large' is a large hive used for testing purposes.  It is generated
 # by the mklarge C program, to avoid having to distribute this large
@@ -37,6 +35,13 @@ mklarge_CPPFLAGS = \
 	-I$(srcdir)
 mklarge_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
 mklarge_LDADD = ../lib/libhivex.la
+
+if IS_WINDOWS
+noinst_PROGRAMS += mkzero
+mkzero_SOURCES = mkzero.c
+mkzero_CFLAGS = $(WARN_CFLAGS) $(WERROR_CFLAGS)
+mkzero_LDADD = -lntdll
+endif
 
 noinst_DATA = large
 
