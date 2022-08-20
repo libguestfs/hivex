@@ -44,6 +44,10 @@
 #define O_BINARY 0
 #endif
 
+#ifndef O_NOCTTY
+#define O_NOCTTY 0
+#endif
+
 #include "full-read.h"
 #include "full-write.h"
 #include "c-ctype.h"
@@ -127,7 +131,7 @@ hivex_open (const char *filename, int flags)
 #endif
   if (h->fd == -1)
     goto error;
-#ifndef O_CLOEXEC
+#ifdef FD_CLOEXEC
   fcntl (h->fd, F_SETFD, FD_CLOEXEC);
 #endif
 
@@ -502,7 +506,7 @@ hivex_commit (hive_h *h, const char *filename, int flags)
 #endif
   if (fd == -1)
     return -1;
-#ifndef O_CLOEXEC
+#ifdef FD_CLOEXEC
   fcntl (fd, F_SETFD, FD_CLOEXEC);
 #endif
 
