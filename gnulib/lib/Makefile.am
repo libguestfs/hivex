@@ -21,6 +21,7 @@
 
 noinst_LTLIBRARIES = libgnu.la
 libgnu_la_SOURCES = \
+	byteswap.h \
 	c-ctype.h \
 	full-read.c \
 	full-read.h \
