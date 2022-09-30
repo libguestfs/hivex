@@ -4,21 +4,22 @@
 #
 # Translators:
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2012
+# Joachim Philipp <joachim.philipp@gmail.com>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-02 09:12+0100\n"
-"PO-Revision-Date: 2015-02-21 07:28-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: German (http://www.transifex.com/projects/p/hivex/language/"
-"de/)\n"
+"PO-Revision-Date: 2022-09-30 14:19+0000\n"
+"Last-Translator: Joachim Philipp <joachim.philipp@gmail.com>\n"
+"Language-Team: German <https://translate.fedoraproject.org/projects/hivex/"
+"master/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: sh/hivexsh.c:161
 #, c-format
@@ -31,31 +32,42 @@ msgid ""
 "      'quit' to quit the shell\n"
 "\n"
 msgstr ""
+"\n"
+"Willkommen zu hivexsh, der hivex interaktiven Shell, um binäre \n"
+"hive-Dateien der Windows Registry  zu untersuchen.\n"
+"\n"
+"Geben Sie ein:  'help' ein für eine Zusammenfassung der Hilfe\n"
+"'quit' um die Shell zu beenden\n"
+"\n"
 
 #: sh/hivexsh.c:275
 #, c-format
 msgid "hivexsh: error getting parent of node %zu\n"
-msgstr ""
+msgstr "hivexsh: Fehler beim Abruf des parents von Knoten %zu\n"
 
 #: sh/hivexsh.c:285
 #, c-format
 msgid "hivexsh: error getting node name of node %zx\n"
-msgstr ""
+msgstr "hivexsh: Fehler beim Abruf des Knotennamens von Knoten %zx\n"
 
 #: sh/hivexsh.c:424
 #, c-format
 msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
 msgstr ""
+"hivexsh: Sie müssen erst eine hive-Datei laden mit dem Befehl 'load hivefile'"
+"\n"
 
 #: sh/hivexsh.c:445
 #, c-format
 msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
 msgstr ""
+"hivexsh: Unbekannter Befehl '%s', benutzen Sie 'help' für eine "
+"Zusammenfassung der Hilfe\n"
 
 #: sh/hivexsh.c:455
 #, c-format
 msgid "hivexsh: load: no hive file name given to load\n"
-msgstr ""
+msgstr "hivexsh: load: kein hive-Dateiname zum Laden angegeben\n"
 
 #: sh/hivexsh.c:471
 #, c-format
@@ -68,6 +80,13 @@ msgid ""
 "which fails into a bug report at https://bugzilla.redhat.com/\n"
 "\n"
 msgstr ""
+"hivexsh: Fehler beim Öffnen der hive Datei: %s: %m\n"
+"\n"
+"Wenn Sie sicher sind, dass diese Datei eine gültige Windows Binärdatei \n"
+"(_keine_  Regedit *.reg Datei) ist, dann rufen Sie den Befehl erneut auf \n"
+"mit der Option '-d' und hängen den gesamten Output zusammen mit der \n"
+"hive-Datei an einen Bugreport unter https://bugzilla.redhat.com an.\n"
+"\n"
 
 #: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
 #, c-format
