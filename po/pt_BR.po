@@ -122,9 +122,9 @@ msgid "%s: %s: key not found\n"
 msgstr "%s: %s: chave não encontrada\n"
 
 #: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
-msgstr "%s: %s: parâmetro inteiro inválido (%s retornou %d)\n"
+msgstr "%s: %s: parâmetro inteiro inválido (%s retornou %u)\n"
 
 #: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
 #, c-format
@@ -147,7 +147,7 @@ msgstr ""
 #: sh/hivexsh.c:1069
 #, c-format
 msgid "hivexsh: setval: trailing garbage after hex string\n"
-msgstr ""
+msgstr "hivexsh: setval: lixo ao final após string hex\n"
 
 #: sh/hivexsh.c:1076
 #, c-format
