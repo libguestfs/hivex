@@ -1,0 +1,148 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# This file is distributed under the same license as the hivex package.
+# Hela Basa <r45xveza@pm.me>, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: hivex 1.3.19\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-29 11:16+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: si\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: sh/hivexsh.c:161
+#, c-format
+msgid ""
+"\n"
+"Welcome to hivexsh, the hivex interactive shell for examining\n"
+"Windows Registry binary hive files.\n"
+"\n"
+"Type: 'help' for help summary\n"
+"      'quit' to quit the shell\n"
+"\n"
+msgstr ""
+
+#: sh/hivexsh.c:275
+#, c-format
+msgid "hivexsh: error getting parent of node %zu\n"
+msgstr ""
+
+#: sh/hivexsh.c:285
+#, c-format
+msgid "hivexsh: error getting node name of node %zx\n"
+msgstr ""
+
+#: sh/hivexsh.c:424
+#, c-format
+msgid "hivexsh: you must load a hive file first using 'load hivefile'\n"
+msgstr ""
+
+#: sh/hivexsh.c:445
+#, c-format
+msgid "hivexsh: unknown command '%s', use 'help' for help summary\n"
+msgstr ""
+
+#: sh/hivexsh.c:455
+#, c-format
+msgid "hivexsh: load: no hive file name given to load\n"
+msgstr ""
+
+#: sh/hivexsh.c:471
+#, c-format
+msgid ""
+"hivexsh: failed to open hive file: %s: %m\n"
+"\n"
+"If you think this file is a valid Windows binary hive file (_not_\n"
+"a regedit *.reg file) then please run this command again using the\n"
+"hivexsh option '-d' and attach the complete output _and_ the hive file\n"
+"which fails into a bug report at https://bugzilla.redhat.com/\n"
+"\n"
+msgstr ""
+
+#: sh/hivexsh.c:504 sh/hivexsh.c:613 sh/hivexsh.c:1099
+#, c-format
+msgid "hivexsh: '%s' command should not be given arguments\n"
+msgstr ""
+
+#: sh/hivexsh.c:546
+#, c-format
+msgid ""
+"%s: %s: \\ characters in path are doubled - are you escaping the path "
+"parameter correctly?\n"
+msgstr ""
+
+#: sh/hivexsh.c:584
+#, c-format
+msgid "hivexsh: cd: subkey '%s' not found\n"
+msgstr ""
+
+#: sh/hivexsh.c:602
+#, c-format
+msgid ""
+"Navigate through the hive's keys using the 'cd' command, as if it\n"
+"contained a filesystem, and use 'ls' to list the subkeys of the\n"
+"current key.  Full documentation is in the hivexsh(1) manual page.\n"
+msgstr ""
+
+#: sh/hivexsh.c:681
+#, c-format
+msgid "%s: %s: key not found\n"
+msgstr ""
+
+#: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
+#, c-format
+msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
+msgstr ""
+
+#: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
+#, c-format
+msgid "%s: %s: integer out of range\n"
+msgstr ""
+
+#: sh/hivexsh.c:900 sh/hivexsh.c:918
+#, c-format
+msgid "hivexsh: setval: unexpected end of input\n"
+msgstr ""
+
+#: sh/hivexsh.c:939 sh/hivexsh.c:958
+#, c-format
+msgid ""
+"hivexsh: string(utf16le): only 7 bit ASCII strings are supported for input\n"
+msgstr ""
+
+#: sh/hivexsh.c:1069
+#, c-format
+msgid "hivexsh: setval: trailing garbage after hex string\n"
+msgstr ""
+
+#: sh/hivexsh.c:1076
+#, c-format
+msgid ""
+"hivexsh: setval: cannot parse value string, please refer to the man page "
+"hivexsh(1) for help: %s\n"
+msgstr ""
+
+#: sh/hivexsh.c:1105
+#, c-format
+msgid "hivexsh: del: the root node cannot be deleted\n"
+msgstr ""
+
+#: xml/hivexml.c:80
+#, c-format
+msgid "%s: failed to write XML document\n"
+msgstr ""
+
+#: xml/hivexml.c:116
+#, c-format
+msgid "hivexml: missing name of input file\n"
+msgstr ""
+
+#: xml/hivexml.c:135
+#, c-format
+msgid "xmlNewTextWriterFilename: failed to create XML writer\n"
+msgstr ""
