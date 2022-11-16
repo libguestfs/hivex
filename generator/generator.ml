@@ -34,7 +34,9 @@
  * default.  (2) Read the resources at http://ocaml-tutorial.org/
  *)
 
+#directory "+unix";;
 #load "unix.cma";;
+#directory "+str";;
 #load "str.cma";;
 
 open Unix
@@ -683,7 +685,7 @@ let check_functions () =
   (* Check short descriptions. *)
   List.iter (
     fun (name, _, shortdesc, _) ->
-      if shortdesc.[0] <> Char.lowercase shortdesc.[0] then
+      if shortdesc.[0] <> Char.lowercase_ascii shortdesc.[0] then
         failwithf "short description of %s should begin with lowercase." name;
       let c = shortdesc.[String.length shortdesc-1] in
       if c = '\n' || c = '.' then
@@ -698,7 +700,7 @@ let check_functions () =
   ) functions
 
 (* 'pr' prints to the current output file. *)
-let chan = ref Pervasives.stdout
+let chan = ref Stdlib.stdout
 let lines = ref 0
 let pr fs =
   ksprintf
@@ -2202,7 +2204,7 @@ XSLoader::load ('Win::Hivex');
 
   List.iter (
     fun (_, flag, _) ->
-      pr "\n                        [%s => 1,]" (String.lowercase flag)
+      pr "\n                        [%s => 1,]" (String.lowercase_ascii flag)
   ) open_flags;
 
   pr ")
@@ -2232,7 +2234,7 @@ sub open {
   List.iter (
     fun (n, flag, description) ->
       pr "  # %s\n" description;
-      pr "  $flags += %d if $flags{%s};\n" n (String.lowercase flag)
+      pr "  $flags += %d if $flags{%s};\n" n (String.lowercase_ascii flag)
   ) open_flags;
 
   pr "\
@@ -3337,7 +3339,7 @@ class Hivex(object):
     def __init__ (self, filename";
 
   List.iter (
-    fun (_, flag, _) -> pr ", %s = False" (String.lowercase flag)
+    fun (_, flag, _) -> pr ", %s = False" (String.lowercase_ascii flag)
   ) open_flags;
 
   pr "):
@@ -3348,7 +3350,7 @@ class Hivex(object):
   List.iter (
     fun (n, flag, description) ->
       pr "        # %s\n" description;
-      pr "        if %s: flags += %d\n" (String.lowercase flag) n
+      pr "        if %s: flags += %d\n" (String.lowercase_ascii flag) n
   ) open_flags;
 
   pr "        self._o = libhivexmod.open (filename, flags)
@@ -3579,7 +3581,7 @@ get_values (VALUE valuesv, size_t *nr_values)
           List.iter (
             fun (n, flag, _) ->
               pr "  if (RTEST (rb_hash_lookup (flagsv, ID2SYM (rb_intern (\"%s\")))))\n"
-                (String.lowercase flag);
+                (String.lowercase_ascii flag);
               pr "    flags += %d;\n" n
           ) open_flags
         | AUnusedFlags -> ()
@@ -3792,7 +3794,7 @@ let output_to filename k =
   chan := open_out filename_new;
   k ();
   close_out !chan;
-  chan := Pervasives.stdout;
+  chan := Stdlib.stdout;
 
   (* Is the new file different from the current file? *)
   if Sys.file_exists filename && files_equal filename filename_new then

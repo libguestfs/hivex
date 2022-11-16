@@ -57,11 +57,11 @@ let () =
     let len' = len * 2 + 2 in
     let str' = Bytes.create len' in
     for i = 0 to len-1 do
-      str'.[i*2] <- str.[i];
-      str'.[i*2+1] <- '\000'
+      Bytes.set str' (i*2) str.[i];
+      Bytes.set str' (i*2+1) '\000'
     done;
-    str'.[len'-2] <- '\000';
-    str'.[len'-1] <- '\000';
+    Bytes.set str' (len'-2) '\000';
+    Bytes.set str' (len'-1) '\000';
     Bytes.to_string str'
   in
   iter 0 0 (Hivex.root h);
