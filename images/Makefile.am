@@ -19,6 +19,7 @@
 builddir ?= $(top_builddir)/images
 
 EXTRA_DIST = \
+	mkrlenvalue_test_hive.py \
 	minimal \
 	rlenvalue_test_hive \
 	special

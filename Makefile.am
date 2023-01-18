@@ -52,8 +52,21 @@ if ALWAYS_FALSE
 SUBDIRS += extra-tests
 endif
 
-EXTRA_DIST = LICENSE README.md run.in \
-	po/zanata-pull.sh po/zanata.xml
+EXTRA_DIST = \
+	.gitignore \
+	FUZZING \
+	LICENSE \
+	README.md \
+	SECURITY \
+	cfg.mk \
+	html/pod.css \
+	m4/.gitignore \
+	run.in \
+	po/*.po \
+	po/Makevars.template \
+	po/zanata-pull.sh \
+	po/zanata.xml \
+	.x-sc_prohibit_magic_number_exit
 
 # Maintainer website update.
 HTMLFILES = \
