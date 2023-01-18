@@ -55,11 +55,6 @@ endif
 EXTRA_DIST = LICENSE README.md run.in \
 	po/zanata-pull.sh po/zanata.xml
 
-# Generate the ChangeLog automatically from the gitlog.
-dist-hook:
-	$(top_srcdir)/build-aux/gitlog-to-changelog > ChangeLog
-	cp ChangeLog $(distdir)/ChangeLog
-
 # Maintainer website update.
 HTMLFILES = \
 	html/hivex.3.html \
