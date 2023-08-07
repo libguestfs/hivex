@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # -*- ruby -*-
 
-require File::join(File::dirname(__FILE__), 'test_helper')
+require 'minitest/autorun'
+require 'hivex'
 
 class TestRLenValue < Minitest::Test
   def test_RLenValue

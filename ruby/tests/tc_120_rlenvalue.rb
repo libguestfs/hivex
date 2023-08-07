@@ -21,7 +21,8 @@
 # length and offset for this value cell should be 37 bytes, position
 # 8712.
 
-require File::join(File::dirname(__FILE__), 'test_helper')
+require 'minitest/autorun'
+require 'hivex'
 
 class TestRLenValue < Minitest::Test
   def test_RLenValue
