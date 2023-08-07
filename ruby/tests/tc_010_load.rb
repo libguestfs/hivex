@@ -17,7 +17,7 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestLoad < MiniTest::Unit::TestCase
+class TestLoad < Minitest::Test
   def test_load
     h = Hivex::open("../images/minimal", {})
     refute_nil (h)

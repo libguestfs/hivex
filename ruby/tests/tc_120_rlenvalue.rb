@@ -23,7 +23,7 @@
 
 require File::join(File::dirname(__FILE__), 'test_helper')
 
-class TestRLenValue < MiniTest::Unit::TestCase
+class TestRLenValue < Minitest::Test
   def test_RLenValue
     h = Hivex::open(File::join(ENV['abs_srcdir'], '..', 'images', 'rlenvalue_test_hive'), {})
     refute_nil(h)
