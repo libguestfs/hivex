@@ -136,7 +136,7 @@ AS_IF([test "x$with_readline" != xno],
 
 dnl For i18n.
 AM_GNU_GETTEXT([external])
-AM_GNU_GETTEXT_VERSION([0.21])
+AM_GNU_GETTEXT_VERSION([0.19])
 AM_ICONV
 
 dnl libxml2 (optional).
