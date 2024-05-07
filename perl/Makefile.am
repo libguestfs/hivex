@@ -55,6 +55,7 @@ Makefile-pl: Makefile.PL
 	-[ $(srcdir) != $(builddir) ] && cp -rsu $(abs_srcdir)/. $(builddir)/.
 	perl Makefile.PL \
 	    CC="$(CC)" \
+	    LD="$(CC)" \
 	    INSTALLDIRS=$(INSTALLDIRS) \
 	    PREFIX=$(prefix)
 
