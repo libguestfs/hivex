@@ -50,9 +50,13 @@ INSTALLDIRS = site
 all: Makefile-pl src_deps
 	$(MAKE) -f Makefile-pl
 
+# For overriding CC see: https://stackoverflow.com/a/65729336
 Makefile-pl: Makefile.PL
 	-[ $(srcdir) != $(builddir) ] && cp -rsu $(abs_srcdir)/. $(builddir)/.
-	perl Makefile.PL INSTALLDIRS=$(INSTALLDIRS) PREFIX=$(prefix)
+	perl Makefile.PL \
+	    CC="$(CC)" \
+	    INSTALLDIRS=$(INSTALLDIRS) \
+	    PREFIX=$(prefix)
 
 # No!  Otherwise it is deleted before the clean-local rule runs.
 #CLEANFILES = Makefile-pl
