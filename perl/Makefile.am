@@ -53,7 +53,7 @@ all: Makefile-pl src_deps
 # For overriding CC see: https://stackoverflow.com/a/65729336
 Makefile-pl: Makefile.PL
 	-[ $(srcdir) != $(builddir) ] && cp -rsu $(abs_srcdir)/. $(builddir)/.
-	perl Makefile.PL \
+	$(PERL) Makefile.PL \
 	    CC="$(CC)" \
 	    LD="$(CC)" \
 	    INSTALLDIRS=$(INSTALLDIRS) \
