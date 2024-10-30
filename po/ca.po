@@ -117,9 +117,9 @@ msgid "%s: %s: key not found\n"
 msgstr "%s: %s: clau no trobada\n"
 
 #: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
-msgstr "%s: %s: paràmetre enter no vàlid (%s va retornar %d)\n"
+msgstr "%s: %s: paràmetre enter no vàlid (%s retorna %u)\n"
 
 #: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
 #, c-format
