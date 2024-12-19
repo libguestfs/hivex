@@ -375,9 +375,10 @@ hivex_open (const char *filename, int flags)
 
       if (blkoff + seg_len > off + page_size) {
         SET_ERRNO (ENOTSUP,
-                   "%s, the block at 0x%zx size %" PRIu32
-                   " extends beyond the current page, bad registry",
-                   filename, blkoff, le32toh (block->seg_len));
+                   "%s, the block at 0x%zx size %zu "
+                   "extends beyond the current page (0x%zx + %zu), "
+                   "bad registry",
+                   filename, blkoff, seg_len, off, page_size);
         goto error;
       }
 
