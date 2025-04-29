@@ -104,7 +104,7 @@ let hive_types = [
   9, "full_resource_description", "FULL_RESOURCE_DESCRIPTOR",
     "Resource descriptor";
   10, "resource_requirements_list", "RESOURCE_REQUIREMENTS_LIST",
-    "Resouce requirements list";
+    "Resource requirements list";
   11, "qword", "QWORD",
     "QWORD (64 bit integer), unspecified endianness but usually little endian"
 ]
@@ -692,7 +692,7 @@ let check_functions () =
         failwithf "short description of %s should not end with . or \\n." name
   ) functions;
 
-  (* Check long dscriptions. *)
+  (* Check long descriptions. *)
   List.iter (
     fun (name, _, _, longdesc) ->
       if longdesc.[String.length longdesc-1] = '\n' then

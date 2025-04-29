@@ -381,7 +381,7 @@ sub _delete_node
     ($h, $path) = _map_handle ($hmap, $path);
 
     my $node = _node_lookup ($h, $path);
-    # Not an error to delete a non-existant node.
+    # Not an error to delete a non-existent node.
     return unless defined $node;
 
     # However you cannot delete the root node.
@@ -708,7 +708,7 @@ defaults to UTF-16LE.
 The file itself that is imported should be in the local encoding for
 files (usually UTF-8 on modern Linux systems).  This means if you
 receive a regedit file from a Windows system, you may sometimes have
-to reencode it:
+to re-encode it:
 
  iconv -f utf-16le -t utf-8 < input.reg | dos2unix > output.reg
 

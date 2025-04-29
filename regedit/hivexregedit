@@ -257,7 +257,7 @@ my $unsafe;
 Use heuristics to tolerate certain levels of corruption within hives.
 
 This is unsafe but may allow to export/merge valid keys/values in an
-othewise corrupted hive.
+otherwise corrupted hive.
 
 =cut
 

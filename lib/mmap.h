@@ -63,7 +63,7 @@ extern void *hivex__rpl_mmap (hive_h *h, void *p_addr, size_t len, int prot, int
  * Parameters:
  *   h               : Hive handle
  *   void *p_addr    : Startaddress of mapping created with mmap
- *   size_t len      : Lenght of mapping to be unmapped. Unsupported. The whole
+ *   size_t len      : Length of mapping to be unmapped. Unsupported. The whole
  *                     mapping will always be unmapped.
  *
  * Returns:
