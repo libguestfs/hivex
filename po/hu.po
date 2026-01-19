@@ -5,21 +5,22 @@
 # Translators:
 # Máté Gelei <geleimate@fedoraproject.org>, 2011
 # Meskó Balázs <meskobalazs@gmail.com>, 2018. #zanata
+# Mate Babos <hunorjani17@gmail.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.11\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-31 10:25+0100\n"
-"PO-Revision-Date: 2018-12-06 06:58-0500\n"
-"Last-Translator: Copied by Zanata <copied-by-zanata@zanata.org>\n"
-"Language-Team: Hungarian (http://www.transifex.com/projects/p/hivex/language/"
-"hu/)\n"
+"PO-Revision-Date: 2026-01-19 17:58+0000\n"
+"Last-Translator: Mate Babos <hunorjani17@gmail.com>\n"
+"Language-Team: Hungarian <https://translate.fedoraproject.org/projects/hivex/"
+"master/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Zanata 4.6.2\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: sh/hivexsh.c:161
 #, c-format
@@ -127,9 +128,9 @@ msgid "%s: %s: key not found\n"
 msgstr "%s: %s: a kulcs nem található\n"
 
 #: sh/hivexsh.c:873 sh/hivexsh.c:977 sh/hivexsh.c:1003 sh/hivexsh.c:1032
-#, fuzzy, c-format
+#, c-format
 msgid "%s: %s: invalid integer parameter (%s returned %u)\n"
-msgstr "%s: %s: érvénytelen egész szám paraméter (%s visszatérési értéke %d)\n"
+msgstr "%s: %s: érvénytelen egész szám paraméter (%s visszatérési értéke %u)\n"
 
 #: sh/hivexsh.c:878 sh/hivexsh.c:983 sh/hivexsh.c:1009 sh/hivexsh.c:1038
 #, c-format
