@@ -81,6 +81,12 @@ main (int argc, char *argv[])
   hive_h *h;
   char name[4096] = { '\0' };
 
+  if (argc != 3) {
+    fprintf (stderr, "Make large hive for testing.\n");
+    fprintf (stderr, "Usage: mklarge minimal large\n");
+    exit (EXIT_FAILURE);
+  }
+
   h = hivex_open (argv[1], HIVEX_OPEN_WRITE);
   if (h == NULL) {
     perror (argv[1]);
