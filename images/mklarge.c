@@ -1,5 +1,5 @@
 /* mklarge - Make a large hive for testing purposes.
- * Copyright (C) 2010 Red Hat Inc.
+ * Copyright (C) 2010-2026 Red Hat Inc.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -63,14 +63,14 @@ iter (hive_h *h, int depth, int posn, hive_node_h parent, char *name)
       node = hivex_node_add_child (h, parent, name);
       if (node == 0) {
         perror ("mklarge: hivex_node_add_child");
-        exit (1);
+        exit (EXIT_FAILURE);
       }
       iter (h, depth+1, i, node, name);
     }
 
     if (hivex_node_set_values (h, parent, depth, values, 0) == -1) {
       perror ("mklarge: hivex_node_set_values");
-      exit (1);
+      exit (EXIT_FAILURE);
     }
   }
 }
@@ -84,20 +84,20 @@ main (int argc, char *argv[])
   h = hivex_open (argv[1], HIVEX_OPEN_WRITE);
   if (h == NULL) {
     perror (argv[1]);
-    exit (1);
+    exit (EXIT_FAILURE);
   }
 
   iter (h, 0, 0, hivex_root (h), name);
 
   if (hivex_commit (h, argv[2], 0) == -1) {
     perror (argv[2]);
-    exit (1);
+    exit (EXIT_FAILURE);
   }
 
   if (hivex_close (h) == -1) {
     perror ("mklarge: close");
-    exit (1);
+    exit (EXIT_FAILURE);
   }
 
-  exit (0);
+  exit (EXIT_SUCCESS);
 }
