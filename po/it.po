@@ -3,13 +3,14 @@
 # This file is distributed under the same license as the hivex package.
 # Nathan <nathan95@live.it>, 2026.
 # Salvatore Cocuzza <info@salvatorecocuzza.it>, 2026.
+# Emanuele Petriglia <inbox@emanuelepetriglia.com>, 2026.
 msgid ""
 msgstr ""
 "Project-Id-Version: hivex 1.3.24\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-08-31 10:25+0100\n"
-"PO-Revision-Date: 2026-05-29 16:01+0000\n"
-"Last-Translator: Salvatore Cocuzza <info@salvatorecocuzza.it>\n"
+"PO-Revision-Date: 2026-08-25 10:19+0000\n"
+"Last-Translator: Emanuele Petriglia <inbox@emanuelepetriglia.com>\n"
 "Language-Team: Italian <https://translate.fedoraproject.org/projects/hivex/"
 "master/it/>\n"
 "Language: it\n"
@@ -17,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2026.5\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: sh/hivexsh.c:161
 #, c-format
@@ -30,6 +31,13 @@ msgid ""
 "      'quit' to quit the shell\n"
 "\n"
 msgstr ""
+"\n"
+"Benvenuti in hivexsh, la shell interattiva di hivex per esaminare\n"
+"i file hive binari del Registro di Windows.\n"
+"\n"
+"Digitare: 'help' per un riepilogo dell'aiuto\n"
+"                   'quit' per uscire dalla shell\n"
+"\n"
 
 #: sh/hivexsh.c:275
 #, c-format
