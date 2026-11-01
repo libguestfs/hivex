@@ -4,9 +4,14 @@ To report security bugs, see SECURITY in the top source directory.
 Fuzzing hivex using the American Fuzzy Lop (afl) fuzzer
 =======================================================
 
-You will need to recompile hivex with afl instrumentation:
+You will need to recompile hivex with AFL + Clang instrumentation:
 
-  ./configure CC=/usr/bin/afl-gcc CXX=/usr/bin/afl-g++
+  export AFL_USE_ASAN=1
+  ./configure CC=/usr/bin/afl-clang-lto CXX=/usr/bin/afl-clang-lto++ \
+      --disable-ocaml \
+      --disable-perl \
+      --disable-python \
+      --disable-ruby
   make clean
   make
 
@@ -21,9 +26,9 @@ and as many slaves (-S) as you can:
 Master:
 
   mkdir -p sync_dir
-  afl-fuzz -i testcase_dir -o sync_dir -m 256 -M fuzz01 xml/.libs/hivexml -k @@
+  afl-fuzz -i testcase_dir -o sync_dir -m 0 -M fuzz01 xml/.libs/hivexml -k @@
 
 Slaves:
 
   # replace fuzzNN with fuzz02, fuzz03, etc.
-  afl-fuzz -i testcase_dir -o sync_dir -m 256 -S fuzzNN xml/.libs/hivexml -k @@
+  afl-fuzz -i testcase_dir -o sync_dir -m 0 -S fuzzNN xml/.libs/hivexml -k @@
