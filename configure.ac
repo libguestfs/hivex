@@ -507,10 +507,17 @@ dnl AC_CHECK_PROG([GHC],[ghc],[ghc],[no])
 dnl AM_CONDITIONAL([HAVE_HASKELL],
 dnl     [test "x$GHC" != "xno"])
 
+AC_ARG_ENABLE([fuzzing],
+    AS_HELP_STRING([--enable-fuzzing], [Enable fuzzing (read fuzzing/FUZZING)]),
+    [],
+    [enable_fuzzing=no])
+AM_CONDITIONAL([ENABLE_FUZZING], [test "x$enable_fuzzing" != "xno"])
+
 dnl Produce output files.
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([Makefile
                  extra-tests/Makefile
+                 fuzzing/Makefile
                  generator/Makefile
                  gnulib/lib/Makefile
                  images/Makefile
@@ -552,6 +559,8 @@ dnl AS_ECHO_N(["Java bindings ....................... "])
 dnl if test "x$HAVE_JAVA_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 dnl AS_ECHO_N(["Haskell bindings .................... "])
 dnl if test "x$HAVE_HASKELL" = "x"; then echo "yes"; else echo "no"; fi
+AS_ECHO_N(["Fuzzing (maintainers only) .......... "])
+if test "x$ENABLE_FUZZING_TRUE" = "x"; then echo "yes"; else echo "no"; fi
 echo
 echo "If any optional component is configured 'no' when you expected 'yes'"
 echo "then you should check the preceding messages."

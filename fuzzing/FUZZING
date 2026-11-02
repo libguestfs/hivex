@@ -1,0 +1,45 @@
+To report security bugs, see SECURITY in the top source directory.
+
+
+Fuzzing hivex using the American Fuzzy Lop (AFL++) fuzzer
+=========================================================
+
+The fuzzing/ subdirectory contains support for fast, persistent
+mode fuzzing using AFL++.
+
+You will need to recompile hivex with AFL + Clang instrumentation:
+
+  export AFL_USE_ASAN=1
+  ./configure \
+      --enable-fuzzing \
+      --disable-shared \
+      CC=/usr/bin/afl-clang-fast \
+      CXX=/usr/bin/afl-clang-fast++ \
+      --disable-ocaml \
+      --disable-perl \
+      --disable-python \
+      --disable-ruby
+  make clean
+  make
+
+This should generate a binary 'fuzzing/fuzz-hivex' which uses AFL++
+"persistent mode", see:
+https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.persistent_mode.md
+
+images/minimal and images/special may be used as initial test cases:
+
+  mkdir -p testcase_dir sync_dir
+  cp images/minimal images/special testcase_dir/
+
+Run multiple copies of afl-fuzz.  Usually you should run 1 master (-M)
+and as many slaves (-S) as you can:
+
+Master:
+
+  mkdir -p sync_dir
+  afl-fuzz -i testcase_dir -o sync_dir -m 0 -M fuzz01 fuzzing/fuzz-hivex
+
+Slaves:
+
+  # replace fuzzNN with fuzz02, fuzz03, etc.
+  afl-fuzz -i testcase_dir -o sync_dir -m 0 -S fuzzNN fuzzing/fuzz-hivex
