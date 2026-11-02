@@ -74,6 +74,7 @@ and argt =                              (* Note, cannot be NULL/0 unless it
   | AUnusedFlags                        (* Flags arg that is always 0 *)
   | ASetValues                          (* See hivex_node_set_values. *)
   | ASetValue                           (* See hivex_node_set_value. *)
+  | ABuffer of string                   (* Binary buffer or (void *, size_t) *)
 
 (* Hive types, from:
  * https://secure.wikimedia.org/wikipedia/en/wiki/Windows_Registry#Keys_and_values
@@ -156,6 +157,16 @@ This may allow to read or write registry keys/values that appear intact in an
 otherwise corrupted hive. Use at your own risk.
 
 =back";
+
+  "open_memory", (RHive, [ABuffer "buf"; AOpenFlags]),
+    "open a hive from an in-memory buffer",
+    "\
+This is the same as C<hivex_open> but instead of opening a file, it
+opens a hive from an in-memory buffer.  Note that hivex reads from
+the in-memory buffer while the handle is open so you have to
+ensure the buffer remains valid and is not changed.
+
+C<HIVEX_OPEN_WRITE> is not supported for in-memory buffers.";
 
   "close", (RErrDispose, [AHive]),
     "close a hive handle",
@@ -599,6 +610,7 @@ let name_of_argt = function
   | AOpenFlags | AUnusedFlags -> "flags"
   | ASetValues -> "values"
   | ASetValue -> "val"
+  | ABuffer n -> n
 
 (* Check function names etc. for consistency. *)
 let check_functions () =
@@ -957,6 +969,7 @@ and generate_c_prototype ?(extern = false) name style =
       | AOpenFlags | AUnusedFlags -> pr "int flags"
       | ASetValues -> pr "size_t nr_values, const hive_set_value *values"
       | ASetValue -> pr "const hive_set_value *val"
+      | ABuffer n -> pr "const void *%s, size_t %s_len" n n
   ) (snd style);
   (match fst style with
    | RLenType | RLenTypeVal -> pr ", hive_type *t, size_t *len"
@@ -1664,6 +1677,7 @@ and generate_ocaml_prototype ?(is_external = false) name style =
     | AUnusedFlags -> ()
     | ASetValues -> pr "set_value array -> "
     | ASetValue -> pr "set_value -> "
+    | ABuffer _ -> pr "string -> "
   ) (snd style);
   (match fst style with
    | RErr -> pr "unit" (* all errors are turned into exceptions *)
@@ -1827,6 +1841,9 @@ static void raise_closed (const char *) Noreturn;
             pr "  hive_set_value *values = HiveSetValues_val (valuesv);\n"
         | ASetValue ->
             pr "  hive_set_value *val = HiveSetValue_val (valv);\n"
+        | ABuffer n ->
+           pr "   const void *%s = String_val (%sv);\n" n n;
+           pr "   size_t %s_len = caml_string_len (%sv);\n" n n
       ) (snd style);
       pr "\n";
 
@@ -1894,7 +1911,7 @@ static void raise_closed (const char *) Noreturn;
       List.iter (
         function
         | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
-        | AOpenFlags | AUnusedFlags -> ()
+        | AOpenFlags | AUnusedFlags | ABuffer _ -> ()
         | ASetValues ->
             pr "  free (values);\n";
             pr "\n";
@@ -2365,7 +2382,8 @@ and generate_perl_prototype name style =
       | AHive -> pr "$h"
       | ANode n
       | AValue n
-      | AString n -> pr "$%s" n
+      | AString n
+      | ABuffer n -> pr "$%s" n
       | AStringNullable n -> pr "[$%s|undef]" n
       | AOpenFlags -> pr "[flags]"
       | AUnusedFlags -> assert false
@@ -2612,6 +2630,9 @@ DESTROY (h)
                 pr "      pl_set_values values = unpack_pl_set_values (ST(%d));\n" i
             | ASetValue ->
                 pr "      hive_set_value *val = unpack_set_value (ST(%d));\n" i
+            | ABuffer n ->
+               pr "       STRLEN %s_len;\n" n;
+               pr "       char *%s = SvPV(ST(%d), %s_len);\n" n i n
         ) (snd style);
 
         let free_args () =
@@ -2622,7 +2643,7 @@ DESTROY (h)
             | ASetValue ->
                 pr "      free (val);\n"
             | AHive | ANode _ | AValue _ | AString _ | AStringNullable _
-            | AOpenFlags | AUnusedFlags -> ()
+            | AOpenFlags | AUnusedFlags | ABuffer _ -> ()
           ) (snd style)
         in
 
@@ -3111,6 +3132,9 @@ put_val_type (char *val, size_t len, hive_type t)
         | ASetValue ->
             pr "  hive_set_value val;\n";
             pr "  PyObject *py_val;\n"
+        | ABuffer n ->
+           pr "   const char *%s;\n" n;
+           pr "   Py_ssize_t %s_len;\n" n
       ) (snd style);
 
       pr "\n";
@@ -3134,6 +3158,8 @@ put_val_type (char *val, size_t len, hive_type t)
         | ASetValues
         | ASetValue ->
             pr "O"
+        | ABuffer n ->
+           pr "y#"
       ) (snd style);
 
       pr ":hivex_%s\"" name;
@@ -3155,6 +3181,8 @@ put_val_type (char *val, size_t len, hive_type t)
             pr ", &py_values"
         | ASetValue ->
             pr ", &py_val"
+        | ABuffer n ->
+           pr ", &%s, &%s_len" n n
         ) (snd style);
 
       pr "))\n";
@@ -3170,7 +3198,8 @@ put_val_type (char *val, size_t len, hive_type t)
         | AString _
         | AStringNullable _
         | AOpenFlags
-        | AUnusedFlags -> ()
+        | AUnusedFlags
+        | ABuffer _ -> ()
         | ASetValues ->
             pr "  if (get_values (py_values, &values) == -1)\n";
             pr "    return NULL;\n"
@@ -3187,7 +3216,7 @@ put_val_type (char *val, size_t len, hive_type t)
         function
         | AHive | ANode _ | AValue _
         | AString _ | AStringNullable _
-        | AOpenFlags | AUnusedFlags -> ()
+        | AOpenFlags | AUnusedFlags | ABuffer _ -> ()
         | ASetValues ->
             pr "  free (values.values);\n"
         | ASetValue -> ()
@@ -3381,7 +3410,8 @@ class Hivex(object):
             match arg with
             | AHive -> assert false
             | ANode n | AValue n
-            | AString n | AStringNullable n -> pr "%s" n
+            | AString n | AStringNullable n
+            | ABuffer n -> pr "%s" n
             | AOpenFlags
             | AUnusedFlags -> assert false
             | ASetValues -> pr "values"
@@ -3576,6 +3606,9 @@ get_values (VALUE valuesv, size_t *nr_values)
         | AStringNullable n ->
           pr "  const char *%s =\n" n;
           pr "    !NIL_P (%sv) ? StringValueCStr (%sv) : NULL;\n" n n
+        | ABuffer n ->
+          pr "  const void *%s = StringValuePtr (%sv);\n" n n;
+          pr "  size_t %s_len = RSTRING_LEN (%sv);\n" n n;
         | AOpenFlags ->
           pr "  int flags = 0;\n";
           List.iter (
@@ -3671,7 +3704,8 @@ get_values (VALUE valuesv, size_t *nr_values)
         | AString _
         | AStringNullable _
         | AOpenFlags
-        | AUnusedFlags -> ()
+        | AUnusedFlags
+        | ABuffer _ -> ()
         | ASetValues ->
           pr "  free (values);\n"
         | ASetValue -> ()

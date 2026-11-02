@@ -98,8 +98,11 @@ _hivex_release_iconv (hive_h *h, recode_type t)
   pthread_mutex_unlock (&h->iconv_cache[t].mutex);
 }
 
-hive_h *
-hivex_open (const char *filename, int flags)
+static hive_h *
+hivex_open_common (const char *filename,
+                   int fd,
+                   void *addr, size_t size,
+                   int flags)
 {
   hive_h *h = NULL;
 
@@ -124,50 +127,15 @@ hivex_open (const char *filename, int flags)
   if (h->filename == NULL)
     goto error;
 
-#ifdef O_CLOEXEC
-  h->fd = open (filename, O_RDONLY | O_CLOEXEC | O_BINARY);
-#else
-  h->fd = open (filename, O_RDONLY | O_BINARY);
-#endif
-  if (h->fd == -1)
-    goto error;
-#ifdef FD_CLOEXEC
-  fcntl (h->fd, F_SETFD, FD_CLOEXEC);
-#endif
-
-  struct stat statbuf;
-  if (fstat (h->fd, &statbuf) == -1)
-    goto error;
-
-  h->size = statbuf.st_size;
+  h->fd = fd;
+  h->addr = addr;
+  h->size = size;
 
   if (h->size < 0x2000) {
     SET_ERRNO (EINVAL,
                "%s: file is too small to be a Windows NT Registry hive file",
                filename);
     goto error;
-  }
-
-  if (!h->writable) {
-    h->addr = mmap (NULL, h->size, PROT_READ, MAP_SHARED, h->fd, 0);
-    if (h->addr == MAP_FAILED)
-      goto error;
-
-    DEBUG (2, "mapped file at %p", h->addr);
-  } else {
-    h->addr = malloc (h->size);
-    if (h->addr == NULL)
-      goto error;
-
-    if (full_read (h->fd, h->addr, h->size) < h->size)
-      goto error;
-
-    /* We don't need the file descriptor along this path, since we
-     * have read all the data.
-     */
-    if (close (h->fd) == -1)
-      goto error;
-    h->fd = -1;
   }
 
   /* Check header. */
@@ -443,19 +411,92 @@ hivex_open (const char *filename, int flags)
   int err = errno;
   if (h) {
     free (h->bitmap);
-    if (h->addr && h->size && h->addr != MAP_FAILED) {
-      if (!h->writable)
-        munmap (h->addr, h->size);
-      else
-        free (h->addr);
-    }
-    if (h->fd >= 0)
-      close (h->fd);
     free (h->filename);
     free (h);
   }
   errno = err;
   return NULL;
+}
+
+hive_h *
+hivex_open (const char *filename, int flags)
+{
+  int fd = -1;
+  size_t size;
+  void *addr = NULL;
+  int writable = !!(flags & HIVEX_OPEN_WRITE);
+
+#ifdef O_CLOEXEC
+  fd = open (filename, O_RDONLY | O_CLOEXEC | O_BINARY);
+#else
+  fd = open (filename, O_RDONLY | O_BINARY);
+#endif
+  if (fd == -1)
+    goto error;
+#ifdef FD_CLOEXEC
+  fcntl (fd, F_SETFD, FD_CLOEXEC);
+#endif
+
+  struct stat statbuf;
+  if (fstat (fd, &statbuf) == -1)
+    goto error;
+
+  size = statbuf.st_size;
+
+  if (!writable) {
+    addr = mmap (NULL, size, PROT_READ, MAP_SHARED, fd, 0);
+    if (addr == MAP_FAILED)
+      goto error;
+
+    //DEBUG (2, "mapped file at %p", addr);
+  }
+  else /* writable */ {
+    addr = malloc (size);
+    if (addr == NULL)
+      goto error;
+
+    if (full_read (fd, addr, size) < size)
+      goto error;
+
+    /* We don't need the file descriptor along this path, since we
+     * have read all the data.
+     */
+    if (close (fd) == -1)
+      goto error;
+    fd = -1;
+  }
+
+  hive_h *h = hivex_open_common (filename, fd, addr, size, flags);
+  if (h)
+    return h;
+
+ error:;
+  int err = errno;
+
+  if (addr && size && addr != MAP_FAILED) {
+    if (!writable)
+      munmap (addr, size);
+    else
+      free (addr);
+    }
+  if (fd >= 0)
+    close (fd);
+
+  errno = err;
+  return NULL;
+}
+
+hive_h *
+hivex_open_memory (const void *buf, size_t len, int flags)
+{
+  if ((flags & HIVEX_OPEN_WRITE) != 0) {
+    //SET_ERRNO (EINVAL,
+    //"hivex_open_memory does not support WRITE flag");
+    errno = EINVAL;
+    return NULL;
+  }
+
+  return hivex_open_common ("<memory>", -1, (void *) buf, len, flags);
 }
 
 int
