@@ -18,6 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <fcntl.h>
 #include <unistd.h>
 
@@ -55,14 +56,21 @@ main (int argc, char **argv)
 
   while (__AFL_LOOP(1000)) {
     int len = __AFL_FUZZ_TESTCASE_LEN;
-    hive_h *h;
+
+    /* For the reason why we copy, see (5) on:
+     * https://nullprogram.com/blog/2025/02/05/
+     */
+    void *copy = malloc (len);
+    memcpy (copy, buf, len);
 
     /* Errors in the hive are expected, so ignore then. */
-    h = hivex_open_memory (buf, len, 0);
+    hive_h *h = hivex_open_memory (copy, len, 0);
     if (h) {
       hivex_visit (h, &visitor, sizeof visitor, NULL, 0);
       hivex_close (h);
     }
+
+    free (copy);
   }
 
   /* Once the loop is exited, terminate normally - AFL will restart
