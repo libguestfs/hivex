@@ -408,6 +408,16 @@ hivex_value_value (hive_h *h, hive_value_h value,
     }
     struct ntreg_value_list *bl =
       (struct ntreg_value_list *) ((char *) h->addr + blocklist_offset);
+    /* nr_blocks is an attacker-controlled field from the db record.
+     * The block list array must fit inside its own block.
+     */
+    size_t bllen = block_len (h, blocklist_offset, NULL);
+    if (4 + nr_blocks * 4 > bllen) {
+      SET_ERRNO (EFAULT, "db block list is too long (%zu, %zu)",
+                 nr_blocks, len);
+      free (ret);
+      return NULL;
+    }
     size_t i, off;
     for (i = off = 0; i < nr_blocks; ++i) {
       size_t subblock_offset = le32toh (bl->offset[i]);
