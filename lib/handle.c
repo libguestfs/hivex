@@ -228,7 +228,7 @@ hivex_open_common (const char *filename,
    */
   size_t off;
   struct ntreg_hbin_page *page;
-  for (off = 0x1000; off < h->size; off += le32toh (page->page_size)) {
+  for (off = 0x1000; off < h->size; /* off incr'd at end of loop body */) {
     if (off >= h->endpages)
       break;
 
@@ -384,6 +384,8 @@ hivex_open_common (const char *filename,
         BITMAP_SET (h->bitmap, blkoff);
       }
     }
+
+    off += page_size;
   }
 
   if (!seen_root_block) {
