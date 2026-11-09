@@ -28,18 +28,20 @@ https://github.com/AFLplusplus/AFLplusplus/blob/stable/instrumentation/README.pe
 
 images/minimal and images/special may be used as initial test cases:
 
-  mkdir -p testcase_dir sync_dir
-  cp images/minimal images/special testcase_dir/
+  mkdir -p fuzzing/testcase_dir
+  cp images/minimal images/special fuzzing/testcase_dir/
 
 Run multiple copies of afl-fuzz.  Usually you should run 1 master (-M)
 and as many slaves (-S) as you can:
 
 Master:
 
-  mkdir -p sync_dir
-  afl-fuzz -i testcase_dir -o sync_dir -m 0 -M fuzz01 fuzzing/fuzz-hivex
+  mkdir -p fuzzing/sync_dir
+  afl-fuzz -i fuzzing/testcase_dir -o fuzzing/sync_dir -m 0 -M fuzz01 \
+      fuzzing/fuzz-hivex
 
 Slaves:
 
   # replace fuzzNN with fuzz02, fuzz03, etc.
-  afl-fuzz -i testcase_dir -o sync_dir -m 0 -S fuzzNN fuzzing/fuzz-hivex
+  afl-fuzz -i fuzzing/testcase_dir -o fuzzing/sync_dir -m 0 -S fuzzNN \
+      fuzzing/fuzz-hivex

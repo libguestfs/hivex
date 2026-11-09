@@ -41,6 +41,8 @@ Makefile.in
 /depcomp
 /extra-tests/*.hive
 /fuzzing/fuzz-hivex
+/fuzzing/sync_dir
+/fuzzing/testcase_dir
 /generator/.pod2text.data.version.2
 /generator/stamp-generator
 /GNUmakefile
@@ -127,7 +129,5 @@ Makefile.in
 /sh/*.1
 /sh/hivexsh
 /stamp-h1
-/sync_dir
-/testcase_dir
 /xml/*.1
 /xml/hivexml
