@@ -232,7 +232,18 @@ hivex_open_common (const char *filename,
     if (off >= h->endpages)
       break;
 
+    /* Check that the page header fits into the remaining file before
+     * reading it (cause of https://github.com/libguestfs/hivex/issues/41).
+     */
+    if (off + sizeof (struct ntreg_hbin_page) > h->size) {
+      SET_ERRNO (ENOTSUP,
+                 "%s: truncated page header at 0x%zx, bad registry",
+                 filename, off);
+      goto error;
+    }
+
     page = (struct ntreg_hbin_page *) ((char *) h->addr + off);
+
     if (page->magic[0] != 'h' ||
         page->magic[1] != 'b' ||
         page->magic[2] != 'i' ||
