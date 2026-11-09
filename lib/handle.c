@@ -268,6 +268,8 @@ hivex_open_common (const char *filename,
 
         if (off >= h->endpages)
           break;
+        if (off + sizeof (struct ntreg_hbin_page) > h->size)
+          break;
 
         page = (struct ntreg_hbin_page *) ((char *) h->addr + off);
         if (page->magic[0] == 'h' &&
