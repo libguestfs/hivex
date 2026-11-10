@@ -64,6 +64,12 @@ make
 make check
 ```
 
+Maintainers can also use:
+
+```
+make check-valgrind
+```
+
 ## Directories and tools
 
 `extra-tests/`

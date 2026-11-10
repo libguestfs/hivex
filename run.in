@@ -102,9 +102,13 @@ if libtool --help >/dev/null 2>&1; then
     libtool="libtool --mode=execute"
 fi
 
+if [ "x$HIVEX_VALGRIND" = "x1" ]; then
+    valgrind="@VG@ --vgdb=no --leak-check=full --show-leak-kinds=all --error-exitcode=119 --suppressions=$s/valgrind-suppressions --trace-children=no --run-libc-freeres=no --num-callers=100"
+fi
+
 # Avoid GNOME keyring stupidity
 export GNOME_KEYRING_CONTROL=
 export GNOME_KEYRING_PID=
 
 # Run the program.
-exec $libtool "$@"
+exec $libtool $valgrind "$@"

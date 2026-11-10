@@ -507,6 +507,16 @@ dnl AC_CHECK_PROG([GHC],[ghc],[ghc],[no])
 dnl AM_CONDITIONAL([HAVE_HASKELL],
 dnl     [test "x$GHC" != "xno"])
 
+dnl Check for valgrind (optional)
+AC_CHECK_PROG([VALGRIND],[valgrind],[valgrind],[no])
+AS_IF([test "x$VALGRIND" != "xno"],[
+    VG="$VALGRIND"
+    ],[
+    # No valgrind, so substitute VG with something that will break.
+    VG=VALGRIND_IS_NOT_INSTALLED
+])
+AC_SUBST([VG])
+
 AC_ARG_ENABLE([fuzzing],
     AS_HELP_STRING([--enable-fuzzing], [Enable fuzzing (read fuzzing/FUZZING)]),
     [],

@@ -37,3 +37,8 @@ test_just_header_CFLAGS = \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
 test_just_header_LDADD = \
 	$(top_builddir)/lib/libhivex.la
+
+# Run the tests under valgrind.
+
+check-valgrind:
+	HIVEX_VALGRIND=1 $(MAKE) check

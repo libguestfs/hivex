@@ -65,6 +65,7 @@ EXTRA_DIST = \
 	po/Makevars.template \
 	po/zanata-pull.sh \
 	po/zanata.xml \
+	valgrind-suppressions \
 	.x-sc_prohibit_magic_number_exit
 
 # Maintainer website update.
@@ -81,6 +82,10 @@ website: $(HTMLFILES)
 	cp $(HTMLFILES) $(WEBSITEDIR)
 
 CLEANFILES = $(HTMLFILES) pod2*.tmp *~
+
+# Run the tests under valgrind.
+check-valgrind: all
+	make -C tests check-valgrind
 
 #----------------------------------------------------------------------
 # Maintainers only!
