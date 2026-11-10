@@ -25,6 +25,10 @@
 int
 main (int argc, char *argv[])
 {
+  int r;
+
   hive_h *h = hivex_open ("../images/minimal", 0);
-  return h != NULL ? 0 : 1;
+  r = h != NULL ? 0 : 1;
+  hivex_close (h);
+  return r;
 }
