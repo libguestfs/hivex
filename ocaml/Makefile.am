@@ -53,7 +53,7 @@ mlhivex.cmxa: $(XOBJS)
 hivex_c.o: hivex_c.c
 	$(CC) $(AM_CPPFLAGS) $(CFLAGS) -fPIC -Wall -c $<
 
-TESTS_ENVIRONMENT = ../run
+LOG_COMPILER = $(top_builddir)/run
 
 TESTS = \
 	t/hivex_005_load \

@@ -31,7 +31,7 @@ check_DATA = $(test_hives)
 	xz --uncompress --stdout $< > $@-t
 	mv $@-t $@
 
-TESTS_ENVIRONMENT = ../run
+LOG_COMPILER = $(top_builddir)/run
 TESTS = check-regedit.sh insert-keys.pl
 
 CLEANFILES = *~ *.hive

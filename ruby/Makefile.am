@@ -39,7 +39,7 @@ if HAVE_RUBY
 
 TESTS = run-ruby-tests
 
-TESTS_ENVIRONMENT = ../run
+LOG_COMPILER = $(top_builddir)/run
 
 all:
 	$(RAKE) build

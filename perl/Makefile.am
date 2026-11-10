@@ -41,9 +41,8 @@ TESTS = run-perl-tests
 
 $(TESTS): src_deps all
 
-TESTS_ENVIRONMENT = \
-  MAKE=$(MAKE) \
-  ../run
+LOG_COMPILER = $(top_builddir)/run
+TESTS_ENVIRONMENT = MAKE=$(MAKE)
 
 INSTALLDIRS = site
 
