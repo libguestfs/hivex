@@ -20,7 +20,7 @@ ACLOCAL_AMFLAGS = -I m4
 # Work around broken libtool.
 export to_tool_file_cmd=func_convert_file_noop
 
-SUBDIRS = gnulib/lib generator lib images include fuzzing
+SUBDIRS = gnulib/lib generator lib images include tests fuzzing
 
 if HAVE_LIBXML2
 SUBDIRS += xml

@@ -86,16 +86,3 @@ $(top_builddir)/html/hivex.3.html: hivex.pod
 	  $<
 
 CLEANFILES = $(man_MANS) *~
-
-# Tests.
-
-check_PROGRAMS = test-just-header
-
-TESTS = test-just-header
-
-test_just_header_SOURCES = test-just-header.c
-test_just_header_CFLAGS = \
-	-I$(top_srcdir)/include \
-	$(WARN_CFLAGS) $(WERROR_CFLAGS)
-test_just_header_LDADD = \
-	$(top_builddir)/lib/libhivex.la
