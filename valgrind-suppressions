@@ -1,0 +1,17 @@
+# iconv is very leaky, even if we close the handle.
+# These are copied from nbdkit.
+{
+  iconv_1
+  Memcheck:Leak
+  fun:malloc
+  ...
+  fun:__gconv_open
+}
+
+{
+  iconv_2
+  Memcheck:Leak
+  fun:calloc
+  ...
+  fun:__gconv_open
+}

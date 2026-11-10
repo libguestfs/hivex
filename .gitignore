@@ -129,5 +129,6 @@ Makefile.in
 /sh/hivexsh
 /stamp-h1
 /tests/test-just-header
+/tests/test-visit
 /xml/*.1
 /xml/hivexml

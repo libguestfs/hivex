@@ -27,15 +27,26 @@ LOG_COMPILER = $(top_builddir)/run
 
 # Tests.
 
-check_PROGRAMS = test-just-header
+check_PROGRAMS = \
+	test-just-header \
+	test-visit
 
-TESTS = test-just-header
+TESTS = \
+	test-just-header \
+	test-visit
 
 test_just_header_SOURCES = test-just-header.c
 test_just_header_CFLAGS = \
 	-I$(top_srcdir)/include \
 	$(WARN_CFLAGS) $(WERROR_CFLAGS)
 test_just_header_LDADD = \
+	$(top_builddir)/lib/libhivex.la
+
+test_visit_SOURCES = test-visit.c
+test_visit_CFLAGS = \
+	-I$(top_srcdir)/include \
+	$(WARN_CFLAGS) $(WERROR_CFLAGS)
+test_visit_LDADD = \
 	$(top_builddir)/lib/libhivex.la
 
 # Run the tests under valgrind.
