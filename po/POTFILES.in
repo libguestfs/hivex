@@ -1,12 +1,11 @@
 lib/handle.c
-lib/write.c
+lib/mmap.c
 lib/node.c
 lib/offset-list.c
-lib/test-just-header.c
 lib/utf16.c
 lib/util.c
 lib/value.c
 lib/visit.c
-lib/mmap.c
+lib/write.c
 sh/hivexsh.c
 xml/hivexml.c
