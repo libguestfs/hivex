@@ -1788,6 +1788,7 @@ static void raise_closed (const char *) Noreturn;
         List.map (function
                   | ASetValues -> ["nrvalues"; "values"]
                   | AUnusedFlags -> ["0"]
+                  | ABuffer n -> [n; n ^ "_len"]
                   | arg -> [name_of_argt arg]) (snd style) in
       let c_params =
         match fst style with
@@ -1842,8 +1843,8 @@ static void raise_closed (const char *) Noreturn;
         | ASetValue ->
             pr "  hive_set_value *val = HiveSetValue_val (valv);\n"
         | ABuffer n ->
-           pr "   const void *%s = String_val (%sv);\n" n n;
-           pr "   size_t %s_len = caml_string_len (%sv);\n" n n
+           pr "  const void *%s = String_val (%sv);\n" n n;
+           pr "  size_t %s_len = caml_string_length (%sv);\n" n n
       ) (snd style);
       pr "\n";
 
@@ -3105,6 +3106,7 @@ put_val_type (char *val, size_t len, hive_type t)
                   | AUnusedFlags -> "0"
                   | ASetValues -> "values.nr_values, values.values"
                   | ASetValue -> "&val"
+                  | ABuffer n -> sprintf "%s, %s_len" n n
                   | arg -> name_of_argt arg) (snd style) in
       let c_params =
         match fst style with
@@ -3133,8 +3135,8 @@ put_val_type (char *val, size_t len, hive_type t)
             pr "  hive_set_value val;\n";
             pr "  PyObject *py_val;\n"
         | ABuffer n ->
-           pr "   const char *%s;\n" n;
-           pr "   Py_ssize_t %s_len;\n" n
+           pr "  const char *%s;\n" n;
+           pr "  Py_ssize_t %s_len;\n" n
       ) (snd style);
 
       pr "\n";
@@ -3674,6 +3676,7 @@ get_values (VALUE valuesv, size_t *nr_values)
                   | ASetValues -> ["nr_values"; "values"]
                   | ASetValue -> ["&val"]
                   | AUnusedFlags -> ["0"]
+                  | ABuffer n -> [n; n ^ "_len"]
                   | arg -> [name_of_argt arg]) args in
       let c_params =
         match ret with
