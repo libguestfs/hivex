@@ -3516,6 +3516,13 @@ get_values (VALUE valuesv, size_t *nr_values)
   return ret;
 }
 
+static const rb_data_type_t hivex_rb_data_type = {
+  .wrap_struct_name = \"hive_h\",
+  .function = {
+    .dfree = ruby_hivex_free,
+  },
+};
+
 ";
 
   List.iter (
@@ -3595,7 +3602,7 @@ get_values (VALUE valuesv, size_t *nr_values)
         function
         | AHive ->
           pr "  hive_h *h;\n";
-          pr "  Data_Get_Struct (hv, hive_h, h);\n";
+          pr "  TypedData_Get_Struct (hv, hive_h, &hivex_rb_data_type, h);\n";
           pr "  if (!h)\n";
           pr "    rb_raise (rb_eArgError, \"%%s: used handle after closing it\",\n";
           pr "              \"%s\");\n" name;
@@ -3723,7 +3730,8 @@ get_values (VALUE valuesv, size_t *nr_values)
       | RErr | RErrDispose ->
         pr "  return Qnil;\n"
       | RHive ->
-        pr "  return Data_Wrap_Struct (c_hivex, NULL, ruby_hivex_free, r);\n"
+        pr "  return TypedData_Wrap_Struct (c_hivex,\n";
+        pr "                                &hivex_rb_data_type, r);\n"
       | RSize
       | RNode
       | RValue
