@@ -66,7 +66,8 @@ main (int argc, char **argv)
     /* Errors in the hive are expected, so ignore then. */
     hive_h *h = hivex_open_memory (copy, len, 0);
     if (h) {
-      hivex_visit (h, &visitor, sizeof visitor, NULL, 0);
+      hivex_visit (h, &visitor, sizeof visitor, NULL,
+                   HIVEX_VISIT_SKIP_BAD);
       hivex_close (h);
     }
 
