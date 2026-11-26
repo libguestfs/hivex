@@ -222,6 +222,10 @@ hivex__visit_node (hive_h *h, hive_node_h node,
           }
           if (vtor->value_string_invalid_utf16) {
             str = hivex_value_value (h, values[i], &t, &len);
+            if (str == NULL) {
+              ret = skip_bad ? 0 : -1;
+              goto error;
+            }
             if (vtor->value_string_invalid_utf16 (h, opaque, node, values[i],
                                                   t, len, key, str) == -1)
               goto error;
