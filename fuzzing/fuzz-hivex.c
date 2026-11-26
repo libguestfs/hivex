@@ -30,8 +30,18 @@
 #pragma clang optimize off
 #pragma GCC optimize("O0")
 
+static int node_start (hive_h *, void *opaque, hive_node_h, const char *name);
+static int node_end (hive_h *, void *opaque, hive_node_h, const char *name);
+static int value_string (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, const char *str);
+static int value_multiple_strings (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, char **argv);
+static int value_string_invalid_utf16 (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, const char *str);
+static int value_dword (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, int32_t);
+static int value_qword (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, int64_t);
+static int value_binary (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, const char *value);
+static int value_none (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, const char *value);
+static int value_other (hive_h *, void *opaque, hive_node_h, hive_value_h, hive_type t, size_t len, const char *key, const char *value);
+
 static struct hivex_visitor visitor = {
-/*
   .node_start = node_start,
   .node_end = node_end,
   .value_string = value_string,
@@ -41,11 +51,12 @@ static struct hivex_visitor visitor = {
   .value_qword = value_qword,
   .value_binary = value_binary,
   .value_none = value_none,
-  .value_other = value_other
-*/
+  .value_other = value_other,
 };
 
 __AFL_FUZZ_INIT();
+
+static int dummy;
 
 int
 main (int argc, char **argv)
@@ -74,6 +85,9 @@ main (int argc, char **argv)
     free (copy);
   }
 
+  /* Just to be sure this is not optimized out. */
+  printf ("%d\n", dummy);
+
   /* Once the loop is exited, terminate normally - AFL will restart
    * the process when this happens, with a clean slate when it comes
    * to allocated memory, leftover file descriptors, etc.
@@ -81,3 +95,115 @@ main (int argc, char **argv)
   return 0;
 }
 
+/* These callbacks should do minimal checks that at least the strings
+ * or memory regions passed to us are bounded.
+ */
+
+static void
+check_valid (const void *p, size_t len)
+{
+  const char *b = p;
+  for (size_t i = 0; i < len; ++i)
+    dummy += b[i];
+}
+
+static int
+node_start (hive_h *h, void *opaque, hive_node_h node, const char *name)
+{
+  dummy += strlen (name);
+  return 0;
+}
+
+static int
+node_end (hive_h *h, void *opaque, hive_node_h node, const char *name)
+{
+  dummy += strlen (name);
+  return 0;
+}
+
+static int
+value_string (hive_h *h, void *opaque,
+              hive_node_h node, hive_value_h val,
+              hive_type t, size_t len,
+              const char *key, const char *str)
+{
+  dummy += strlen (key);
+  dummy += strlen (str);
+  return 0;
+}
+
+static int
+value_multiple_strings (hive_h *h, void *opaque,
+                        hive_node_h node, hive_value_h val,
+                        hive_type t, size_t len,
+                        const char *key, char **argv)
+{
+  dummy += strlen (key);
+  for (size_t i = 0; argv[i]; ++i)
+    dummy += strlen (argv[i]);
+  return 0;
+}
+
+static int
+value_string_invalid_utf16 (hive_h *h, void *opaque,
+                            hive_node_h node, hive_value_h val,
+                            hive_type t, size_t len,
+                            const char *key, const char *str)
+{
+  dummy += strlen (key);
+  check_valid (str, len);
+  return 0;
+}
+
+static int
+value_dword (hive_h *h, void *opaque,
+             hive_node_h node, hive_value_h val,
+             hive_type t, size_t len,
+             const char *key, int32_t dw)
+{
+  dummy += strlen (key);
+  return 0;
+}
+
+static int
+value_qword (hive_h *h, void *opaque,
+             hive_node_h node, hive_value_h val,
+             hive_type t, size_t len,
+             const char *key, int64_t qw)
+{
+  dummy += strlen (key);
+  return 0;
+}
+
+static int
+value_binary (hive_h *h, void *opaque,
+              hive_node_h node, hive_value_h val,
+              hive_type t, size_t len,
+              const char *key, const char *value)
+{
+  dummy += strlen (key);
+  check_valid (value, len);
+  return 0;
+}
+
+static int
+value_none (hive_h *h, void *opaque,
+            hive_node_h node, hive_value_h val,
+            hive_type t, size_t len,
+            const char *key, const char *value)
+{
+  dummy += strlen (key);
+  check_valid (value, len);
+  return 0;
+}
+
+static int
+value_other (hive_h *h, void *opaque,
+             hive_node_h node, hive_value_h val,
+             hive_type t, size_t len,
+             const char *key, const char *value)
+{
+  dummy += strlen (key);
+  check_valid (value, len);
+  return 0;
+}
